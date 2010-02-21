@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+
+<title>{site_name}</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<link rel='stylesheet' type='text/css' media='all' href='{stylesheet=Posts/posts_css}' />
+<script type="text/javascript" src="http://google.com/jsapi"></script>
+<script type="text/javascript">
+	google.load("jquery","1.3.2");
+	google.load("jqueryui","1.7.2");
+</script>
+<script type="text/javascript" src="/js/posts.js"></script>
+</head>
+<body>
+<div id="nav">
+	<p>
+		<a href="#clearup" id="clearUp">Clear up</a>
+		<a href="#clearup" id="scrambel">Scrambel</a>
+		<a href="#clearup" id="washAndGo">Go and return</a>
+	</p>
+</div>
+<div id="container">
+{exp:channel:entries
+orderby="date" 
+limit="9"
+paginate="top"}
+
+<div class="box{absolute_count}">
+	<a href="#" class="close">Close</a>
+	<h1>{title}</h1>
+	<p>{body}</p>
+</div>
+{paginate}
+<p id="navigation">Page {current_page} of {total_pages} pages {pagination_links}</p>
+{/paginate}
+{/exp:channel:entries}
+
+</div>
+</body>
+</html>

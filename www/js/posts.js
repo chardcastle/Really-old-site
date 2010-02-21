@@ -101,5 +101,19 @@ $(function(){
 				.end()
 			.end();
 			return false;	
-	});
+	})
+	.end()
+	.find("#navigation a")
+	.each(function(i,item){		
+		console.log("here");
+		$(item).click(function(e){
+			e.preventDefault();
+			var req = $(this).text();
+			$.getJSON("/index.php/posts_json/P"+req,function(data){
+				console.log(data);
+			});
+			return false;
+		});
+	})
+	
 });
