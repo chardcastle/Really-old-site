@@ -6,7 +6,7 @@ paginate="top"}
 {
 	"index":"{absolute_count}",
 	"title":"{title}",
-	"body":"{body}"
+	"body":"{exp:whitespace}{body}{/exp:whitespace}"
 }{if absolute_count < 9},{/if}
 {/exp:channel:entries}
 ]
