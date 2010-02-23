@@ -39,9 +39,11 @@ $(function(){
 		.find("div")
 		.each(function(){
 			var pos = {
-				top:$(this).offset().top,
-				left:$(this).offset().left
-			};
+				//top:$(this).offset().top,
+				//left:$(this).offset().left
+				top:$(this).css("top"),
+				left:$(this).css("left")
+			};			
 			originLocations[$(this).attr("class")] = pos;			
 		})
 		.end()
@@ -56,10 +58,9 @@ $(function(){
 				$(this).stop();
 			}		
 			var className = $(this).attr("class");
-			var top = originLocations[className].top;
-			var left = originLocations[className].left;
-			
-			$(this).animate({top:top+"px",left:left+"px"},1000);
+			var csstop = originLocations[className].top;
+			var cssleft = originLocations[className].left;			
+			$(this).animate({top:csstop,left:cssleft},1000);
 		});		
 	})
 	.end()
@@ -97,7 +98,7 @@ $(function(){
 				
 					$(this)
 					.scrambel({limit:lim,animate:true})
-					.animate({top:top+"px",left:left+"px"},1000);
+					.animate({top:top,left:left},1000);
 				})
 				.end()
 			.end();
