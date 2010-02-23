@@ -1,12 +1,11 @@
-[
-{exp:channel:entries
+[{exp:channel:entries
 orderby="date" 
 limit="9"
-paginate="top"}
+paginate="top"
+backspace="2"}
 {
-	"index":"{absolute_count}",
+	"index":"box{count}",
 	"title":"{title}",
 	"body":"{exp:whitespace}{body}{/exp:whitespace}"
-}{if absolute_count < 9},{/if}
-{/exp:channel:entries}
-]
+},{paginate} {/paginate}
+{/exp:channel:entries}]

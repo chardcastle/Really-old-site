@@ -33,6 +33,7 @@
 $(function(){
 	var lim = $("#container").width()-$("#container div:first").width();
 	var originLocations = [];
+	var numberOfPages = 0;
 	$("body")
 	.find("#container")
 		.find("div")
@@ -102,17 +103,27 @@ $(function(){
 			.end();
 			return false;	
 	})
+	.end()
 	.find("#navigation a")
 	.each(function(i,item){		
-		console.log("here");
-		$(item).click(function(e){
+		numberOfPages++;
+		var ele = $("<li><a href=''></a></li>")
+		.find("a")
+		.text(numberOfPages)
+		.click(function(e){
 			e.preventDefault();
-			var req = $(this).text();
-			$.getJSON("/index.php/posts_json/P"+req,function(data){
-				console.log(data);
-			});
-			return false;
+			var req = (($(this).text()-1)*9);
+			console.log("/index.php/posts_json/P"+req);
+			$.getJSON("/index.php/posts_json/P"+req,function(data){				
+				$.each(data,function(key,value){					
+					$("."+value["index"]).html(value["body"]);
+				});
+				console.log(data);				
+			});			
+			return false;		
 		});
-	})
+		$("#jsnav").append(ele);
+	});
+	// make new navigation stucture
 	
 });
