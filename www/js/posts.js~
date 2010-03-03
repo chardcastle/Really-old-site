@@ -43,8 +43,7 @@ $(function(){
 				//left:$(this).offset().left
 				top:$(this).css("top"),
 				left:$(this).css("left")
-			};
-			console.log(pos.top,pos.left);
+			};			
 			originLocations[$(this).attr("class")] = pos;			
 		})
 		.end()
@@ -60,8 +59,7 @@ $(function(){
 			}		
 			var className = $(this).attr("class");
 			var csstop = originLocations[className].top;
-			var cssleft = originLocations[className].left;
-			console.log(csstop+"#"+cssleft);
+			var cssleft = originLocations[className].left;			
 			$(this).animate({top:csstop,left:cssleft},1000);
 		});		
 	})
@@ -113,13 +111,19 @@ $(function(){
 		var ele = $("<li><a href=''></a></li>")
 		.find("a")
 		.text(numberOfPages)
-		.click(function(e){
+		.click(function(e){			
 			e.preventDefault();
 			var req = (($(this).text()-1)*9);
 			console.log("/index.php/Posts/posts_json/P"+req);
 			$.getJSON("/index.php/Posts/posts_json/P"+req,function(data){				
 				$.each(data,function(key,value){					
-					$("."+value["index"]).html(value["body"]);
+					$("."+value["index"])
+					.find(".body")
+					.html(value["body"])
+					.end()
+					.find("h1")
+					.html(value["title"])
+					.show();
 				});
 				console.log(data);				
 			});			

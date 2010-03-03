@@ -53,7 +53,7 @@ code {
 	width:762px;
 	height:300px;
 }
-#container div{
+#container div.outer{
 	position:absolute;
 	/*top:0; left:0;*/
 	z-index:3;	

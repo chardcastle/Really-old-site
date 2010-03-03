@@ -111,13 +111,20 @@ $(function(){
 		var ele = $("<li><a href=''></a></li>")
 		.find("a")
 		.text(numberOfPages)
-		.click(function(e){
+		.click(function(e){			
 			e.preventDefault();
 			var req = (($(this).text()-1)*9);
 			console.log("/index.php/Posts/posts_json/P"+req);
 			$.getJSON("/index.php/Posts/posts_json/P"+req,function(data){				
 				$.each(data,function(key,value){					
-					$("."+value["index"]).html(value["body"]);
+					$("."+value["index"])
+					.find(".body")
+					.html(value["body"])
+					.end()
+					.find("h1")
+					.html(value["title"])
+					.end()
+					.show();
 				});
 				console.log(data);				
 			});			

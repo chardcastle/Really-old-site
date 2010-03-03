@@ -32,10 +32,10 @@
 	limit="9"
 	paginate="top"}
 
-	<div class="box{absolute_count}">
+	<div class="box{absolute_count} outer">
 		<a href="#" class="close">Close</a>
 		<h1>{title}</h1>
-		<p>{body}</p>
+		<div class="body">{body}</div>
 	</div>
 	{paginate}
 	<p id="navigation">Page {current_page} of {total_pages} pages {pagination_links}</p>
