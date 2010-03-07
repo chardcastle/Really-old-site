@@ -121,16 +121,16 @@ $(function(){
 					//console.log(className);
 					var top = originLocations[className].top;
 					var left = originLocations[className].left;		
-					$("."+value["index"])
+					$("#"+value["index"])
 					.scrambel({limit:lim,animate:true})
-					/*.find(".body")					
+					.find(".body")					
 					.html(value["body"])
 					.end()
 					.find("h1")
 					.html(value["title"])
 					.end()
 					.animate({top:top,left:left},1000)
-					.show()*/;
+					.show();
 				});
 				//console.log(data);				
 			});			
