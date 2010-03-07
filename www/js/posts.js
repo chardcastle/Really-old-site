@@ -121,7 +121,7 @@ $(function(){
 					//console.log(className);
 					var top = originLocations[className].top;
 					var left = originLocations[className].left;		
-					$("."+value["index"])
+					$("#"+value["index"])
 					.scrambel({limit:lim,animate:true})
 					.find(".body")					
 					.html(value["body"])

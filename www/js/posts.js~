@@ -118,21 +118,21 @@ $(function(){
 			$.getJSON("/index.php/Posts/posts_json/P"+req,function(data){				
 				$.each(data,function(key,value){			
 					var className = value["index"];
-					console.log(className);
+					//console.log(className);
 					var top = originLocations[className].top;
 					var left = originLocations[className].left;		
 					$("."+value["index"])
 					.scrambel({limit:lim,animate:true})
-					.find(".body")					
+					/*.find(".body")					
 					.html(value["body"])
 					.end()
 					.find("h1")
 					.html(value["title"])
 					.end()
 					.animate({top:top,left:left},1000)
-					.show();
+					.show()*/;
 				});
-				console.log(data);				
+				//console.log(data);				
 			});			
 			return false;		
 		});
