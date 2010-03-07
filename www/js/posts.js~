@@ -44,7 +44,7 @@ $(function(){
 				top:$(this).css("top"),
 				left:$(this).css("left")
 			};			
-			originLocations[$(this).attr("class")] = pos;			
+			originLocations[$(this).attr("id")] = pos;			
 		})
 		.end()
 	.end()
@@ -57,7 +57,7 @@ $(function(){
 			if($(this).is(":animated")){
 				$(this).stop();
 			}		
-			var className = $(this).attr("class");
+			var className = $(this).attr("id");
 			var csstop = originLocations[className].top;
 			var cssleft = originLocations[className].left;			
 			$(this).animate({top:csstop,left:cssleft},1000);
@@ -92,7 +92,7 @@ $(function(){
 					if($(this).is(":animated")){
 						$(this).stop();
 					}
-					var className = $(this).attr("class");
+					var className = $(this).attr("id");
 					var top = originLocations[className].top;
 					var left = originLocations[className].left;
 				
@@ -116,13 +116,20 @@ $(function(){
 			var req = (($(this).text()-1)*9);
 			console.log("/index.php/Posts/posts_json/P"+req);
 			$.getJSON("/index.php/Posts/posts_json/P"+req,function(data){				
-				$.each(data,function(key,value){					
+				$.each(data,function(key,value){			
+					var className = value["index"];
+					console.log(className);
+					var top = originLocations[className].top;
+					var left = originLocations[className].left;		
 					$("."+value["index"])
-					.find(".body")
+					.scrambel({limit:lim,animate:true})
+					.find(".body")					
 					.html(value["body"])
 					.end()
 					.find("h1")
 					.html(value["title"])
+					.end()
+					.animate({top:top,left:left},1000)
 					.show();
 				});
 				console.log(data);				
