@@ -3,9 +3,13 @@ orderby="date"
 limit="9"
 paginate="top"
 backspace="2"}
-{
-	"index":"box{count}",
-	"title":"{title}",
-	"body":"{exp:whitespace}{body}{/exp:whitespace}"
+{"index":"box{count}",
+	{if channel_name == "mytweets"}
+		"title":"{exp:whitespace}{timestamp format="%d%S %M %Y"}{/exp:whitespace}",
+		"body":"{exp:whitespace}{content}{/exp:whitespace}"		
+	{if:else}	
+		"title":"{title}",
+		"body":"{exp:whitespace}{body}{/exp:whitespace}"
+	{/if}
 },{paginate} {/paginate}
 {/exp:channel:entries}]

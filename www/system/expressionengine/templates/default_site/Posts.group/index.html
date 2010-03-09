@@ -26,15 +26,21 @@
 <div id="globalOuter">
 	<div id="container">
 	{exp:channel:entries
+	channel="posts|mytweets"
 	orderby="date" 
 	limit="9"
 	paginate="top"}
 
 	<div id="box{absolute_count}" class="outer">
 		<a href="#" class="close ui-icon ui-icon-close" style="float:right">Close</a>
+		{if group_id==3}
+			<p>{content}<span style="font-style:italic">{timestamp format="%d%S %M %Y"}</span></p>							
+		{if:else}
 		<h1>{title}</h1>
 		<div class="pubDate">{entry_date format="%d%S %M %Y"}</div>
-		<div class="body">{body}</div>
+		<div class="body">{body}</div>		
+		{/if}
+
 	</div>
 	{paginate}
 	<p id="navigation">Page {current_page} of {total_pages} pages {pagination_links}</p>
