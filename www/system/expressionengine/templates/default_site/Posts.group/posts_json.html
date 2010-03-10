@@ -1,14 +1,15 @@
 [{exp:channel:entries
+channel="mytweets"
 orderby="date" 
 limit="9"
 paginate="top"
 backspace="2"}
 {"index":"box{count}",
 	{if channel_name == "mytweets"}
-		"title":"{exp:whitespace}{timestamp format="%d%S %M %Y"}{/exp:whitespace}",
-		"body":"{exp:whitespace}{content}{/exp:whitespace}"		
+		"title":"{exp:whitespace}{entry_date format="%d%S %M %Y"}{/exp:whitespace}",
+		"body":"{exp:channel:entries channel="mytweets" start_on="2010-03-09 00:00" stop_before="2010-03-09 23:59"}{exp:whitespace}{content}{/exp:whitespace}{/exp:channel:entries}"		
 	{if:else}	
-		"title":"{title}",
+		"title":"{channel_name}{title}",
 		"body":"{exp:whitespace}{body}{/exp:whitespace}"
 	{/if}
 },{paginate} {/paginate}
