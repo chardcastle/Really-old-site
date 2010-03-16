@@ -1,6 +1,6 @@
 body {
 	background-color: #fff;
-	margin: 40px;
+	padding:40px;
 	font-family: Lucida Grande, Verdana, Sans-serif;
 	font-size: 14px;
 	color: #4F5155;
@@ -15,11 +15,17 @@ a {
 h1 {
 	color: #444;
 	background-color: transparent;
-	border-bottom: 1px solid #D0D0D0;
 	font-size: 16px;
 	font-weight: bold;
 	margin: 24px 0 2px 0;
 	padding: 5px 0 6px 0;
+}
+h1 a{
+	background:transparent url(images/title.png) no-repeat top left;
+	display:block;
+	width:232px;
+	height:36px;
+	text-indent:-9999px;
 }
 
 code {
@@ -65,42 +71,42 @@ code {
 }
 #globalOuter{
 	width:762px;
-	margin:0 auto;
-}
+	margin:20px auto 0 auto;
+`}
 #navigation{
 	display:none;
 }
 #box1{
-	top:20px;
-	left:20px;
+	top:0px;
+	left:0px;
 }
 #box2{
-	top:20px;
-	left:264px;
+	top:0px;
+	left:254px;
 }
 #box3{
-	top:20px;
+	top:0px;
 	left:508px;
 }
 #box4{
-	top:260px;
-	left:20px;
+	top:250px;
+	left:0px;
 }
 #box5{
-	top:260px;
-	left:264px;
+	top:250px;
+	left:254px;
 }
 #box6{
-	top:260px;
+	top:250px;
 	left:508px;
 }
 #box7{
 	top:500px;
-	left:20px;
+	left:0px;
 }
 #box8{
 	top:500px;
-	left:264px;
+	left:254px;
 }
 #box9{
 	top:500px;
