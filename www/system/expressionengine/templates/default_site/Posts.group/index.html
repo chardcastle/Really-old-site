@@ -8,7 +8,7 @@
 <link rel='stylesheet' type='text/css' media='all' href='ui/css/custom-theme/jquery-ui-1.8rc3.custom.css' />
 <link rel='stylesheet' type='text/css' media='all' href='{stylesheet=Posts/reset-min}' />
 <script type="text/javascript" src="ui/js/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="ui/js/jquery-ui.1.8rc3.custom.min.js"></script>
+<script type="text/javascript" src="ui/js/jquery-ui-1.8rc3.custom.min.js"></script>
 <script type="text/javascript" src="ui/js/posts.js"></script>
 </head>
 <body>
@@ -41,15 +41,15 @@
 				<div class="body">{body}</div>
 		</div>
 		
-		<div id="box9" class="outer">
-			<a href="#" class="close ui-icon ui-icon-close" style="float:right">Close</a>
-			{embed="Posts/tweet" content="{content}" date="{entry_date format='%Y-%m-%d'}"}
-		</div>
+
 	{paginate}
 		<p id="navigation">Page {current_page} of {total_pages} pages {pagination_links}</p>
 	{/paginate}
 	{/exp:channel:entries}
-
+		<div id="box9" class="outer">
+			<a href="#" class="close ui-icon ui-icon-close" style="float:right">Close</a>
+			{embed="Posts/tweet" content="{content}" date="{<?php $firstDate?> format='%Y-%m-%d'}"}
+		</div>
 	</div>
 </div>
 </body>

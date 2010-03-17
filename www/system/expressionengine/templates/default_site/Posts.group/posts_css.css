@@ -62,17 +62,28 @@ code {
 #container div.outer{
 	position:absolute;
 	/*top:0; left:0;*/
+	border:1px solid #ccc;
 	z-index:3;	
 	width:200px;
 	height:200px;
-	border:1px solid #ff33ff;
 	overflow:hidden;
+	background:#fff;
 	padding:17px;
+}
+#container div.active{
+	border:2px solid #000;
+}
+#container div.fullSize{
+	top:0;
+	left:0;
+	width:762px;
+	height:900px;
+	scroll:auto;
 }
 #globalOuter{
 	width:762px;
 	margin:20px auto 0 auto;
-`}
+}
 #navigation{
 	display:none;
 }

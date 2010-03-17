@@ -28,23 +28,50 @@
 	  // return
 	  return this;
 	};
+	/*
+	Stop animation to restart
+	*/
+	$.fn.stopIfAnimated = function(){
+		this.each(function(){
+			if($(this).is(":animated")){
+				$(this).stop();
+			}		
+		});
+		// return
+		return this;	
+	};
 })(jQuery);
 
 $(function(){
 	var lim = $("#container").width()-$("#container div:first").width();
-	var originLocations = [];
+	if(!originLocations){
+		var originLocations = [];
+		$("#container")
+		.children("div")
+		.each(function(i,item){
+			var pos = {
+				top:$(this).css("top"),
+				left:$(this).css("left")
+			};	
+			originLocations[$(item).attr("id")] = pos;
+		});
+	}
 	var numberOfPages = 0;
 	$("body")
 	.find("#container")
-		.find("div")
+		.children("div")
 		.each(function(){
-			var pos = {
-				//top:$(this).offset().top,
-				//left:$(this).offset().left
-				top:$(this).css("top"),
-				left:$(this).css("left")
-			};			
-			originLocations[$(this).attr("id")] = pos;			
+			$(this).hover(
+				function(){
+					$(this).delay(200).animate({backgroundColor:"#ccc"}, 800);
+				},
+				function(){
+					$(this).delay(200).animate({backgroundColor:"#fff"}, 800);
+				}
+			).click(function(e){
+				e.preventDefault();
+				$(this).stopIfAnimated().css("z-index","4").toggleClass("fullSize",1000);	
+			});		
 		})
 		.end()
 	.end()
@@ -52,15 +79,15 @@ $(function(){
 	.click(function(e){
 		e.preventDefault();
 		$("#container")
-		.find("div")		
-		.each(function(){
-			if($(this).is(":animated")){
-				$(this).stop();
-			}		
-			var className = $(this).attr("id");
+		.children("div")		
+		.each(function(i,item){
+			if($(item).is(":animated")){
+				$(item).stop();
+			}			
+			var className = $(item).attr("id");
 			var csstop = originLocations[className].top;
 			var cssleft = originLocations[className].left;			
-			$(this).animate({top:csstop,left:cssleft},1000);
+			$(item).animate({top:csstop,left:cssleft},1000);
 		});		
 	})
 	.end()
@@ -68,7 +95,7 @@ $(function(){
 	.click(function(e){
 		e.preventDefault();
 		$("#container")
-			.find("div")
+			.children("div")
 			.each(function(){
 				$(this).scrambel({limit:lim,animate:true});
 			})
@@ -85,14 +112,13 @@ $(function(){
 	.find("#washAndGo")
 	.click(function(e){
 		e.preventDefault();
-		console.log("here");
 			$("#container")
-				.find("div")
+				.children("div")
 				.each(function(){
 					if($(this).is(":animated")){
 						$(this).stop();
 					}
-					var className = $(this).attr("id");
+					var className = $(this).attr("id");					
 					var top = originLocations[className].top;
 					var left = originLocations[className].left;
 				
@@ -114,25 +140,23 @@ $(function(){
 		.click(function(e){			
 			e.preventDefault();
 			var req = (($(this).text()-1)*9);
-			console.log("/index.php/Posts/posts_json/P"+req);
-			$.getJSON("/index.php/Posts/posts_json/P"+req,function(data){				
+			$.getJSON("/index.php/Posts/posts_json/P"+req,function(data){						
 				$.each(data,function(key,value){			
 					var className = value["index"];
 					//console.log(className);
 					var top = originLocations[className].top;
 					var left = originLocations[className].left;		
 					$("#"+value["index"])
-					.scrambel({limit:lim,animate:true})
+					.scrambel({limit:lim,animate:true,speed:300})
 					.find(".body")					
 					.html(value["body"])
 					.end()
 					.find("h1")
 					.html(value["title"])
 					.end()
-					.animate({top:top,left:left},1000)
+					.animate({top:top,left:left},300)
 					.show();
 				});
-				//console.log(data);				
 			});			
 			return false;		
 		});
