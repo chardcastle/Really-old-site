@@ -40,6 +40,18 @@
 		// return
 		return this;	
 	};
+	/*
+	Stop animation to restart
+	*/
+	$.fn.resizeIfNecessary = function(){
+		this.each(function(){
+			if(!$(this).is(".fullsize")){
+				$(this).attr("style","");
+			}		
+		});
+		// return
+		return this;	
+	};	
 })(jQuery);
 
 $(function(){
@@ -70,7 +82,9 @@ $(function(){
 				}
 			).click(function(e){
 				e.preventDefault();
-				$(this).stopIfAnimated().css("z-index","4").toggleClass("fullSize",1000);	
+				$(this).stopIfAnimated()
+				.toggleClass("fullSize",1000)
+				.resizeIfNecessary();	
 			});		
 		})
 		.end()

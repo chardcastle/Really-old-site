@@ -79,6 +79,7 @@ code {
 	width:762px;
 	height:900px;
 	scroll:auto;
+	z-index:4;
 }
 #globalOuter{
 	width:762px;
