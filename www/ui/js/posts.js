@@ -67,6 +67,7 @@ $(function(){
 			};	
 			originLocations[$(item).attr("id")] = pos;
 		});
+		console.log("OriginLocations was not set");
 	}
 	var numberOfPages = 0;
 	$("body")
@@ -81,10 +82,16 @@ $(function(){
 					$(this).delay(200).animate({backgroundColor:"#fff"}, 800);
 				}
 			).click(function(e){
-				e.preventDefault();
-				$(this).stopIfAnimated()
-				.toggleClass("fullSize",1000)
-				.resizeIfNecessary();	
+				if($(this).is(".fullSize")){
+					$(this).toggle("explode",null,800);
+				}else{
+					e.preventDefault();
+					$(this).stopIfAnimated()
+					.toggleClass("fullSize",1000)
+					.resizeIfNecessary();
+				}
+				
+				return false;	
 			});		
 		})
 		.end()

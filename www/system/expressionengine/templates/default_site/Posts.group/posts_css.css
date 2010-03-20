@@ -74,12 +74,13 @@ code {
 	border:2px solid #000;
 }
 #container div.fullSize{
-	top:0;
-	left:0;
+	top:0!important;
+	left:0!important;
 	width:762px;
 	height:900px;
 	scroll:auto;
 	z-index:4;
+	position:absolute;
 }
 #globalOuter{
 	width:762px;
