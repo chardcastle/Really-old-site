@@ -76,14 +76,14 @@ $(function(){
 		.each(function(){
 			$(this).hover(
 				function(){
-					$(this).delay(200).animate({backgroundColor:"#ccc"}, 800);
+					$(this).delay(200).animate({backgroundColor:"#ccc"}, 500);
 				},
 				function(){
-					$(this).delay(200).animate({backgroundColor:"#fff"}, 800);
+					$(this).delay(200).animate({backgroundColor:"#fff"}, 500);
 				}
 			).click(function(e){
 				if($(this).is(".fullSize")){
-					$(this).toggle("explode",null,800);
+					$(this).toggle("explode",null,800).removeClass("fullSize").show(500);
 				}else{
 					e.preventDefault();
 					$(this).stopIfAnimated()
@@ -110,6 +110,7 @@ $(function(){
 			var cssleft = originLocations[className].left;			
 			$(item).animate({top:csstop,left:cssleft},1000);
 		});		
+		return false;
 	})
 	.end()
 	.find("a#scrambel")
@@ -122,12 +123,14 @@ $(function(){
 			})
 			.end()
 		.end()	
+		return false;
 	})
 	.end()
 	.find(".close")
 	.click(function(e){
 		e.preventDefault();		
 		$(this).parent().hide(300);
+		return false;
 	})
 	.end()
 	.find("#washAndGo")
