@@ -18,32 +18,35 @@ if ( ! defined('EXT'))
 
 class Tweetengine {
 
-	$twitterRequest = "http://api.twitter.com/1/statuses/user_timeline/hardcastle.json";
+	//var $twitterRequest = "http://api.twitter.com/1/statuses/user_timeline/hardcastle.json";
 	/**
 	  * Constructor
 	  */
+	  var $return_data 	= '';
 	function Tweetengine()
 	{
 		// Make a local reference to the ExpressionEngine super object
 		$this->EE =& get_instance();
 
 		$this->p_limit = $this->limit;
-
-		$this->query_string = "";
-
+/*
+		$this->EE->db->select_max("field_id_4");
+		$this->EE->db->get("exp_channel_data");
+		$q = $this->EE->db->limit(1);
+		var_dump($q);
+		echo "Oh hai";
 		$tweets = file_get_contents();
+*/
+$this->EE->TMPL->tagdata= array();
+		$this->return_data = $this->EE->TMPL->tagdata;
 
-		// a number tags utilize the disable= parameter, set it here
-		if (isset($this->EE->TMPL) && is_object($this->EE->TMPL))
-		{
-			$this->_fetch_disable_param();
-		}
 	}
 
 	// ------------------------------------------------------------------------
 
 	/**
 	  *  Initialize values
+	  *  Required?
 	  */
 	function initialize()
 	{
@@ -56,19 +59,9 @@ class Tweetengine {
 	/**
 	  *  Fetch Cache
 	  */
-	function fetch_cache($identifier = '')
+	function test()
 	{
-		
-	}
-
-	// ------------------------------------------------------------------------
-
-	/**
-	  *  Save Cache
-	  */
-	function save_cache($sql, $identifier = '')
-	{
-
+		echo "oh hai";
 	}
 
 

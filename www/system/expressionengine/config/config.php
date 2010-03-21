@@ -21,7 +21,15 @@ $config['site_label'] = 'Chris Hardcastle';
 $config['cookie_prefix'] = '';
 
 
+
+
+
+
+
+
+
 // END EE config items
+
 
 /*
 |--------------------------------------------------------------------------
@@ -194,7 +202,7 @@ $config['function_trigger'] = 'M';
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 4;
 
 /*
 |--------------------------------------------------------------------------
@@ -322,6 +330,7 @@ $config['rewrite_short_tags'] = TRUE;
 */
 $config['proxy_ips'] = "";
 
-
+// use Phils cli library MY_URI
+$config['uri_protocol']    = "AUTO"; // Works for web and command line
 /* End of file config.php */
 /* Location: ./system/expressionengine/config/config.php */

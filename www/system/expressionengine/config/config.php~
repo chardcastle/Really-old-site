@@ -21,7 +21,15 @@ $config['site_label'] = 'Chris Hardcastle';
 $config['cookie_prefix'] = '';
 
 
+
+
+
+
+
+
+
 // END EE config items
+
 
 /*
 |--------------------------------------------------------------------------
@@ -322,6 +330,7 @@ $config['rewrite_short_tags'] = TRUE;
 */
 $config['proxy_ips'] = "";
 
-
+// use Phils cli library MY_URI
+$config['uri_protocol']    = "AUTO"; // Works for web and command line
 /* End of file config.php */
 /* Location: ./system/expressionengine/config/config.php */
