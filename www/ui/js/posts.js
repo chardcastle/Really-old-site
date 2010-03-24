@@ -87,6 +87,7 @@ $(function(){
 				}else{
 					e.preventDefault();
 					$(this).stopIfAnimated()
+					.css("z-index","4")
 					.toggleClass("fullSize",1000)
 					.resizeIfNecessary();
 				}

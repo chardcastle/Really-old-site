@@ -22,23 +22,24 @@ class Tweetengine {
 	/**
 	  * Constructor
 	  */
-	  var $return_data 	= '';
+	var $return_data 	= '';
 	function Tweetengine()
 	{
 		// Make a local reference to the ExpressionEngine super object
+		/*
 		$this->EE =& get_instance();
-
-		$this->p_limit = $this->limit;
-/*
+		$this->p_limit = $this->limit;		
 		$this->EE->db->select_max("field_id_4");
 		$this->EE->db->get("exp_channel_data");
 		$q = $this->EE->db->limit(1);
 		var_dump($q);
 		echo "Oh hai";
 		$tweets = file_get_contents();
-*/
-$this->EE->TMPL->tagdata= array();
-		$this->return_data = $this->EE->TMPL->tagdata;
+		$this->EE->TMPL->tagdata= array();
+		*/
+		//$this->return_data = $this->EE->TMPL->tagdata;
+		log_message("debug","called mod");
+		$this->return_data = "Oh hai from the module";
 
 	}
 
@@ -51,7 +52,7 @@ $this->EE->TMPL->tagdata= array();
 	function initialize()
 	{
 		$this->sql 			= '';
-		$this->return_data	= '';
+		//$this->return_data	= '';
 	}
 
 	// ------------------------------------------------------------------------
@@ -61,7 +62,7 @@ $this->EE->TMPL->tagdata= array();
 	  */
 	function test()
 	{
-		echo "oh hai";
+		return $this->return_data;
 	}
 
 
