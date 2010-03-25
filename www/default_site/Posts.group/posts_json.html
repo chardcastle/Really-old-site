@@ -1,0 +1,12 @@
+[{exp:channel:entries
+channel="posts"
+orderby="date" 
+limit="8"
+paginate="top"
+backspace="2"}
+<?php $firstDate = "{entry_date format='%d%S %M %Y'}"; ?>
+{"index":"box{count}",		
+	"title":"{title}",
+	"body":"{exp:whitespace}{body}{/exp:whitespace}"	
+},{paginate} {/paginate}
+{/exp:channel:entries}]
