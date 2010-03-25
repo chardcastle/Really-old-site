@@ -60,7 +60,7 @@ class Welcome_Controller extends Template_Controller {
 				//$date = str_replace("T"," ",$commit->{"committed-date"});
 				$date = $commit->{"committed-date"};
 				$this->template->content->test .= "<pre>".date("dS m h:m",strtotime($date)).$commit->message."</pre>";				
-			}			
+			}
 			//$this->template->content->test .= Kohana::debug($post->message);			
 		}
 		$xml = new SimpleXMLElement($myTweets);
