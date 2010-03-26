@@ -16,12 +16,14 @@ class Welcome_Controller extends Template_Controller {
 
 	// Set the name of the template to use
 	public $template = 'kohana/template';
-
+	private $db;
+	
 	public function index()
-	{
+	{	
+		$this->db = new Database('local');
 		// In Kohana, all views are loaded and treated as objects.
 		$this->template->content = new View('welcome_content');
-
+	
 		// You can assign anything variable to a view by using standard OOP
 		// methods. In my welcome view, the $title variable will be assigned
 		// the value I give it here.
@@ -38,7 +40,14 @@ class Welcome_Controller extends Template_Controller {
 			'License'       => 'Kohana License.html',
 			'Donate'        => 'http://kohanaphp.com/donate',
 		);
-		$this->template->test = "";
+		$this->template->content->test = "";
+		/**/
+		$table = $this->db->query("SELECT * FROM exp_channel_data limit 0,1
+");
+		foreach($table->result_array(false) as $row){
+			$this->template->content->test = Kohana::debug($row);	
+		}
+		/**/
 		foreach (array('agent', 'browser', 'version') as $key)
 		{
 			$this->template->content->test = $key.': '.Kohana::user_agent($key).'<br/>'."\n";
@@ -50,38 +59,47 @@ class Welcome_Controller extends Template_Controller {
 		// Parse an external atom feed		
 		$myTummy = feed::parse('http://hardcastle.tumblr.com/rss');
 		$myTweets = file_get_contents('https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20twitter.user.timeline%20where%20id%3D%22hardcastle%22&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys');
-		$jQueryfeed = file_get_contents("http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20github.repo.commits%20where%20id%3D'jquery'%20and%20repo%3D'jquery'&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
+		$repoName = "jQuery";
+		$jQueryfeed = file_get_contents("http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20github.repo.commits%20where%20id%3D'jquery'%20and%20repo%3D'".strtolower($repoName)."'&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
 		$xml = new SimpleXMLElement($jQueryfeed);
 		//$this->template->content->test .= Kohana::debug($xml);
+		//kohana::log("debug",Kohana::debug($post));
 		$this->template->content->test .= "<h2>Jquery dev</h2>";
-		foreach($xml->results->commits as $post){
-			//kohana::log("debug",Kohana::debug($post));
-			foreach($post as $commit){
-				//$date = str_replace("T"," ",$commit->{"committed-date"});
-				$date = $commit->{"committed-date"};
-				$this->template->content->test .= "<pre>".date("dS m h:m",strtotime($date)).$commit->message."</pre>";				
-			}
-			//$this->template->content->test .= Kohana::debug($post->message);			
+		foreach($xml->results->commits as $post){			
+			foreach($post as $commit){				
+				$created = strtotime($commit->{"committed-date"});				
+				$this->db->insert("kh_posts",array(
+					"title"=>"{$repoName}",
+					"content"=>"{$commit->message}",
+					"created_dt"=>"{$created}",					
+					"modified_dt"=>time(),
+					"type" => "gitcommit"
+				));
+			}						
 		}
-		$xml = new SimpleXMLElement($myTweets);
-		//$this->template->content->test .= Kohana::debug($xml);
-		$this->template->content->test .= "<h2>Twitter</h2>";
-		foreach($xml->results->entry as $post){
-			kohana::log("debug",Kohana::debug($post));
-			/*foreach($post as $tweet){
-				$this->template->content->test .= "<pre>".$tweet->content."</pre>";				
-			}*/			
-			$this->template->content->test .= "<pre>".date("dS m h:m",strtotime($post->published)).$post->content."</pre>";			
-			//$this->template->content->test .= Kohana::debug($post->message);			
-		}		
+		$xml = new SimpleXMLElement($myTweets);		
+		foreach($xml->results->entry as $post){			
+			$created = strtotime($post->published);			
+			$this->db->insert("kh_posts",array(
+				"title"=>"tweet",
+				"content"=>"{$post->content}",
+				"created_dt"=>"{$created}",					
+				"modified_dt"=>time(),
+				"type" => "tweet"
+			));
+		}
+		/**/		
 		$this->template->content->test .= "<h2>Tumblr</h2>";
 		foreach($myTummy as $post){
-			$this->template->content->test .= "<pre>".$post["description"]."</pre>";			
+			$created = strtotime($post['pubDate']);
+			$this->db->insert("kh_posts",array(
+				"title"=>"tumblr",
+				"content"=>"{$post['description']}",
+				"created_dt"=>"{$created}",					
+				"modified_dt"=>time(),
+				"type" => "tumblr"
+			));
 		}
-		//$this->template->content->test = $xml->commit->message;
-		// Show debug info
-		//$this->template->content->test .= Kohana::debug($xml);
-
 		$this->template->content->test .= Kohana::lang('core.stats_footer');
 	}
 
