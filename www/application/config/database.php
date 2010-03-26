@@ -23,7 +23,7 @@
  *  cache         - Enable or disable query caching
  *	escape        - Enable automatic query builder escaping
  */
-$config['default'] = array
+$config['local'] = array
 (
 	'benchmark'     => TRUE,
 	'persistent'    => FALSE,
