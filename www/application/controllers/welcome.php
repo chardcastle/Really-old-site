@@ -19,7 +19,13 @@ class Welcome_Controller extends Template_Controller {
 	private $db;
 	
 	public function index()
-	{	
+	{
+		/*
+		 * Useful snippets
+		 * 	$this->template->content->test .= Kohana::debug($xml);
+		 *  kohana::log("debug",Kohana::debug($post));	
+		 */
+		
 		$this->db = new Database('local');
 		// In Kohana, all views are loaded and treated as objects.
 		$this->template->content = new View('welcome_content');
@@ -41,17 +47,19 @@ class Welcome_Controller extends Template_Controller {
 			'Donate'        => 'http://kohanaphp.com/donate',
 		);
 		$this->template->content->test = "";
-		/**/
-		$table = $this->db->query("SELECT * FROM exp_channel_data limit 0,1
-");
+/* */
+		//$table = $this->db->query("select * from kh_posts");
+		$this->db->select("post_id")
+		->from("kh_posts")
+		->limit(1)
+		->get();
+		
+		$test = $this->db->get()->result_array(true);
+		$this->template->content->test = "<pre>".$test->post_id."</pre>";		
+/*
 		foreach($table->result_array(false) as $row){
 			$this->template->content->test = Kohana::debug($row);	
-		}
-		/**/
-		foreach (array('agent', 'browser', 'version') as $key)
-		{
-			$this->template->content->test = $key.': '.Kohana::user_agent($key).'<br/>'."\n";
-		}
+		}		
 
 		$this->template->content->test .=  "<br/><br/>\n";
 		$this->template->content->test .= 'done in {execution_time} seconds';	
@@ -62,9 +70,7 @@ class Welcome_Controller extends Template_Controller {
 		$repoName = "jQuery";
 		$jQueryfeed = file_get_contents("http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20github.repo.commits%20where%20id%3D'jquery'%20and%20repo%3D'".strtolower($repoName)."'&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
 		$xml = new SimpleXMLElement($jQueryfeed);
-		//$this->template->content->test .= Kohana::debug($xml);
-		//kohana::log("debug",Kohana::debug($post));
-		$this->template->content->test .= "<h2>Jquery dev</h2>";
+			
 		foreach($xml->results->commits as $post){			
 			foreach($post as $commit){				
 				$created = strtotime($commit->{"committed-date"});				
@@ -88,8 +94,7 @@ class Welcome_Controller extends Template_Controller {
 				"type" => "tweet"
 			));
 		}
-		/**/		
-		$this->template->content->test .= "<h2>Tumblr</h2>";
+				
 		foreach($myTummy as $post){
 			$created = strtotime($post['pubDate']);
 			$this->db->insert("kh_posts",array(
@@ -100,6 +105,7 @@ class Welcome_Controller extends Template_Controller {
 				"type" => "tumblr"
 			));
 		}
+		/**/
 		$this->template->content->test .= Kohana::lang('core.stats_footer');
 	}
 
