@@ -48,65 +48,76 @@ class Welcome_Controller extends Template_Controller {
 		);
 		$this->template->content->test = "";
 /* */
-		//$table = $this->db->query("select * from kh_posts");
-		$this->db->select("post_id")
-		->from("kh_posts")
+		//Get the most recent post
+		$mostRecentPost = $this->db->select("created_dt")
+		->from("kh_posts")		
 		->limit(1)
-		->get();
-		
-		$test = $this->db->get()->result_array(true);
-		$this->template->content->test = "<pre>".$test->post_id."</pre>";		
-/*
-		foreach($table->result_array(false) as $row){
-			$this->template->content->test = Kohana::debug($row);	
-		}		
+		->orderby("created_dt","desc")
+		->get()
+		->result_array(true);				
 
-		$this->template->content->test .=  "<br/><br/>\n";
-		$this->template->content->test .= 'done in {execution_time} seconds';	
-
+		$mostRecentPost = $mostRecentPost[0]->created_dt;
+				 		
+		/*
+		 * Look for new posts that are newer than the last lot. 
+		 */
 		// Parse an external atom feed		
 		$myTummy = feed::parse('http://hardcastle.tumblr.com/rss');
 		$myTweets = file_get_contents('https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20twitter.user.timeline%20where%20id%3D%22hardcastle%22&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys');
 		$repoName = "jQuery";
 		$jQueryfeed = file_get_contents("http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20github.repo.commits%20where%20id%3D'jquery'%20and%20repo%3D'".strtolower($repoName)."'&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
 		$xml = new SimpleXMLElement($jQueryfeed);
-			
+		
+		// jQuery github activity	
 		foreach($xml->results->commits as $post){			
 			foreach($post as $commit){				
-				$created = strtotime($commit->{"committed-date"});				
-				$this->db->insert("kh_posts",array(
-					"title"=>"{$repoName}",
-					"content"=>"{$commit->message}",
-					"created_dt"=>"{$created}",					
-					"modified_dt"=>time(),
-					"type" => "gitcommit"
-				));
+				$created = strtotime($commit->{"committed-date"});
+				if($created > $mostRecentPost){					
+					// Yay, a new post, save it!				
+					$this->db->insert("kh_posts",array(
+						"title"=>"{$repoName}",
+						"content"=>"{$commit->message}",
+						"created_dt"=>"{$created}",					
+						"modified_dt"=>time(),
+						"type" => "gitcommit"
+					));
+					kohana::log("debug",Kohana::debug("Found a new ".$repoName." commit ... saved"));
+				}
 			}						
 		}
+		// Tweets
 		$xml = new SimpleXMLElement($myTweets);		
 		foreach($xml->results->entry as $post){			
-			$created = strtotime($post->published);			
-			$this->db->insert("kh_posts",array(
-				"title"=>"tweet",
-				"content"=>"{$post->content}",
-				"created_dt"=>"{$created}",					
-				"modified_dt"=>time(),
-				"type" => "tweet"
-			));
-		}
-				
+			$created = strtotime($post->published);	
+			if($created > $mostRecentPost){
+				// Yay, a new post, save it!
+				$this->db->insert("kh_posts",array(
+					"title"=>"tweet",
+					"content"=>"{$post->content}",
+					"created_dt"=>"{$created}",					
+					"modified_dt"=>time(),
+					"type" => "tweet"
+				));
+				kohana::log("debug",Kohana::debug("Found a new Tweet ... saved"));
+			}
+			
+		}		
+		// Tumblr		
 		foreach($myTummy as $post){
 			$created = strtotime($post['pubDate']);
-			$this->db->insert("kh_posts",array(
-				"title"=>"tumblr",
-				"content"=>"{$post['description']}",
-				"created_dt"=>"{$created}",					
-				"modified_dt"=>time(),
-				"type" => "tumblr"
-			));
+			if($created > $mostRecentPost){
+				// Yay, a new post, save it!			
+				$this->db->insert("kh_posts",array(
+					"title"=>"tumblr",
+					"content"=>"{$post['description']}",
+					"created_dt"=>"{$created}",					
+					"modified_dt"=>time(),
+					"type" => "tumblr"
+				));
+				kohana::log("debug",Kohana::debug("Found a new Tumblr post ... saved"));
+			}
 		}
-		/**/
-		$this->template->content->test .= Kohana::lang('core.stats_footer');
+		/**/		
 	}
 
 	public function __call($method, $arguments)
