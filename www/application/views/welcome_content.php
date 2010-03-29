@@ -22,13 +22,19 @@ My test <?php echo $test; ?>
 These are my posts
 <?php
 
-foreach($posts as $key => $post){
+foreach($posts as $posts){
 	//echo $post->title."<br/>";
-	$content = $post->content;
+	/*$content = $post->content;
 	if($post->teaser !== null){
 		$content = $post->teaser;	
-	}	
-	echo "<div style='border:3px solid #fff;marign:6px'>".$post->title."#".$content."</div>";
+	}*/	
+	echo "<div style='border:3px solid #fff;marign:6px'>";
+	foreach($posts as $post){
+		
+		echo "<p>".$post."</p>";		
+	}
+	echo "</div>\n";
+	
 	
 }
 ?>
