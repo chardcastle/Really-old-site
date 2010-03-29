@@ -25,11 +25,12 @@ class Welcome_Controller extends Template_Controller {
 		 * 	$this->template->content->test .= Kohana::debug($xml);
 		 *  kohana::log("debug",Kohana::debug($post));	
 		 */
-		
+		// Load database
 		$this->db = new Database('local');
-		// In Kohana, all views are loaded and treated as objects.
+		// Load template
 		$this->template->content = new View('welcome_content');
-	
+		$postObj = new Post_Model;
+		$myDataSources = $postObj->getDataSourceUrls();
 		// You can assign anything variable to a view by using standard OOP
 		// methods. In my welcome view, the $title variable will be assigned
 		// the value I give it here.
@@ -45,79 +46,52 @@ class Welcome_Controller extends Template_Controller {
 			'Forum'         => 'http://forum.kohanaphp.com/',
 			'License'       => 'Kohana License.html',
 			'Donate'        => 'http://kohanaphp.com/donate',
+			'jQuery'		=> $myDataSources["github"]["jquery"]
 		);
-		$this->template->content->test = "";
-/* */
-		//Get the most recent post
+		// get some posts as test
+		/*$posts = $this->db->select("created_dt")
+		->from("kh_posts")
+		->get()
+		->array_result(true);
+		*/
+		/* WORKS
+		$this->template->content->posts = $this->db->select("*")
+		->from("kh_posts")		
+		->limit(6,9)
+		->orderby("created_dt","desc")
+		->get()
+		->result_array(true);		
+		*/	
+		//$this->template->content->posts = $this->db->query("select * from kh_posts group by created_dt order by created_dt desc limit 0,9")->result_array(true);
+		$this->template->content->posts = $this->db->query("SELECT posts.type,from_unixtime(posts.created_dt) as date,posts.content, posts.* FROM (select * from kh_posts) as posts inner join kh_posts as dates on posts.created_dt = dates.created_dt GROUP BY posts.content order by posts.created_dt desc limit 0,10")->result_array(true);
+		//$this->template->content->posts = array();
+		/*
 		$mostRecentPost = $this->db->select("created_dt")
 		->from("kh_posts")		
 		->limit(1)
 		->orderby("created_dt","desc")
 		->get()
-		->result_array(true);				
-
-		$mostRecentPost = $mostRecentPost[0]->created_dt;
-				 		
-		/*
-		 * Look for new posts that are newer than the last lot. 
-		 */
-		// Parse an external atom feed		
-		$myTummy = feed::parse('http://hardcastle.tumblr.com/rss');
-		$myTweets = file_get_contents('https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20twitter.user.timeline%20where%20id%3D%22hardcastle%22&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys');
-		$repoName = "jQuery";
-		$jQueryfeed = file_get_contents("http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20github.repo.commits%20where%20id%3D'jquery'%20and%20repo%3D'".strtolower($repoName)."'&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
-		$xml = new SimpleXMLElement($jQueryfeed);
+		->result_array(true);	
 		
-		// jQuery github activity	
-		foreach($xml->results->commits as $post){			
-			foreach($post as $commit){				
-				$created = strtotime($commit->{"committed-date"});
-				if($created > $mostRecentPost){					
-					// Yay, a new post, save it!				
-					$this->db->insert("kh_posts",array(
-						"title"=>"{$repoName}",
-						"content"=>"{$commit->message}",
-						"created_dt"=>"{$created}",					
-						"modified_dt"=>time(),
-						"type" => "gitcommit"
-					));
-					kohana::log("debug",Kohana::debug("Found a new ".$repoName." commit ... saved"));
-				}
-			}						
+		
+		$this->template->content->posts = array();
+		foreach($posts as $post){				
+			$this->template->content->posts[] = array(
+			"title" => $post->title,
+			"content" => $post->content,
+			"created_dt" => date("d-m-y",$post->created_dt));
 		}
-		// Tweets
-		$xml = new SimpleXMLElement($myTweets);		
-		foreach($xml->results->entry as $post){			
-			$created = strtotime($post->published);	
-			if($created > $mostRecentPost){
-				// Yay, a new post, save it!
-				$this->db->insert("kh_posts",array(
-					"title"=>"tweet",
-					"content"=>"{$post->content}",
-					"created_dt"=>"{$created}",					
-					"modified_dt"=>time(),
-					"type" => "tweet"
-				));
-				kohana::log("debug",Kohana::debug("Found a new Tweet ... saved"));
-			}
-			
-		}		
-		// Tumblr		
-		foreach($myTummy as $post){
-			$created = strtotime($post['pubDate']);
-			if($created > $mostRecentPost){
-				// Yay, a new post, save it!			
-				$this->db->insert("kh_posts",array(
-					"title"=>"tumblr",
-					"content"=>"{$post['description']}",
-					"created_dt"=>"{$created}",					
-					"modified_dt"=>time(),
-					"type" => "tumblr"
-				));
-				kohana::log("debug",Kohana::debug("Found a new Tumblr post ... saved"));
-			}
-		}
-		/**/		
+		/**/
+		$this->template->content->test = "Oh hai!";
+		
+	}
+	
+	public function saveNewPosts(){
+		
+		$postObj = new Post_Model;		
+		$inserts = $postObj->searchForNewPosts();
+		echo Kohana::debug($inserts);
+		exit;
 	}
 
 	public function __call($method, $arguments)
