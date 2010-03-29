@@ -86,19 +86,19 @@ class Post_Model extends Model {
 			if($created > $mostRecentPost || !$mostRecentPost){
 				// Yay, a new post, save it!
 				$content = $post['description'];
-				$teaser = "";
-				$break = strpos($post['description'],"<!-- more -->");	
-				if($break !== false){					
-					$teaser = substr($content,0,$break);
-				}		
-				$this->db->insert("kh_posts",array(
+				$query = $this->db->insert("kh_posts",array(
 					"title"=>"tumblr",
 					"content"=>"{$content}",
-					"created_dt"=>"{$created}",
-					"teaser" => "{$teaser}",					
+					"created_dt"=>"{$created}",										
 					"modified_dt"=>time(),
 					"type" => "tumblr"
-				));
+				));				
+				$break = strpos($post['description'],"<!-- more -->");
+				$insertId = $query->insert_id();
+				if($break !== false){					
+					$teaser = substr($content,0,$break);
+					$this->db->from('kh_posts')->set(array('teaser' => '{$teaser}'))->where(array('post_id' => $insertId))->update();
+				}				
 				$numberOfNewPosts++;
 				kohana::log("debug",Kohana::debug("Found a new Tumblr post ... saved"));
 			}
