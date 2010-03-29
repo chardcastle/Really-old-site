@@ -17,3 +17,19 @@
 <div>
 My test <?php echo $test; ?>
 </div>
+
+<div>
+These are my posts
+<?php
+
+foreach($posts as $key => $post){
+	//echo $post->title."<br/>";
+	$content = $post->content;
+	if($post->teaser !== null){
+		$content = $post->teaser;	
+	}	
+	echo "<div style='border:3px solid #fff;marign:6px'>".$post->title."#".$content."</div>";
+	
+}
+?>
+</div>
