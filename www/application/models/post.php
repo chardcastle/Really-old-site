@@ -10,7 +10,7 @@ class Post_Model extends Model {
 		parent::__construct();
 		$this->urls = array(
 			"tweets" => 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20twitter.user.timeline%20where%20id%3D%22hardcastle%22&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys',
-			"tumblr" => 'http://hardcastle.tumblr.com/rss',
+			"tumblr" => "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20tumblr.posts%20where%20username%3D'hardcastle'&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys",
 			"github" => array("jquery"=>"http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20github.repo.commits%20where%20id%3D'jquery'%20and%20repo%3D'jquery'&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys")
 		);
 	}
@@ -34,7 +34,7 @@ class Post_Model extends Model {
 		kohana::log("debug","Looking for posts newer than ".date("d-m-y",$mostRecentPost));		
 
 		// Parse an external atom feed		
-		$myTummy = feed::parse($this->urls["tumblr"]);
+		$myTummy = file_get_contents($this->urls["tumblr"]);
 		$myTweets = file_get_contents($this->urls["tweets"]);		
 		$jQueryfeed = file_get_contents($this->urls["github"]["jquery"]);
 		$numberOfNewPosts = 0;
@@ -79,28 +79,75 @@ class Post_Model extends Model {
 			
 		}		
 		// Tumblr		
-		$first = true;
-		foreach($myTummy as $post){
-			$created = strtotime($post['pubDate']);
+		$xml = new SimpleXMLElement($myTummy);	
+		foreach($xml->results->posts->post as $post){			
+			$created = strtotime($post["date"]);
+			kohana::log("debug","Tumblr post detected of type ".$post["type"]." on:".$post["date"] );
 			// Unless override is on, only include if new			
 			if($created > $mostRecentPost || !$mostRecentPost){
 				// Yay, a new post, save it!
-				$content = $post['description'];
-				$query = $this->db->insert("kh_posts",array(
-					"title"=>"tumblr",
-					"content"=>"{$content}",
-					"created_dt"=>"{$created}",										
-					"modified_dt"=>time(),
-					"type" => "tumblr"
-				));				
-				$break = strpos($post['description'],"<!-- more -->");
-				$insertId = $query->insert_id();
-				if($break !== false){					
-					$teaser = substr($content,0,$break);
-					$this->db->from('kh_posts')->set(array('teaser' => '{$teaser}'))->where(array('post_id' => $insertId))->update();
-				}				
-				$numberOfNewPosts++;
-				kohana::log("debug",Kohana::debug("Found a new Tumblr post ... saved"));
+				$content = json_encode($post);
+				$title = $post["type"];
+				/*		
+				$content = false;
+				$title = false;
+				$type = $post["type"];
+				switch($type){
+					case "photo":
+						
+						$photoData = array();
+						foreach($post->{"photo-url"} as $key => $val){
+							kohana::log("debug","Tumblr post data val:".$val." key:".$key);
+							//$photoUrls[] = array("size"=>$key["max-width"],"url"=>$val);
+							//$photoUrls[] = $val;							
+							$photoData[] = $val;
+						}
+						$photoData["caption"] = $post->{"photo-caption"}; 
+						$content = json_encode($photoData);
+						
+						$content = json_encode($post);
+						$title = $type;
+						//kohana::log("debug","Tumblr post data content:".$content." title:".$title);
+						break;
+					case "link":
+						$content = $post->{"link-text"};
+						$title = $post->{"link-url"};
+						kohana::log("debug","Tumblr post data content:".$content." title:".$title);
+						break;	
+					case "regular":
+						$content = $post->{"regular-body"};
+						$title = $post->{"regular-slug"};
+						//kohana::log("debug","Tumblr post data content:".$content." title:".$title);
+						break;
+					case "video":
+						$content = $post->{"video-player"};
+						$title = $post->{"video-caption"};	
+						kohana::log("debug","Tumblr post data content:".$content." title:".$title);
+						break;
+					default:
+						$content = false;						
+						break;																		
+				}
+				*/
+				if($content && $title){
+					$query = $this->db->insert("kh_posts",array(
+						"title"=>"{$title}",
+						"content"=>"{$content}",
+						"created_dt"=>"{$created}",										
+						"modified_dt"=>time(),
+						"type" => "tumblr"
+					));
+					kohana::log("debug","Tumblr last query was ".$this->db->last_query());
+					// Now make a teaser
+					$break = strpos($content,"<!-- more -->");
+					$insertId = $query->insert_id();
+					if($break !== false){					
+						$teaser = substr($content,0,$break);
+						$this->db->from('kh_posts')->set(array("teaser" => "{$teaser}"))->where(array('post_id' => $insertId))->update();
+					}
+					$numberOfNewPosts++;
+					kohana::log("debug","Found a new Tumblr post ... saved");
+				}
 			}
 		}
 		return $numberOfNewPosts;

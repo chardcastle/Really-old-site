@@ -30,7 +30,10 @@ foreach($posts as $posts){
 	}*/	
 	echo "<div style='border:3px solid #fff;marign:6px'>";
 	foreach($posts as $post){
-		
+		if($post["type"] == "tumblr" && $post["title"] == "photo"){
+			$content = json_decode($post);
+			echo "<img src=''";
+		}
 		echo "<p>".$post."</p>";		
 	}
 	echo "</div>\n";
