@@ -21,24 +21,41 @@ My test <?php echo $test; ?>
 <div>
 These are my posts
 <?php
+//var_dump($posts);
+/* */ 
 
-foreach($posts as $posts){
-	//echo $post->title."<br/>";
-	/*$content = $post->content;
-	if($post->teaser !== null){
-		$content = $post->teaser;	
-	}*/	
-	echo "<div style='border:3px solid #fff;marign:6px'>";
+	//echo $post->title."<br/>";	 
+
+
 	foreach($posts as $post){
-		if($post["type"] == "tumblr" && $post["title"] == "photo"){
-			$content = json_decode($post);
-			echo "<img src=''";
-		}
-		echo "<p>".$post."</p>";		
+		echo "<div style='border:3px solid #fff;marign:6px'>";
+			foreach($post as $p){				
+				/*  	
+					if(isset($p["tiny"])){
+						echo "<img src='".stripslashes($p["image"])."' alt='' />";
+					}else{
+						echo $p."<br/>";
+						
+					}
+					/* */				
+					if(is_a($p,"Photo_Model")){
+						echo "<img src='".$p->urls["small"]."' alt='' />";
+						
+					}else{
+						echo "<p>".var_dump($p)."</p>";
+						
+					}
+					
+					
+				
+			}	
+		echo "</div>\n";
 	}
-	echo "</div>\n";
+				
 	
 	
-}
+	
+
+/* */
 ?>
 </div>

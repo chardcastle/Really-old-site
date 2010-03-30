@@ -64,19 +64,53 @@ class Welcome_Controller extends Template_Controller {
 		*/	
 		//$this->template->content->posts = $this->db->query("select * from kh_posts group by created_dt order by created_dt desc limit 0,9")->result_array(true);
 		$posts = $this->db->query("SELECT posts.type,from_unixtime(posts.created_dt,'%d-%m-%y') as dateKey,posts.content, posts.* FROM (select * from kh_posts) as posts inner join kh_posts as dates on posts.created_dt = dates.created_dt GROUP BY posts.content order by posts.created_dt desc")->result_array(true);
-		$this->template->content->posts = array();
+		$myPosts = array();
 		foreach($posts as $key => $value){
 			$content = $value->content;
-			if($value->teaser !== null){
-				$content = $value->teaser;	
-			}			
-			if(!array_key_exists($value->dateKey,$this->template->content->posts)){
-				$this->template->content->posts[$value->dateKey] = array($content);				
+			if($value->type == "tumblr"){				
+				$contentJson = json_decode($content);
+				
+				/* */
+				if(!$contentJson){					
+					kohana::log("debug","failed to decode");				
+				}else{
+					
+					kohana::log("debug","Found json");
+					//kohana::log("debug",print_r($contentJson,true));
+					$json = $contentJson->{"@attributes"};
+					if(is_object($json) && $json->type =="photo"){
+						$photoObj = new Photo_Model;
+						$photoObj->urls["small"] = $json->tiny;
+						$photoObj->title = "Test";//$json->{"photo-caption"};
+						$content = $photoObj;						
+					}
+					/*
+					foreach($contentJson as $meta){
+						// handel photo				
+						if($value->title == "photo"){
+							if(is_object($meta)){
+								$content = array("image"=>$meta->tiny);
+							}else{
+								$content = "fail";								
+							}			
+						}
+					}
+					/**/										
+				}
+				/**/
+			// use teaser if available
+			}else if($value->teaser !== null){
+				$content = $value->teaser;					
+			}
+			// load into result array
+			if(!array_key_exists($value->dateKey,$myPosts)){
+				$myPosts[$value->dateKey] = array($content);				
 			}else{
-				$this->template->content->posts[$value->dateKey][] = $content;				
+				$myPosts[$value->dateKey][] = $content;				
 			}	
 			
 		}
+		$this->template->content->posts = $myPosts;
 		//$this->template->content->posts = array();
 		/*
 		$mostRecentPost = $this->db->select("created_dt")
