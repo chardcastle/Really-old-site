@@ -86,49 +86,20 @@ class Post_Model extends Model {
 			// Unless override is on, only include if new			
 			if($created > $mostRecentPost || !$mostRecentPost){
 				// Yay, a new post, save it!
-				$content = json_encode($post);
-				$title = $post["type"];
-				/*		
-				$content = false;
-				$title = false;
-				$type = $post["type"];
-				switch($type){
-					case "photo":
-						
-						$photoData = array();
-						foreach($post->{"photo-url"} as $key => $val){
-							kohana::log("debug","Tumblr post data val:".$val." key:".$key);
-							//$photoUrls[] = array("size"=>$key["max-width"],"url"=>$val);
-							//$photoUrls[] = $val;							
-							$photoData[] = $val;
-						}
-						$photoData["caption"] = $post->{"photo-caption"}; 
-						$content = json_encode($photoData);
-						
-						$content = json_encode($post);
-						$title = $type;
-						//kohana::log("debug","Tumblr post data content:".$content." title:".$title);
-						break;
-					case "link":
-						$content = $post->{"link-text"};
-						$title = $post->{"link-url"};
-						kohana::log("debug","Tumblr post data content:".$content." title:".$title);
-						break;	
-					case "regular":
-						$content = $post->{"regular-body"};
-						$title = $post->{"regular-slug"};
-						//kohana::log("debug","Tumblr post data content:".$content." title:".$title);
-						break;
-					case "video":
-						$content = $post->{"video-player"};
-						$title = $post->{"video-caption"};	
-						kohana::log("debug","Tumblr post data content:".$content." title:".$title);
-						break;
-					default:
-						$content = false;						
-						break;																		
+				$title = $post["type"];				
+				if($title == "photo"){
+					foreach($post->{"photo-url"} as $photo){
+						if(strpos($photo,"500") !== false){
+							$post["large"] = $photo;						
+						}else if(strpos($photo,"250") !== false){
+							$post["small"] = $photo;							
+						}else if(strpos($photo,"75") !== false){
+							$post["tiny"] = $photo;							
+						}					
+					}
 				}
-				*/
+				$content = json_encode($post);
+								
 				if($content && $title){
 					$query = $this->db->insert("kh_posts",array(
 						"title"=>"{$title}",
@@ -143,7 +114,10 @@ class Post_Model extends Model {
 					$insertId = $query->insert_id();
 					if($break !== false){					
 						$teaser = substr($content,0,$break);
-						$this->db->from('kh_posts')->set(array("teaser" => "{$teaser}"))->where(array('post_id' => $insertId))->update();
+						$this->db->from('kh_posts')
+						->set(array("teaser" => "{$teaser}"))
+						->where(array('post_id' => $insertId))
+						->update();
 					}
 					$numberOfNewPosts++;
 					kohana::log("debug","Found a new Tumblr post ... saved");
