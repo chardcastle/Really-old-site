@@ -48,87 +48,59 @@ class Welcome_Controller extends Template_Controller {
 			'Donate'        => 'http://kohanaphp.com/donate',
 			'jQuery'		=> $myDataSources["github"]["jquery"]
 		);
-		// get some posts as test
-		/*$posts = $this->db->select("created_dt")
-		->from("kh_posts")
-		->get()
-		->array_result(true);
-		*/
-		/* WORKS
-		$this->template->content->posts = $this->db->select("*")
-		->from("kh_posts")		
-		->limit(6,9)
-		->orderby("created_dt","desc")
-		->get()
-		->result_array(true);		
-		*/	
-		//$this->template->content->posts = $this->db->query("select * from kh_posts group by created_dt order by created_dt desc limit 0,9")->result_array(true);
+
 		$posts = $this->db->query("SELECT posts.type,from_unixtime(posts.created_dt,'%d-%m-%y') as dateKey,posts.content, posts.* FROM (select * from kh_posts) as posts inner join kh_posts as dates on posts.created_dt = dates.created_dt GROUP BY posts.content order by posts.created_dt desc")->result_array(true);
 		$myPosts = array();
 		foreach($posts as $key => $value){
 			$content = $value->content;
 			if($value->type == "tumblr"){				
-				$contentJson = json_decode($content);
-				
+				$contentJson = json_decode($content);				
 				/* */
 				if(!$contentJson){					
 					kohana::log("debug","failed to decode");				
-				}else{
-					
+				}else{					
 					kohana::log("debug","Found json");
-					//kohana::log("debug",print_r($contentJson,true));
-					$json = $contentJson->{"@attributes"};
+					$json = $contentJson->{"@attributes"};					
 					if(is_object($json) && $json->type =="photo"){
 						$photoObj = new Photo_Model;
 						$photoObj->urls["small"] = $json->tiny;
 						$photoObj->title = "Test";//$json->{"photo-caption"};
-						$content = $photoObj;						
+						$view = new View("summary_photo");
+						$view->set("photo",$photoObj);
+						$content = $view->render();						
+					}else if(is_object($json) && $json->type =="regular"){						
+						$regObj = new Regular_Model;
+						preg_match('/\"regular-title\"\:\"(.*)\",/i',$content,$title);
+						$title = (isset($title[0]))?explode(":",$title[0]):false;
+						preg_match('/\"regular-body\"\:\"(.*)\"/i',$content,$body);
+						$body = (isset($body[0]))?explode(":",$body[0]):false;												
+						$body = (isset($body[1]))?$body[1]:false;
+						$end = strpos($body,"<!-- more -->");
+						$regObj->title = (isset($title[1]))?$title[1]:"";										
+						$regObj->teaser = ($body)?substr(strip_tags($body),0,($end!==false)?$end:strlen($body)):"?";
+						$view = new View("summary_regular");
+						$view->set("article",$regObj);
+						$content = $view->render();
 					}
-					/*
-					foreach($contentJson as $meta){
-						// handel photo				
-						if($value->title == "photo"){
-							if(is_object($meta)){
-								$content = array("image"=>$meta->tiny);
-							}else{
-								$content = "fail";								
-							}			
-						}
-					}
-					/**/										
 				}
-				/**/
+			}	
+			/*
 			// use teaser if available
-			}else if($value->teaser !== null){
+			}else if(strlen($value->teaser)>0){
 				$content = $value->teaser;					
 			}
+			/**/
 			// load into result array
-			if(!array_key_exists($value->dateKey,$myPosts)){
-				$myPosts[$value->dateKey] = array($content);				
+			$key = date("dS M y",$value->created_dt);
+			if(!array_key_exists($key,$myPosts)){
+				$myPosts[$key] = array($content);				
 			}else{
-				$myPosts[$value->dateKey][] = $content;				
+				$myPosts[$key][] = $content;				
 			}	
 			
 		}
 		$this->template->content->posts = $myPosts;
-		//$this->template->content->posts = array();
-		/*
-		$mostRecentPost = $this->db->select("created_dt")
-		->from("kh_posts")		
-		->limit(1)
-		->orderby("created_dt","desc")
-		->get()
-		->result_array(true);	
-		
-		
-		$this->template->content->posts = array();
-		foreach($posts as $post){				
-			$this->template->content->posts[] = array(
-			"title" => $post->title,
-			"content" => $post->content,
-			"created_dt" => date("d-m-y",$post->created_dt));
-		}
-		/**/
+
 		$this->template->content->test = "Oh hai!";
 		
 	}
