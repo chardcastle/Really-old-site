@@ -110,10 +110,11 @@ class Post_Model extends Model {
 					));
 					kohana::log("debug","Tumblr last query was ".$this->db->last_query());
 					// Now make a teaser
-					$break = strpos($content,"<!-- more -->");
+					$breakStart = strpos($content,"<!-- more -->");
+					$breakEnd = strlen($content);
 					$insertId = $query->insert_id();
 					if($break !== false){					
-						$teaser = substr($content,0,$break);
+						$teaser = substr($content,$breakStart,$breakEnd);
 						$this->db->from('kh_posts')
 						->set(array("teaser" => "{$teaser}"))
 						->where(array('post_id' => $insertId))

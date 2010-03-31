@@ -21,41 +21,18 @@ My test <?php echo $test; ?>
 <div>
 These are my posts
 <?php
-//var_dump($posts);
-/* */ 
-
-	//echo $post->title."<br/>";	 
-
-
-	foreach($posts as $post){
-		echo "<div style='border:3px solid #fff;marign:6px'>";
+	foreach($posts as $date => $post){
+		echo "<div style='border:3px solid #fff;marign:6px'><h4>".$date."</h4>";
 			foreach($post as $p){				
-				/*  	
-					if(isset($p["tiny"])){
-						echo "<img src='".stripslashes($p["image"])."' alt='' />";
-					}else{
-						echo $p."<br/>";
-						
-					}
-					/* */				
-					if(is_a($p,"Photo_Model")){
-						echo "<img src='".$p->urls["small"]."' alt='' />";
-						
-					}else{
-						echo "<p>".var_dump($p)."</p>";
-						
-					}
-					
-					
-				
+				if(is_a($p,"Photo_Model")){
+					echo "detected model";//"<img src='".$p->urls["small"]."' alt='' />";
+				}else{
+					//echo "<p>".var_dump($p)."</p>";
+					echo $p."<br/>";					
+				}
 			}	
 		echo "</div>\n";
 	}
-				
-	
-	
-	
-
 /* */
 ?>
 </div>

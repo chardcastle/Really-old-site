@@ -467,4 +467,14 @@ class Examples_Controller extends Controller {
 
 		echo 'done in {execution_time} seconds';
 	}
+	function hardcastle(){
+		// get some posts as test		
+		$this->template->content->posts = $this->db->select("*")
+		->from("kh_posts")		
+		->limit(6,9)
+		->orderby("created_dt","desc")
+		->get()
+		->result_array(true);		
+		
+	}
 } // End Examples
