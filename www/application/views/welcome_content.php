@@ -21,16 +21,13 @@ My test <?php echo $test; ?>
 <div>
 These are my posts
 <?php
-	foreach($posts as $date => $post){
-		echo "<div style='border:3px solid #fff;marign:6px'><h4>".$date."</h4>";
-			foreach($post as $p){				
-				if(is_a($p,"Photo_Model")){
-					echo "detected model";//"<img src='".$p->urls["small"]."' alt='' />";
-				}else{
-					//echo "<p>".var_dump($p)."</p>";
-					echo $p."<br/>";					
-				}
-			}	
+/* */
+	foreach($posts as $post){
+		echo "<div style='border:3px solid #fff;marign:6px'><h4>".$post->date."</h4>";
+		$features = json_decode($post->content); 
+		foreach($features as $f){			
+			echo "<p>".stripslashes($f)."</p>";
+		}				
 		echo "</div>\n";
 	}
 /* */

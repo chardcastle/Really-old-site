@@ -3,11 +3,12 @@
 class Post_Model extends Model {
 	 	
  	private $urls = array();
- 	
+ 	protected $db; // database instance
 	public function __construct()
 	{
 		// load database library into $this->db (can be omitted if not required)
 		parent::__construct();
+		$this->db = new Database('local');
 		$this->urls = array(
 			"tweets" => 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20twitter.user.timeline%20where%20id%3D%22hardcastle%22&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys',
 			"tumblr" => "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20tumblr.posts%20where%20username%3D'hardcastle'&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys",
@@ -21,7 +22,7 @@ class Post_Model extends Model {
 	public function searchForNewPosts(){
 		/* */
 		kohana::log("debug","Request for new posts detected");
-		$this->db = new Database('local');
+		//$this->db = new Database('local');
 		//Get the most recent post
 		$mostRecentPost = $this->db->select("*")
 		->from("kh_posts")		
@@ -113,7 +114,7 @@ class Post_Model extends Model {
 					$breakStart = strpos($content,"<!-- more -->");
 					$breakEnd = strlen($content);
 					$insertId = $query->insert_id();
-					if($break !== false){					
+					if($breakStart !== false){					
 						$teaser = substr($content,$breakStart,$breakEnd);
 						$this->db->from('kh_posts')
 						->set(array("teaser" => "{$teaser}"))
@@ -127,6 +128,73 @@ class Post_Model extends Model {
 		}
 		return $numberOfNewPosts;
 		/**/		
+	}
+	
+	/*
+	 * Remove all records from timeline
+	 * create new ones based on post source table 
+	 * */
+	public function digestNewPosts(){
+		// remove old records
+		$this->db->delete("kh_timeline",array("id >="=>0));
+			
+		$sql = <<<SQL
+			SELECT posts.type,
+				from_unixtime(posts.created_dt,'%d-%m-%y') AS dateKey,
+				posts.content, 
+				posts.* 
+				FROM (select * from kh_posts) AS posts 
+				INNER JOIN kh_posts AS dates ON posts.created_dt = dates.created_dt 
+				GROUP BY posts.content ORDER BY posts.created_dt DESC
+SQL;
+
+		$posts = $this->db->query($sql)->result_array(true);
+		$myPosts = array();
+		foreach($posts as $key => $value){
+			$content = $value->content;
+			if($value->type == "tumblr"){				
+				$contentJson = json_decode($content);				
+				/* */
+				if(!$contentJson){					
+					kohana::log("debug","failed to decode");				
+				}else{					
+					kohana::log("debug","Found json");
+					$json = $contentJson->{"@attributes"};
+					if(is_object($json) && isset($json->type)){
+						switch($json->type){
+							case "photo":
+								$photoObj = new Photo_Model;
+								$content = $photoObj->loadFromLocalSource($json);
+								break;						
+							case "regular":		
+								$regObj = new Regular_Model;				
+								$content = $regObj->loadFromLocalSource($content);
+								break;
+							case "link":	
+								$linkObj = new Link_Model;					
+								$content = $linkObj->loadFromLocalSource($content);
+								break;
+							case "video":		
+								$vidObj = new Video_Model;													
+								$content = $vidObj->loadFromLocalSource($content);	
+								break;							
+						}
+					}
+				}
+			}	
+			// load into result array
+			$key = date("dS M y",$value->created_dt);
+			if(!array_key_exists($key,$myPosts)){
+				$myPosts[$key] = array($content);				
+			}else{
+				$myPosts[$key][] = $content;				
+			}
+			// traverse and stick into table
+			foreach($myPosts as $key => $value){
+				$content = json_encode($value);
+				$this->db->insert("kh_timeline", array("date" => $key, "content" => "{$content}"));				
+			}	
+		}		
 	}
 	public function getPosts($page){
 		$this->db->select("*")
