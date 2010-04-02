@@ -48,8 +48,17 @@ class Welcome_Controller extends Template_Controller {
 			'Donate'        => 'http://kohanaphp.com/donate',
 			'jQuery'		=> $myDataSources["github"]["jquery"]
 		);
+		$sql = <<<SQL
+			SELECT posts.type,
+				from_unixtime(posts.created_dt,'%d-%m-%y') AS dateKey,
+				posts.content, 
+				posts.* 
+				FROM (select * from kh_posts) AS posts 
+				INNER JOIN kh_posts AS dates ON posts.created_dt = dates.created_dt 
+				GROUP BY posts.content ORDER BY posts.created_dt DESC
+SQL;
 
-		$posts = $this->db->query("SELECT posts.type,from_unixtime(posts.created_dt,'%d-%m-%y') as dateKey,posts.content, posts.* FROM (select * from kh_posts) as posts inner join kh_posts as dates on posts.created_dt = dates.created_dt GROUP BY posts.content order by posts.created_dt desc")->result_array(true);
+		$posts = $this->db->query($sql)->result_array(true);
 		$myPosts = array();
 		foreach($posts as $key => $value){
 			$content = $value->content;
@@ -70,29 +79,10 @@ class Welcome_Controller extends Template_Controller {
 								$content = $this->getRegularObj($content);
 								break;
 							case "link":						
-								$linkObj = new Link_Model;
-								preg_match('/\"link-text\"\:\"(.*)\",/i',$content,$this->result);
-								$linkObj->title = $this->getResult();
-								preg_match('/\"link-url\"\:\"(.*)\",/i',$content,$this->result);
-								$linkObj->destination = $this->getResult();
-								// view
-								$view = new View("item_summary/link");
-								$view->set("link",$linkObj);
-								$content = $view->render();
+								$content = $this->getLinkObj($content);
 								break;
 							case "video":							
-								$vidObj = new Video_Model;
-								// this preg statements use case insensitive and ungreedy match
-								preg_match('/\"video-caption\"\:\"(.*)\"/iU',$content,$this->result);
-								$vidObj->caption = strip_tags($this->getResult());
-								preg_match('/\"video-player\"\:\"(.*)\"/i',$content,$this->result);
-								$vidObj->player = stripslashes($this->getResult());
-								preg_match('/\"video-source\"\:\"(.*)\",/i',$content,$this->result);
-								$vidObj->source = $this->getResult();							
-								// view
-								$view = new View("item_summary/video");
-								$view->set("video",$vidObj);
-								$content = $view->render();
+								$content = $this->getVideoObj($content);	
 								break;							
 						}
 					}
@@ -179,5 +169,31 @@ class Welcome_Controller extends Template_Controller {
 		$view = new View("item_summary/regular");
 		$view->set("article",$regObj);
 		return $view->render();
+	}
+	private function getLinkObj($content){
+		$linkObj = new Link_Model;
+		preg_match('/\"link-text\"\:\"(.*)\",/i',$content,$this->result);
+		$linkObj->title = $this->getResult();
+		preg_match('/\"link-url\"\:\"(.*)\",/i',$content,$this->result);
+		$linkObj->destination = $this->getResult();
+		// view
+		$view = new View("item_summary/link");
+		$view->set("link",$linkObj);
+		$content = $view->render();	
+	}
+	private function getVideoObj($content){
+		$vidObj = new Video_Model;
+		// this preg statements use case insensitive and ungreedy match
+		preg_match('/\"video-caption\"\:\"(.*)\"/iU',$content,$this->result);
+		$vidObj->caption = strip_tags($this->getResult());
+		preg_match('/\"video-player\"\:\"(.*)\"/i',$content,$this->result);
+		$vidObj->player = stripslashes($this->getResult());
+		preg_match('/\"video-source\"\:\"(.*)\",/i',$content,$this->result);
+		$vidObj->source = $this->getResult();							
+		// view
+		$view = new View("item_summary/video");
+		$view->set("video",$vidObj);
+		$content = $view->render();		
+	
 	}
 } // End Welcome Controller
