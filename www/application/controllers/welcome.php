@@ -17,7 +17,7 @@ class Welcome_Controller extends Template_Controller {
 	// Set the name of the template to use
 	public $template = 'kohana/template';
 	private $db;
-	
+	private $result = array();	
 	public function index()
 	{
 		/*
@@ -70,21 +70,29 @@ class Welcome_Controller extends Template_Controller {
 						$content = $view->render();						
 					}else if(is_object($json) && $json->type =="regular"){						
 						$regObj = new Regular_Model;
-						$data = array();
-						preg_match('/\"regular-title\"\:\"(.*)\",/i',$content,$title);						
-						$data["title"] = (isset($title[0]))?json_decode("[{".$title[0]."}]"):array();
-						preg_match('/\"regular-body\"\:\"(.*)\"/i',$content,$body);						
-						$regObj->title = (isset($title[1]))?$title[1]:false;						
-						$body = (isset($body[1]))?$body[1]:false;
-						$pos = strpos($body,"<!-- more -->");
-						$pos = ($pos!==false)?$pos:strlen($body);									
+						// Get title						
+						preg_match('/\"regular-title\"\:\"(.*)\",/i',$content,$this->result);						
+						$regObj->title = $this->getResult();
+						// Get body
+						preg_match('/\"regular-body\"\:\"(.*)\"/i',$content,$this->result);						
+						$body = $this->getResult();
+						$pos = ($body)?strpos($body,"<!-- more -->"):false;
+						$pos = ($pos!==false)?$pos:$this->findTeaserLength(12,$body);									
 						$regObj->teaser = ($body)?nl2br(substr(strip_tags($body),0,$pos)):"?";
+						// view						
 						$view = new View("summary_regular");
 						$view->set("article",$regObj);
 						$content = $view->render();
-					}else if(is_object($json) && $json->type =="link"){
-						
-						
+					}else if(is_object($json) && $json->type =="link"){						
+						$linkObj = new Link_Model;
+						preg_match('/\"link-text\"\:\"(.*)\",/i',$content,$this->result);
+						$linkObj->title = $this->getResult();
+						preg_match('/\"link-url\"\:\"(.*)\",/i',$content,$this->result);
+						$linkObj->destination = $this->getResult();
+						// view
+						$view = new View("summary_link");
+						$view->set("link",$linkObj);
+						$content = $view->render();
 					}
 				}
 			}	
@@ -108,7 +116,26 @@ class Welcome_Controller extends Template_Controller {
 		$this->template->content->test = "Oh hai!";
 		
 	}
-	
+	/*
+	 * Find the length of teaser
+	 * If the word limit is greater than
+	 * the number of words, just use the whole string
+	 */
+	private function findTeaserLength($wordLimit,$body){		
+		$words = explode(' ',$body);
+		$i = ($wordLimit < $words)?count($words):$wordLimit;
+		$teaserText = "";
+		while($i > 0)
+	    {	    	
+		    $i--;
+		    $teaserText .= $words[$i]." ";
+	    }
+		return strlen($teaserText); 
+	}
+	private function getResult(){
+		return (isset($this->result[1]))?$this->result[1]:false;
+		
+	}
 	public function saveNewPosts(){
 		
 		$postObj = new Post_Model;		
