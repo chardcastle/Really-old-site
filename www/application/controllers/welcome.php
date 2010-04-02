@@ -73,16 +73,20 @@ SQL;
 					if(is_object($json) && isset($json->type)){
 						switch($json->type){
 							case "photo":
-								$content = $this->getPhotoObj($json);
+								$photoObj = new Photo_Model;
+								$content = $photoObj->loadFromLocalSource($json);
 								break;						
-							case "regular":						
-								$content = $this->getRegularObj($content);
+							case "regular":		
+								$regObj = new Regular_Model;				
+								$content = $regObj->loadFromLocalSource($content);
 								break;
-							case "link":						
-								$content = $this->getLinkObj($content);
+							case "link":	
+								$linkObj = new Link_Model;					
+								$content = $linkObj->loadFromLocalSource($content);
 								break;
-							case "video":							
-								$content = $this->getVideoObj($content);	
+							case "video":		
+								$vidObj = new Video_Model;													
+								$content = $vidObj->loadFromLocalSource($content);	
 								break;							
 						}
 					}
@@ -102,29 +106,15 @@ SQL;
 		$this->template->content->test = "Oh hai!";
 		
 	}
-	/*
-	 * Find the length of teaser
-	 * If the word limit is greater than
-	 * the number of words, just use the whole string
-	 */
-	private function findTeaserLength($wordLimit,$body){		
-		$words = explode(' ',$body);
-		$i = ($wordLimit < $words)?count($words):$wordLimit;
-		$teaserText = "";
-		while($i > 0)
-	    {	    	
-		    $i--;
-		    $teaserText .= $words[$i]." ";
-	    }
-		return strlen($teaserText); 
-	}
+
 	/*
 	 * return the array result for preg matches 
-	 * */
+	 * 
 	private function getResult(){
 		return (isset($this->result[1]))?$this->result[1]:false;
 		
 	}
+	*/
 	public function saveNewPosts(){
 		
 		$postObj = new Post_Model;		
@@ -145,7 +135,7 @@ SQL;
 	}
 	/*
 	 * Post type object creation
-	 * */
+	 * 
 	private function getPhotoObj($content){
 		$photoObj = new Photo_Model;
 		$photoObj->urls["small"] = $content->tiny;
@@ -170,6 +160,7 @@ SQL;
 		$view->set("article",$regObj);
 		return $view->render();
 	}
+	
 	private function getLinkObj($content){
 		$linkObj = new Link_Model;
 		preg_match('/\"link-text\"\:\"(.*)\",/i',$content,$this->result);
@@ -196,4 +187,5 @@ SQL;
 		$content = $view->render();		
 	
 	}
+	*/
 } // End Welcome Controller

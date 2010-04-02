@@ -13,6 +13,13 @@ class Photo_Model extends Model {
 			"small" => ""
 		);
 	}
+	public function loadFromLocalSource($content){		
+		$this->urls["small"] = $content->tiny;
+		$this->title = "Test";//$json->{"photo-caption"};
+		$view = new View("item_summary/photo");
+		$view->set("photo",$this);
+		return $view->render();		
+	}
 
  
 }
