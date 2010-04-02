@@ -61,8 +61,60 @@ class Welcome_Controller extends Template_Controller {
 				}else{					
 					kohana::log("debug","Found json");
 					$json = $contentJson->{"@attributes"};
-					if(is_object($json)){					
-						if($json->type =="photo"){
+					if(is_object($json) && isset($json->type)){
+						switch($json->type){
+							case "photo":
+								$photoObj = new Photo_Model;
+								$photoObj->urls["small"] = $json->tiny;
+								$photoObj->title = "Test";//$json->{"photo-caption"};
+								$view = new View("item_summary/photo");
+								$view->set("photo",$photoObj);
+								$content = $view->render();
+								break;						
+							case "regular":						
+								$regObj = new Regular_Model;
+								// Get title						
+								preg_match('/\"regular-title\"\:\"(.*)\",/i',$content,$this->result);						
+								$regObj->title = $this->getResult();
+								// Get body
+								preg_match('/\"regular-body\"\:\"(.*)\"/i',$content,$this->result);						
+								$body = $this->getResult();
+								$pos = ($body)?strpos($body,"<!-- more -->"):false;
+								$pos = ($pos!==false)?$pos:$this->findTeaserLength(12,$body);									
+								$regObj->teaser = ($body)?nl2br(substr(strip_tags($body),0,$pos)):"?";
+								// view						
+								$view = new View("item_summary/regular");
+								$view->set("article",$regObj);
+								$content = $view->render();
+								break;
+							case "link":						
+								$linkObj = new Link_Model;
+								preg_match('/\"link-text\"\:\"(.*)\",/i',$content,$this->result);
+								$linkObj->title = $this->getResult();
+								preg_match('/\"link-url\"\:\"(.*)\",/i',$content,$this->result);
+								$linkObj->destination = $this->getResult();
+								// view
+								$view = new View("item_summary/link");
+								$view->set("link",$linkObj);
+								$content = $view->render();
+								break;
+							case "video":							
+								$vidObj = new Video_Model;
+								// this preg statements use case insensitive and ungreedy match
+								preg_match('/\"video-caption\"\:\"(.*)\"/iU',$content,$this->result);
+								$vidObj->caption = strip_tags($this->getResult());
+								preg_match('/\"video-player\"\:\"(.*)\"/i',$content,$this->result);
+								$vidObj->player = stripslashes($this->getResult());
+								preg_match('/\"video-source\"\:\"(.*)\",/i',$content,$this->result);
+								$vidObj->source = $this->getResult();							
+								// view
+								$view = new View("item_summary/video");
+								$view->set("video",$vidObj);
+								$content = $view->render();
+								break;							
+						}	
+						/* 
+						if($json->type == "photo"){
 							$photoObj = new Photo_Model;
 							$photoObj->urls["small"] = $json->tiny;
 							$photoObj->title = "Test";//$json->{"photo-caption"};
@@ -107,7 +159,8 @@ class Welcome_Controller extends Template_Controller {
 							$view = new View("item_summary/video");
 							$view->set("video",$vidObj);
 							$content = $view->render();							
-						}					
+						}
+						/* */
 					}
 				}
 			}	
@@ -141,6 +194,9 @@ class Welcome_Controller extends Template_Controller {
 	    }
 		return strlen($teaserText); 
 	}
+	/*
+	 * return the array result for preg matches 
+	 * */
 	private function getResult(){
 		return (isset($this->result[1]))?$this->result[1]:false;
 		
