@@ -70,17 +70,21 @@ class Welcome_Controller extends Template_Controller {
 						$content = $view->render();						
 					}else if(is_object($json) && $json->type =="regular"){						
 						$regObj = new Regular_Model;
-						preg_match('/\"regular-title\"\:\"(.*)\",/i',$content,$title);
-						$title = (isset($title[0]))?explode(":",$title[0]):false;
-						preg_match('/\"regular-body\"\:\"(.*)\"/i',$content,$body);
-						$body = (isset($body[0]))?explode(":",$body[0]):false;												
+						$data = array();
+						preg_match('/\"regular-title\"\:\"(.*)\",/i',$content,$title);						
+						$data["title"] = (isset($title[0]))?json_decode("[{".$title[0]."}]"):array();
+						preg_match('/\"regular-body\"\:\"(.*)\"/i',$content,$body);						
+						$regObj->title = (isset($title[1]))?$title[1]:false;						
 						$body = (isset($body[1]))?$body[1]:false;
-						$end = strpos($body,"<!-- more -->");
-						$regObj->title = (isset($title[1]))?$title[1]:"";										
-						$regObj->teaser = ($body)?substr(strip_tags($body),0,($end!==false)?$end:strlen($body)):"?";
+						$pos = strpos($body,"<!-- more -->");
+						$pos = ($pos!==false)?$pos:strlen($body);									
+						$regObj->teaser = ($body)?nl2br(substr(strip_tags($body),0,$pos)):"?";
 						$view = new View("summary_regular");
 						$view->set("article",$regObj);
 						$content = $view->render();
+					}else if(is_object($json) && $json->type =="link"){
+						
+						
 					}
 				}
 			}	
