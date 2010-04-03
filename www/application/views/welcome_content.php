@@ -1,3 +1,4 @@
+<?php echo $hotlinks; ?>
 <?php defined('SYSPATH') OR die('No direct access allowed.'); ?>
 <div class="box">
 	<p>This is the default Kohana index page. You may also access this page as <code><?php echo html::anchor('welcome/index', 'welcome/index') ?></code>.</p>
@@ -13,10 +14,6 @@
 	<li><?php echo ($title === 'License') ? html::file_anchor($url, html::specialchars($title)) : html::anchor($url, html::specialchars($title)) ?></li>
 <?php endforeach ?>
 </ul>
-
-<div>
-My test <?php echo $test; ?>
-</div>
 
 <div>
 These are my posts
