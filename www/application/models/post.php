@@ -4,6 +4,8 @@ class Post_Model extends Model {
 	 	
  	private $urls = array();
  	protected $db; // database instance
+ 	public $posts = array();
+ 	
 	public function __construct()
 	{
 		// load database library into $this->db (can be omitted if not required)
@@ -135,9 +137,10 @@ class Post_Model extends Model {
 	 * create new ones based on post source table 
 	 * */
 	public function digestNewPosts(){
+		$this->posts = array();
 		// remove old records
-		$this->db->delete("kh_timeline",array("id >="=>0));
-			
+		$this->db->query("TRUNCATE TABLE kh_timeline");
+		//$this->db->update("kh_timeline",array("id"=>0));	
 		$sql = <<<SQL
 			SELECT posts.type,
 				from_unixtime(posts.created_dt,'%d-%m-%y') AS dateKey,
@@ -148,8 +151,7 @@ class Post_Model extends Model {
 				GROUP BY posts.content ORDER BY posts.created_dt DESC
 SQL;
 
-		$posts = $this->db->query($sql)->result_array(true);
-		$myPosts = array();
+		$posts = $this->db->query($sql)->result_array(true);		
 		foreach($posts as $key => $value){
 			$content = $value->content;
 			if($value->type == "tumblr"){				
@@ -182,19 +184,26 @@ SQL;
 					}
 				}
 			}	
-			// load into result array
+			// load into result array			
 			$key = date("dS M y",$value->created_dt);
-			if(!array_key_exists($key,$myPosts)){
-				$myPosts[$key] = array($content);				
+			if(!array_key_exists($key,$this->posts)){
+				$this->posts[$key] = array($content);				
 			}else{
-				$myPosts[$key][] = $content;				
-			}
-			// traverse and stick into table
-			foreach($myPosts as $key => $value){
-				$content = json_encode($value);
-				$this->db->insert("kh_timeline", array("date" => $key, "content" => "{$content}"));				
+				$this->posts[$key][] = $content;				
 			}	
-		}		
+		}	
+		// traverse and stick into table
+		kohana::log("debug",print_r($this->posts,true));
+		$x=0;
+		foreach($this->posts as $key => $value){
+			$x++;
+			$content = json_encode($value);
+			$this->db->insert("kh_timeline", array(
+				"date" => $key,
+				"content" => "{$content}",
+				"squence_id" => $x
+			));				
+		}
 	}
 	public function getPosts($page){
 		$this->db->select("*")

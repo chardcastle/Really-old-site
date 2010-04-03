@@ -28,7 +28,7 @@ class Welcome_Controller extends Template_Controller {
 		$this->pagination = new Pagination(array(
 		    'base_url'    => 'welcome/page/', // base_url will default to current uri
 		    'uri_segment'    => 'page', // pass a string as uri_segment to trigger former 'label' functionality
-		    'total_items'    => $this->db->count_records("kh_timeline")/10, // use db count query here of course
+		    'total_items'    => $this->db->count_records("kh_timeline"), // use db count query here of course
 		    'items_per_page' => 10, // it may be handy to set defaults for stuff like this in config/pagination.php
 		    'style'          => 'classic' // pick one from: classic (default), digg, extended, punbb, or add your own!		
 		));		
@@ -41,8 +41,7 @@ class Welcome_Controller extends Template_Controller {
 		 * 	$this->template->content->test .= Kohana::debug($xml);
 		 *  kohana::log("debug",Kohana::debug($post));	
 		 */
-		// Load database
-		
+	
 		// Load template
 		$this->template->content = new View('welcome_content');
 		$postObj = new Post_Model;
@@ -54,7 +53,7 @@ class Welcome_Controller extends Template_Controller {
 		$mostRecentPost = $this->db->select("*")
 		->from("kh_timeline")		
 		->limit(9)
-		->orderby("id","desc")
+		->orderby("id","asc")
 		->get()
 		->result_array(true);
 		
@@ -72,26 +71,26 @@ class Welcome_Controller extends Template_Controller {
 			$this->template->content = new View('welcome_content');
 			
 			$this->template->content->hotlinks = $this->pagination->render();
-			$start = $pageId * 10;
+			$start = ($pageId * 9)-9;
 			$this->template->content->posts = $this->db->select("*")
 			->from("kh_timeline")		
-			->limit($start,10)
-			->orderby("id","desc")
+			->limit(9,$start)
+			->orderby("id","asc")
 			->get()
 			->result_array(true);
 			
-			$this->template->title = 'Welcome to Kohana!';
+			$this->template->title = "Chris";//var_dump($this->pagination);
 		}
 	}
 	/*
 	 * Provide data as JSON
 	 * */
 	public function pageAsJson($pageId){				
-		$start = $pageId * 10;
+		$start =  ($pageId * 9)-9;
 		$data = $this->db->select("*")
 		->from("kh_timeline")		
-		->limit($start,10)
-		->orderby("id","desc")
+		->limit(9,$start)
+		->orderby("id","asc")
 		->get()
 		->result_array(true);		
 		$x = 0;
