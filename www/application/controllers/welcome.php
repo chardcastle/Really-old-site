@@ -16,8 +16,32 @@ class Welcome_Controller extends Template_Controller {
 
 	// Set the name of the template to use
 	public $template = 'kohana/template';
-	private $db;
+	public $pagination = "";
+	public $links = array();
+	protected $db;
 	private $result = array();	
+	
+	public function __construct(){		
+		parent::__construct(); // This must be included		
+		$this->db = new Database('local');
+		$this->links = array
+		(
+			'Home Page'     => 'http://kohanaphp.com/',
+			'Documentation' => 'http://docs.kohanaphp.com/',
+			'Forum'         => 'http://forum.kohanaphp.com/',
+			'License'       => 'Kohana License.html',
+			'Donate'        => 'http://kohanaphp.com/donate'			
+		);
+		
+		$this->pagination = new Pagination(array(
+		    // 'base_url'    => 'welcome/pagination_example/page/', // base_url will default to current uri
+		    'uri_segment'    => 'page', // pass a string as uri_segment to trigger former 'label' functionality
+		    'total_items'    => $this->db->count_records("kh_timeline")/10, // use db count query here of course
+		    'items_per_page' => 10, // it may be handy to set defaults for stuff like this in config/pagination.php
+		    'style'          => 'classic' // pick one from: classic (default), digg, extended, punbb, or add your own!		
+		));		
+	}
+	
 	public function index()
 	{
 		/*
@@ -26,11 +50,10 @@ class Welcome_Controller extends Template_Controller {
 		 *  kohana::log("debug",Kohana::debug($post));	
 		 */
 		// Load database
-		$this->db = new Database('local');
+		
 		// Load template
 		$this->template->content = new View('welcome_content');
-		$postObj = new Post_Model;
-		$myDataSources = $postObj->getDataSourceUrls();
+		$postObj = new Post_Model;		
 		// You can assign anything variable to a view by using standard OOP
 		// methods. In my welcome view, the $title variable will be assigned
 		// the value I give it here.
@@ -39,94 +62,49 @@ class Welcome_Controller extends Template_Controller {
 		// An array of links to display. Assiging variables to views is completely
 		// asyncronous. Variables can be set in any order, and can be any type
 		// of data, including objects.
-		$this->template->content->links = array
-		(
-			'Home Page'     => 'http://kohanaphp.com/',
-			'Documentation' => 'http://docs.kohanaphp.com/',
-			'Forum'         => 'http://forum.kohanaphp.com/',
-			'License'       => 'Kohana License.html',
-			'Donate'        => 'http://kohanaphp.com/donate',
-			'jQuery'		=> $myDataSources["github"]["jquery"]
-		);
-		
+		$this->template->content->links = $this->links;
+
+		$this->template->content->hotlinks = $this->pagination->render("digg");
 		$mostRecentPost = $this->db->select("*")
 		->from("kh_timeline")		
 		->limit(9)
 		->orderby("id","desc")
 		->get()
 		->result_array(true);
-		/*  begin extraction
-		$sql = <<<SQL
-			SELECT posts.type,
-				from_unixtime(posts.created_dt,'%d-%m-%y') AS dateKey,
-				posts.content, 
-				posts.* 
-				FROM (select * from kh_posts) AS posts 
-				INNER JOIN kh_posts AS dates ON posts.created_dt = dates.created_dt 
-				GROUP BY posts.content ORDER BY posts.created_dt DESC
-SQL;
 
-		$posts = $this->db->query($sql)->result_array(true);
-		$myPosts = array();
-		foreach($posts as $key => $value){
-			$content = $value->content;
-			if($value->type == "tumblr"){				
-				$contentJson = json_decode($content);				
-				if(!$contentJson){					
-					kohana::log("debug","failed to decode");				
-				}else{					
-					kohana::log("debug","Found json");
-					$json = $contentJson->{"@attributes"};
-					if(is_object($json) && isset($json->type)){
-						switch($json->type){
-							case "photo":
-								$photoObj = new Photo_Model;
-								$content = $photoObj->loadFromLocalSource($json);
-								break;						
-							case "regular":		
-								$regObj = new Regular_Model;				
-								$content = $regObj->loadFromLocalSource($content);
-								break;
-							case "link":	
-								$linkObj = new Link_Model;					
-								$content = $linkObj->loadFromLocalSource($content);
-								break;
-							case "video":		
-								$vidObj = new Video_Model;													
-								$content = $vidObj->loadFromLocalSource($content);	
-								break;							
-						}
-					}
-				}
-			}	
-			// load into result array
-			$key = date("jS M y",$value->created_dt);
-			if(!array_key_exists($key,$myPosts)){
-				$myPosts[$key] = array($content);				
-			}else{
-				$myPosts[$key][] = $content;				
-			}	
-			end extraction
-			 
-		}
-		/* */
-		$this->template->content->posts = $mostRecentPost;
-
-		$this->template->content->test = "Oh hai!";
+		$this->template->content->posts = $mostRecentPost;		
 		
 	}
+	public function page($pageId){
+		$this->template->content = new View('welcome_content');
+		$this->template->content->links = $this->links;
+		$this->template->content->hotlinks = $this->pagination->render();
+		$start = $pageId * 10;
+		$this->template->content->posts = $this->db->select("*")
+		->from("kh_timeline")		
+		->limit($start,10)
+		->orderby("id","desc")
+		->get()
+		->result_array(true);
 
-	public function saveNewPosts(){
-		
+		$this->template->title = 'Welcome to Kohana!';
+	}
+	/*
+	 * To be called by cron
+	 * */
+	public function saveNewPosts(){		
 		$postObj = new Post_Model;		
 		$inserts = $postObj->searchForNewPosts();
-		echo Kohana::debug($inserts);
+		echo "The function 'saveNewPosts' has run and ".Kohana::debug($inserts)." records have been added.";
 		exit;
 	}
+	/*
+	 * To be called by cron
+	 * */	
 	public function digestNewPosts(){
 		$postObj = new Post_Model;
 		$postObj->digestNewPosts();
-		echo "Done";
+		echo "The system has digested the posts tabel. HTML is now refreshed.";
 		exit;
 	}
 
