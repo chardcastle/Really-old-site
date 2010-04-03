@@ -15,7 +15,7 @@ class Welcome_Controller extends Template_Controller {
 	const ALLOW_PRODUCTION = FALSE;
 
 	// Set the name of the template to use
-	public $template = 'kohana/template';
+	public $template = 'template';
 	public $pagination = "";
 	public $links = array();
 	protected $db;
@@ -24,14 +24,6 @@ class Welcome_Controller extends Template_Controller {
 	public function __construct(){		
 		parent::__construct(); // This must be included		
 		$this->db = new Database('local');
-		$this->links = array
-		(
-			'Home Page'     => 'http://kohanaphp.com/',
-			'Documentation' => 'http://docs.kohanaphp.com/',
-			'Forum'         => 'http://forum.kohanaphp.com/',
-			'License'       => 'Kohana License.html',
-			'Donate'        => 'http://kohanaphp.com/donate'			
-		);
 		
 		$this->pagination = new Pagination(array(
 		    // 'base_url'    => 'welcome/pagination_example/page/', // base_url will default to current uri
@@ -53,31 +45,25 @@ class Welcome_Controller extends Template_Controller {
 		
 		// Load template
 		$this->template->content = new View('welcome_content');
-		$postObj = new Post_Model;		
-		// You can assign anything variable to a view by using standard OOP
-		// methods. In my welcome view, the $title variable will be assigned
-		// the value I give it here.
+		$postObj = new Post_Model;
+				
 		$this->template->title = 'Welcome to Kohana!';
 
-		// An array of links to display. Assiging variables to views is completely
-		// asyncronous. Variables can be set in any order, and can be any type
-		// of data, including objects.
-		$this->template->content->links = $this->links;
-
 		$this->template->content->hotlinks = $this->pagination->render("digg");
+		// Post timeline data
 		$mostRecentPost = $this->db->select("*")
 		->from("kh_timeline")		
 		->limit(9)
 		->orderby("id","desc")
 		->get()
 		->result_array(true);
-
+		
 		$this->template->content->posts = $mostRecentPost;		
 		
 	}
 	public function page($pageId){
 		$this->template->content = new View('welcome_content');
-		$this->template->content->links = $this->links;
+		
 		$this->template->content->hotlinks = $this->pagination->render();
 		$start = $pageId * 10;
 		$this->template->content->posts = $this->db->select("*")
@@ -86,7 +72,7 @@ class Welcome_Controller extends Template_Controller {
 		->orderby("id","desc")
 		->get()
 		->result_array(true);
-
+		
 		$this->template->title = 'Welcome to Kohana!';
 	}
 	/*
