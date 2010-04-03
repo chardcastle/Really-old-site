@@ -123,3 +123,8 @@ $config['modules'] = array
 	// MODPATH.'payment',   // Online payments
 	// MODPATH.'unit_test', // Unit testing
 );
+/**
+ * Contains the number of posts on a page.
+ * custom and referenced as Kohana::config("config.number_of_items")
+ */
+$config['number_of_items'] = 9;
