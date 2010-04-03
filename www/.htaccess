@@ -3,7 +3,7 @@ RewriteEngine On
 
 # Installation directory
 #RewriteBase /kohana/
-RewriteBase /sites/ee/
+RewriteBase /sites/mysite/mysite/www/
 
 # Protect application and system files from being viewed
 RewriteRule ^(application|modules|system) - [F,L]

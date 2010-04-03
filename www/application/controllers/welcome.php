@@ -26,7 +26,7 @@ class Welcome_Controller extends Template_Controller {
 		$this->db = new Database('local');
 		
 		$this->pagination = new Pagination(array(
-		    // 'base_url'    => 'welcome/pagination_example/page/', // base_url will default to current uri
+		    'base_url'    => 'welcome/page/', // base_url will default to current uri
 		    'uri_segment'    => 'page', // pass a string as uri_segment to trigger former 'label' functionality
 		    'total_items'    => $this->db->count_records("kh_timeline")/10, // use db count query here of course
 		    'items_per_page' => 10, // it may be handy to set defaults for stuff like this in config/pagination.php
@@ -61,20 +61,51 @@ class Welcome_Controller extends Template_Controller {
 		$this->template->content->posts = $mostRecentPost;		
 		
 	}
-	public function page($pageId){
-		$this->template->content = new View('welcome_content');
-		
-		$this->template->content->hotlinks = $this->pagination->render();
+	/*
+	 * Provide data to static pages
+	 * */
+	public function page($pageId,$ajax=false){
+		if($ajax){
+			echo $this->pageAsJson($pageId);
+			exit;			
+		}else{
+			$this->template->content = new View('welcome_content');
+			
+			$this->template->content->hotlinks = $this->pagination->render();
+			$start = $pageId * 10;
+			$this->template->content->posts = $this->db->select("*")
+			->from("kh_timeline")		
+			->limit($start,10)
+			->orderby("id","desc")
+			->get()
+			->result_array(true);
+			
+			$this->template->title = 'Welcome to Kohana!';
+		}
+	}
+	/*
+	 * Provide data as JSON
+	 * */
+	public function pageAsJson($pageId){				
 		$start = $pageId * 10;
-		$this->template->content->posts = $this->db->select("*")
+		$data = $this->db->select("*")
 		->from("kh_timeline")		
 		->limit($start,10)
 		->orderby("id","desc")
 		->get()
-		->result_array(true);
+		->result_array(true);		
+		$x = 0;
+		$returned = array();
+		foreach($data as $key => $value){
+			$x++;			
+			$returned[$key] = array(
+				"index"=>"box{$x}",
+				"title"=>$value->date,
+				"body"=>$value->content);			 			
+		}
+		return json_encode($returned);		
 		
-		$this->template->title = 'Welcome to Kohana!';
-	}
+	}	
 	/*
 	 * To be called by cron
 	 * */

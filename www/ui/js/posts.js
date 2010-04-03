@@ -156,16 +156,12 @@ $(function(){
 			return false;	
 	})
 	.end()
-	.find("#navigation a")
+	.find(".pagination a")
 	.each(function(i,item){		
-		numberOfPages++;
-		var ele = $("<li><a href=''></a></li>")
-		.find("a")
-		.text(numberOfPages)
-		.click(function(e){			
-			e.preventDefault();
-			var req = (($(this).text()-1)*9);
-			$.getJSON("/index.php/Posts/posts_json/P"+req,function(data){						
+		$(item)
+			.click(function(e){			
+			e.preventDefault();			
+			$.getJSON($(this).attr("href")+"/true",function(data){						
 				$.each(data,function(key,value){			
 					var className = value["index"];
 					//console.log(className);
@@ -184,8 +180,7 @@ $(function(){
 				});
 			});			
 			return false;		
-		});
-		$("#jsnav").append(ele);
+		});		
 	});
 	// make new navigation stucture
 	
