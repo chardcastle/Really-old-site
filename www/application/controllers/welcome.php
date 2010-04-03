@@ -17,6 +17,7 @@ class Welcome_Controller extends Template_Controller {
 	// Set the name of the template to use
 	public $template = 'template';
 	public $pagination = "";
+	public $itemsPerPage = 9;
 	public $links = array();
 	protected $db;
 	private $result = array();	
@@ -24,12 +25,12 @@ class Welcome_Controller extends Template_Controller {
 	public function __construct(){		
 		parent::__construct(); // This must be included		
 		$this->db = new Database('local');
-		
+		$this->itemsPerPage = Kohana::config("config.number_of_items");
 		$this->pagination = new Pagination(array(
 		    'base_url'    => 'welcome/page/', // base_url will default to current uri
 		    'uri_segment'    => 'page', // pass a string as uri_segment to trigger former 'label' functionality
 		    'total_items'    => $this->db->count_records("kh_timeline"), // use db count query here of course
-		    'items_per_page' => 10, // it may be handy to set defaults for stuff like this in config/pagination.php
+		    'items_per_page' => $this->itemsPerPage, // it may be handy to set defaults for stuff like this in config/pagination.php
 		    'style'          => 'classic' // pick one from: classic (default), digg, extended, punbb, or add your own!		
 		));		
 	}
@@ -52,7 +53,7 @@ class Welcome_Controller extends Template_Controller {
 		// Post timeline data
 		$mostRecentPost = $this->db->select("*")
 		->from("kh_timeline")		
-		->limit(9)
+		->limit($this->itemsPerPage)
 		->orderby("id","asc")
 		->get()
 		->result_array(true);
@@ -71,10 +72,10 @@ class Welcome_Controller extends Template_Controller {
 			$this->template->content = new View('welcome_content');
 			
 			$this->template->content->hotlinks = $this->pagination->render();
-			$start = ($pageId * 9)-9;
+			$end = $this->getPageSqlEnd($pageId);
 			$this->template->content->posts = $this->db->select("*")
 			->from("kh_timeline")		
-			->limit(9,$start)
+			->limit($this->itemsPerPage,$end)
 			->orderby("id","asc")
 			->get()
 			->result_array(true);
@@ -82,14 +83,17 @@ class Welcome_Controller extends Template_Controller {
 			$this->template->title = "Chris";//var_dump($this->pagination);
 		}
 	}
+	private function getPageSqlEnd($pageId){
+		return ($pageId * $this->itemsPerPage)-$this->itemsPerPage;		
+	}
 	/*
 	 * Provide data as JSON
 	 * */
 	public function pageAsJson($pageId){				
-		$start =  ($pageId * 9)-9;
+		$end = $this->getPageSqlEnd($pageId);
 		$data = $this->db->select("*")
 		->from("kh_timeline")		
-		->limit(9,$start)
+		->limit($this->itemsPerPage,$end)
 		->orderby("id","asc")
 		->get()
 		->result_array(true);		

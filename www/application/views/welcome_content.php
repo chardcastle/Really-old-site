@@ -13,7 +13,7 @@
 			$features = json_decode($post->content); 
 			foreach($features as $f){
 			?>
-				<div><?php echo stripslashes($f); ?></div>
+				<div class="body"><?php echo stripslashes($f); ?></div>
 			<?php } ?>				
 		</div>
 	<?php } ?>

@@ -183,6 +183,13 @@ SQL;
 						}
 					}
 				}
+			}else if($value->type == "gitcommit"){
+				$gitObj = new Git_Model;
+				$gitObj->repoName = $value->title;
+				$gitObj->dateTime = $value->created_dt;
+				$gitObj->message = $value->content;
+				// slight difference in parameter for this object 
+				$content = $gitObj->loadFromLocalSource($gitObj);				
 			}	
 			// load into result array			
 			$key = date("dS M y",$value->created_dt);
