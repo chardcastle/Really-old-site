@@ -9,7 +9,7 @@ html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pr
 
 body {
 	background-color: #fff;
-	margin: 40px;
+	padding:40px;
 	font-family: Lucida Grande, Verdana, Sans-serif;
 	font-size: 14px;
 	color: #4F5155;
@@ -24,11 +24,17 @@ a {
 h1 {
 	color: #444;
 	background-color: transparent;
-	border-bottom: 1px solid #D0D0D0;
 	font-size: 16px;
 	font-weight: bold;
 	margin: 24px 0 2px 0;
 	padding: 5px 0 6px 0;
+}
+h1 a{
+	background:transparent url(images/title.png) no-repeat top left;
+	display:block;
+	width:232px;
+	height:36px;
+	text-indent:-9999px;
 }
 
 code {
@@ -59,68 +65,72 @@ code {
 }
 #container{
 	position:relative;
-	border:1px solid #ff22ff;
 	width:762px;
 	height:300px;
 }
-#container div{
+#container div.outer{
 	position:absolute;
 	/*top:0; left:0;*/
+	border:1px solid #ccc;
 	z-index:3;	
 	width:200px;
 	height:200px;
-	border:1px solid #ff33ff;
 	overflow:hidden;
+	background:#fff;
 	padding:17px;
 }
-.box1,
-.box10{
-	top:20px;
-	left:20px;
-
-
+#container div.active{
+	border:2px solid #000;
 }
-.box2,
-.box11{
-	top:20px;
+#container div.fullSize{
+	top:0!important;
+	left:0!important;
+	width:762px;
+	height:900px;
+	scroll:auto;
+	z-index:4;
+	position:absolute;
+}
+#globalOuter{
+	width:762px;
+	margin:20px auto 0 auto;
+}
+#navigation{
+	display:none;
+}
+#box1{
+	top:0px;
+	left:0px;
+}
+#box2{
+	top:0px;
 	left:254px;
-
 }
-.box3,
-.box12{
-	top:20px;
+#box3{
+	top:0px;
 	left:508px;
-
 }
-.box4,
-.box13{
-	top:260px;
-	left:20px;
-
+#box4{
+	top:250px;
+	left:0px;
 }
-.box5,
-.box14{
-	top:260px;
+#box5{
+	top:250px;
 	left:254px;
-	
-
 }
-.box6{
-	top:260px;
+#box6{
+	top:250px;
 	left:508px;
-
 }
-.box7{
+#box7{
 	top:500px;
-	left:20px;
-
+	left:0px;
 }
-.box8{
+#box8{
 	top:500px;
 	left:254px;
-
 }
-.box9{
+#box9{
 	top:500px;
 	left:508px;
 }
