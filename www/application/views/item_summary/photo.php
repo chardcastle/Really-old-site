@@ -1,4 +1,4 @@
 <div class="photo item">
-<p>This is partial view photo_summary</p>
-<img src="<?php echo $photo->urls["small"]; ?>" alt="Templated"/>
+<p><?php echo $photo->title; ?></p>
+<img src="<?php echo $photo->urls["medium"]; ?>" alt="Templated"/>
 </div>
