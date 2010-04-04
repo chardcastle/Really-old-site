@@ -12,9 +12,9 @@ class Post_Model extends Model {
 		parent::__construct();
 		$this->db = new Database('local');
 		$this->urls = array(
-			"tweets" => 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20twitter.user.timeline%20where%20id%3D%22hardcastle%22&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys',
+			"tweets" => 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20twitter.user.timeline%20where%20id%3D%22hardcastle%22&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys',
 			"tumblr" => "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20tumblr.posts%20where%20username%3D'hardcastle'&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys",
-			"github" => array("jquery"=>"http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20github.repo.commits%20where%20id%3D'jquery'%20and%20repo%3D'jquery'&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys")
+			"github" => array("jquery"=>"http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20github.repo.commits%20where%20id%3D'jquery'%20and%20repo%3D'jquery'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys")
 		);
 	}
 	
@@ -45,11 +45,11 @@ class Post_Model extends Model {
 		$info .= "<p>".(isset($tumNo)?$tumNo:"Didn't request any")." new Tumblr items</p>";
 		
 		$obj = new Tweet_Model;
-		$tweNo = $obj->captureFeed($this->urls["tweets"],$mostRecentPost);
+		//$tweNo = $obj->captureFeed($this->urls["tweets"],$mostRecentPost);
 		$info .= "<p>".(isset($tweNo)?$tweNo:"Didn't request any")." new Tweet items</p>";
 		
 		$obj = new Git_Model;
-		//$gitNo = $obj->captureFeed($this->urls["github"]["jquery"],$mostRecentPost);
+		$gitNo = $obj->captureFeed($this->urls["github"]["jquery"],$mostRecentPost);
 		$info .= "<p>".(isset($gitNo)?$gitNo:"Didn't request any")." new Git items</p>";
 		echo $info;
 		/*				
@@ -158,21 +158,23 @@ SQL;
 				}
 			}else if($value->type == "gitcommit"){
 				$obj = new Git_Model;
+				$content = unserialize($value->content);
 				$obj->repoName = $value->title;
+				$obj->committer = (isset($content["committer"])?$content["committer"]:false);
 				$obj->dateTime = $value->created_dt;
-				$obj->message = $value->content;
+				$obj->message = $content["message"];
 				// slight difference in parameter for this object 
 				$content = $obj->loadFromLocalSource($obj);			
 			}else if($value->type == "tweet"){
-				$tweet = explode(":",$value->content);
-				$content = (isset($tweet[1]))?$tweet[1]:"";
+				
+				$content = unserialize($value->content);
 				//preg_replace("#\[(([a-zA-Z]+://)([a-zA-Z0-9?&%.;:/=+_-]*))\]#e", "'<a href=\"$1\" target=\"_blank\">$3</a>'", $content);			
-				preg_replace("/#[a-zA-Z]+/i", "<a href='http://twitter.com/search?q=urlencode($1)' target='_blank'>$1</a>", $content);
+				//$tweet = preg_replace("/#[a-zA-Z]+/i", "<a href='http://twitter.com/search?q=urlencode($1)' target='_blank'>$1</a>", $content["tweet"]);
+				$tweet = $content["tweet"];
 				$obj = new Tweet_Model;
-				$obj->tweet = $value->content; 
-				$obj->author = (isset($tweet[0]))?$tweet[0]:"";
-				$obj->tweetWithLinks = $content;
-				$obj->pubDateTime = $value->created_dt;				
+				$obj->tweet = $tweet; 
+				$obj->author = "@hardcastle";				
+				$obj->time = $content["time"];
 				// slight difference in parameter for this object 
 				$content = $obj->loadFromLocalSource($obj);				
 			}				

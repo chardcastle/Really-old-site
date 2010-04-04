@@ -4,8 +4,8 @@ class Tweet_Model extends App_Model {
 	 	
  	public $tweet = "";
  	public $author = "";
- 	public $tweetWithLinks = ""; 	
- 	public $pubDateTime = 0;
+ 	public $profilePic = ""; 	
+ 	public $time = 0;
  	
 	public function __construct()
 	{
@@ -21,21 +21,24 @@ class Tweet_Model extends App_Model {
 	public function captureFeed($feedUrl,$mostRecentPost){
 		$numberOfNewPosts = 0;
 		$myTweets = file_get_contents($feedUrl);
-		// Tweets
-		$xml = new SimpleXMLElement($myTweets);		
-		foreach($xml->results->entry as $post){			
-			$created = strtotime($post->published);
-			// Unless override is on, only include if new	
-			if($created > $mostRecentPost || !$mostRecentPost){
-				// Yay, a new post, save it!				
-				$attributes = array();
-				Kohana::debug("Attributes data:".$post->{"@attributes"});				
-				foreach($post->{"@attributes"} as $key => $value){
-					kohana::log("debug",Kohana::debug("Attributes serial: key:".$key." val:".$value));					
-					$attributes[$key] = $value;						
-				}				
-				$content = serialize($attributes);
-				
+
+		$tweets = json_decode($myTweets,true);
+		foreach($tweets["query"]["results"]["entry"] as $tweet){
+				foreach($tweet["link"] as $link){
+					if($link["rel"] == "image"){						
+						$profilePic = $link["href"];
+					}
+				}			
+				$content = array(
+					"tweet" => str_ireplace("hardcastle:","",$tweet["title"]),
+					"author "=> $tweet["author"]["name"],
+					"profilePic" => $profilePic, 
+					"time" => strtotime($tweet["published"])
+				);
+
+				$content = serialize($content);
+				$created = strtotime($tweet["published"]);
+						
 				$this->db->insert("kh_posts",array(
 					"title"=>"tweet",
 					"content"=>"{$content}",
@@ -45,7 +48,7 @@ class Tweet_Model extends App_Model {
 				));
 				$numberOfNewPosts++;
 				kohana::log("debug",Kohana::debug("Found a new Tweet ... saved"));
-			}			
+			//}			
 		}		
 		return $numberOfNewPosts;
 	}
