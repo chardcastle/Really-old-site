@@ -10,7 +10,7 @@
 			<a href="#" class="close ui-icon ui-icon-close" style="float:right">Close</a>		
 			<div class="pubDate"><?php echo $post->date; ?></div>
 			<?php 
-			$features = json_decode($post->content); 
+			$features = unserialize($post->content); 
 			foreach($features as $f){
 			?>
 				<div class="body"><?php echo stripslashes($f); ?></div>

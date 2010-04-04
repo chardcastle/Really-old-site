@@ -184,13 +184,21 @@ SQL;
 					}
 				}
 			}else if($value->type == "gitcommit"){
-				$gitObj = new Git_Model;
-				$gitObj->repoName = $value->title;
-				$gitObj->dateTime = $value->created_dt;
-				$gitObj->message = $value->content;
+				$obj = new Git_Model;
+				$obj->repoName = $value->title;
+				$obj->dateTime = $value->created_dt;
+				$obj->message = $value->content;
 				// slight difference in parameter for this object 
-				$content = $gitObj->loadFromLocalSource($gitObj);				
-			}	
+				$content = $gitObj->loadFromLocalSource($gitObj);			
+			}else if($value->type == "tweet"){
+				$content = $value->content;
+				$obj = new Tweet_Model;
+				$obj->tweet = $value->title;
+				$obj->tweetWithLinks = $value->content;
+				$obj->pubDateTime = $value->created_dt;				
+				// slight difference in parameter for this object 
+				$content = $obj->loadFromLocalSource($obj);				
+			}				
 			// load into result array			
 			$key = date("dS M y",$value->created_dt);
 			if(!array_key_exists($key,$this->posts)){
@@ -200,11 +208,11 @@ SQL;
 			}	
 		}	
 		// traverse and stick into table
-		kohana::log("debug",print_r($this->posts,true));
+		//kohana::log("debug",print_r($this->posts,true));
 		$x=0;
 		foreach($this->posts as $key => $value){
 			$x++;
-			$content = json_encode($value);
+			$content = serialize($value);
 			$this->db->insert("kh_timeline", array(
 				"date" => $key,
 				"content" => "{$content}",
