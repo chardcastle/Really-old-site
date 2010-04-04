@@ -134,3 +134,15 @@ code {
 	top:500px;
 	left:508px;
 }
+.item{
+	margin:2px 0;
+}
+.tweet{
+	background: DodgerBlue ;
+}
+.git{
+	background: Gainsboro;
+}
+.regular{
+	background: Lavender;
+}
