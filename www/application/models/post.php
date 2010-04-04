@@ -26,6 +26,7 @@ class Post_Model extends Model {
 		kohana::log("debug","Request for new posts detected");
 		//$this->db = new Database('local');
 		//Get the most recent post
+		$this->db->query("TRUNCATE TABLE kh_posts");
 		$mostRecentPost = $this->db->select("*")
 		->from("kh_posts")		
 		->limit(1)
@@ -34,14 +35,25 @@ class Post_Model extends Model {
 		->result_array(true);				
 		
 		$mostRecentPost = (isset($mostRecentPost[0]))?$mostRecentPost[0]->created_dt:false;
-		kohana::log("debug","Looking for posts newer than ".date("d-m-y",$mostRecentPost));		
-
-		// Parse an external atom feed		
-		$myTummy = file_get_contents($this->urls["tumblr"]);
-		$myTweets = file_get_contents($this->urls["tweets"]);		
-		$jQueryfeed = file_get_contents($this->urls["github"]["jquery"]);
-		$numberOfNewPosts = 0;
+				
+		$info = "Looking for posts newer than ".date("d-m-y",$mostRecentPost);
+		// return nothing, just capture feeds
+		// Parse an external atom feed
 		
+		$obj = new Tumblr_Model;		
+		//$tumNo = $obj->captureFeed($this->urls["tumblr"],$mostRecentPost);
+		$info .= "<p>".(isset($tumNo)?$tumNo:"Didn't request any")." new Tumblr items</p>";
+		
+		$obj = new Tweet_Model;
+		$tweNo = $obj->captureFeed($this->urls["tweets"],$mostRecentPost);
+		$info .= "<p>".(isset($tweNo)?$tweNo:"Didn't request any")." new Tweet items</p>";
+		
+		$obj = new Git_Model;
+		//$gitNo = $obj->captureFeed($this->urls["github"]["jquery"],$mostRecentPost);
+		$info .= "<p>".(isset($gitNo)?$gitNo:"Didn't request any")." new Git items</p>";
+		echo $info;
+		/*				
+		$jQueryfeed = file_get_contents($feedUrl);		
 		$xml = new SimpleXMLElement($jQueryfeed);		
 		// jQuery github activity	
 		foreach($xml->results->commits as $post){			
@@ -49,10 +61,11 @@ class Post_Model extends Model {
 				$created = strtotime($commit->{"committed-date"});
 				// Unless override is on, only include if new				
 				if($created > $mostRecentPost || !$mostRecentPost){					
-					// Yay, a new post, save it!				
+					// Yay, a new post, save it!
+					$content = serialize((array) $commit);				
 					$this->db->insert("kh_posts",array(
 						"title"=>"jQuery",
-						"content"=>"{$commit->message}",
+						"content"=>"{$content}",
 						"created_dt"=>"{$created}",					
 						"modified_dt"=>time(),
 						"type" => "gitcommit"
@@ -62,74 +75,34 @@ class Post_Model extends Model {
 				}
 			}						
 		}
-		// Tweets
+		/* Tweets
 		$xml = new SimpleXMLElement($myTweets);		
 		foreach($xml->results->entry as $post){			
 			$created = strtotime($post->published);
 			// Unless override is on, only include if new	
 			if($created > $mostRecentPost || !$mostRecentPost){
-				// Yay, a new post, save it!
+				// Yay, a new post, save it!				
+				$attributes = array();
+				Kohana::debug("Attributes data:".$post->{"@attributes"});				
+				foreach($post->{"@attributes"} as $key => $value){
+					kohana::log("debug",Kohana::debug("Attributes serial: key:".$key." val:".$value));					
+					$attributes[$key] = $value;						
+				}				
+				$content = serialize($attributes);
+				
 				$this->db->insert("kh_posts",array(
 					"title"=>"tweet",
-					"content"=>"{$post->content}",
+					"content"=>"{$content}",
 					"created_dt"=>"{$created}",					
 					"modified_dt"=>time(),
 					"type" => "tweet"
 				));
 				$numberOfNewPosts++;
 				kohana::log("debug",Kohana::debug("Found a new Tweet ... saved"));
-			}
-			
-		}		
-		// Tumblr		
-		$xml = new SimpleXMLElement($myTummy);	
-		foreach($xml->results->posts->post as $post){			
-			$created = strtotime($post["date"]);
-			kohana::log("debug","Tumblr post detected of type ".$post["type"]." on:".$post["date"] );
-			// Unless override is on, only include if new			
-			if($created > $mostRecentPost || !$mostRecentPost){
-				// Yay, a new post, save it!
-				$title = $post["type"];				
-				if($title == "photo"){
-					foreach($post->{"photo-url"} as $photo){
-						if(strpos($photo,"500") !== false){
-							$post["large"] = $photo;						
-						}else if(strpos($photo,"250") !== false){
-							$post["small"] = $photo;							
-						}else if(strpos($photo,"75") !== false){
-							$post["tiny"] = $photo;							
-						}					
-					}
-				}
-				$content = json_encode($post);
-								
-				if($content && $title){
-					$query = $this->db->insert("kh_posts",array(
-						"title"=>"{$title}",
-						"content"=>"{$content}",
-						"created_dt"=>"{$created}",										
-						"modified_dt"=>time(),
-						"type" => "tumblr"
-					));
-					kohana::log("debug","Tumblr last query was ".$this->db->last_query());
-					// Now make a teaser
-					$breakStart = strpos($content,"<!-- more -->");
-					$breakEnd = strlen($content);
-					$insertId = $query->insert_id();
-					if($breakStart !== false){					
-						$teaser = substr($content,$breakStart,$breakEnd);
-						$this->db->from('kh_posts')
-						->set(array("teaser" => "{$teaser}"))
-						->where(array('post_id' => $insertId))
-						->update();
-					}
-					$numberOfNewPosts++;
-					kohana::log("debug","Found a new Tumblr post ... saved");
-				}
-			}
+			}			
 		}
 		return $numberOfNewPosts;
-		/**/		
+		/* */		
 	}
 	
 	/*
@@ -155,30 +128,30 @@ SQL;
 		foreach($posts as $key => $value){
 			$content = $value->content;
 			if($value->type == "tumblr"){				
-				$contentJson = json_decode($content);				
+				$contentSerial = unserialize($content);				
 				/* */
-				if(!$contentJson){					
+				if(!$contentSerial){					
 					kohana::log("debug","failed to decode");				
 				}else{					
 					kohana::log("debug","Found json");
-					$json = $contentJson->{"@attributes"};
-					if(is_object($json) && isset($json->type)){
-						switch($json->type){
+					$json = $contentSerial["@attributes"];
+					if(is_array($json) && isset($json->type)){
+						switch($json["type"]){
 							case "photo":
-								$photoObj = new Photo_Model;
-								$content = $photoObj->loadFromLocalSource($json);
+								$obj = new Photo_Model;
+								$content = $obj->loadFromLocalSource($json);
 								break;						
 							case "regular":		
-								$regObj = new Regular_Model;				
-								$content = $regObj->loadFromLocalSource($content);
+								$obj = new Regular_Model;				
+								$content = $obj->loadFromLocalSource($content);
 								break;
 							case "link":	
-								$linkObj = new Link_Model;					
-								$content = $linkObj->loadFromLocalSource($content);
+								$obj = new Link_Model;					
+								$content = $obj->loadFromLocalSource($content);
 								break;
 							case "video":		
-								$vidObj = new Video_Model;													
-								$content = $vidObj->loadFromLocalSource($content);	
+								$obj = new Video_Model;													
+								$content = $obj->loadFromLocalSource($content);	
 								break;							
 						}
 					}
@@ -189,12 +162,16 @@ SQL;
 				$obj->dateTime = $value->created_dt;
 				$obj->message = $value->content;
 				// slight difference in parameter for this object 
-				$content = $gitObj->loadFromLocalSource($gitObj);			
+				$content = $obj->loadFromLocalSource($obj);			
 			}else if($value->type == "tweet"){
-				$content = $value->content;
+				$tweet = explode(":",$value->content);
+				$content = (isset($tweet[1]))?$tweet[1]:"";
+				//preg_replace("#\[(([a-zA-Z]+://)([a-zA-Z0-9?&%.;:/=+_-]*))\]#e", "'<a href=\"$1\" target=\"_blank\">$3</a>'", $content);			
+				preg_replace("/#[a-zA-Z]+/i", "<a href='http://twitter.com/search?q=urlencode($1)' target='_blank'>$1</a>", $content);
 				$obj = new Tweet_Model;
-				$obj->tweet = $value->title;
-				$obj->tweetWithLinks = $value->content;
+				$obj->tweet = $value->content; 
+				$obj->author = (isset($tweet[0]))?$tweet[0]:"";
+				$obj->tweetWithLinks = $content;
 				$obj->pubDateTime = $value->created_dt;				
 				// slight difference in parameter for this object 
 				$content = $obj->loadFromLocalSource($obj);				

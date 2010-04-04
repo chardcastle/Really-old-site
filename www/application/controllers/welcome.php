@@ -100,11 +100,13 @@ class Welcome_Controller extends Template_Controller {
 		$x = 0;
 		$returned = array();
 		foreach($data as $key => $value){
-			$x++;			
+			$x++;		
+			$contents = unserialize($value->content);
+			
 			$returned[$key] = array(
 				"index"=>"box{$x}",
-				"title"=>$value->date,
-				"body"=>$value->content);			 			
+				"body"=>$contents,
+				"title"=>$value->date);			 			
 		}
 		return json_encode($returned);		
 		

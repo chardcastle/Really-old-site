@@ -170,7 +170,7 @@ $(function(){
 					$("#"+value["index"])
 					.scrambel({limit:lim,animate:true,speed:300})
 					.find(".body")					
-					.html(value["body"]))
+					.html(value["body"])
 					.end()
 					.find("h1")
 					.html(value["title"])
