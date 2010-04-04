@@ -3,12 +3,12 @@
 class App_Model extends Model {
 	 	
 	public $result = array();
-	 	
+	protected $db;	 	
 	public function __construct()
 	{
 		// load database library into $this->db (can be omitted if not required)
 		parent::__construct();
-
+		$this->db = new Database('local');
 	}
 	/*
 	 * return the array result for preg matches 
