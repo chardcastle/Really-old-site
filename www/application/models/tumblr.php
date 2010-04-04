@@ -15,27 +15,27 @@ class Tumblr_Model extends App_Model {
 	public function captureFeed($feedUrl,$mostRecentPost){
 		$numberOfNewPosts = 0;		 
 		$myTummy = file_get_contents($feedUrl);
-		$xml = new SimpleXMLElement($myTummy);	
-		foreach($xml->results->posts->post as $post){			
-			$created = strtotime($post["date"]);
+		$myTummy = json_decode($myTummy,true);
+		foreach($myTummy["query"]["results"]["posts"]["post"] as $post){			
+			$created = strtotime($post["date"]);			
 			kohana::log("debug","Tumblr post detected of type ".$post["type"]." on:".$post["date"] );
 			// Unless override is on, only include if new			
 			if($created > $mostRecentPost || !$mostRecentPost){
 				// Yay, a new post, save it!
 				$title = $post["type"];				
 				if($title == "photo"){
-					foreach($post->{"photo-url"} as $photo){
-						if(strpos($photo,"500") !== false){
-							$post["large"] = $photo;						
-						}else if(strpos($photo,"250") !== false){
-							$post["small"] = $photo;							
-						}else if(strpos($photo,"75") !== false){
-							$post["tiny"] = $photo;							
+					foreach($post["photo-url"] as $photo){
+						$picUrl = $photo["content"];
+						if(strpos($picUrl,"500") !== false){
+							$post["large"] = $picUrl;						
+						}else if(strpos($picUrl,"250") !== false){
+							$post["medium"] = $picUrl;
+						}else if(strpos($picUrl,"75") !== false){
+							$post["small"] = $picUrl;
 						}					
 					}
 				}
-				$content = serialize((array) $post);
-								
+				$content = serialize($post);								
 				if($content && $title){
 					$query = $this->db->insert("kh_posts",array(
 						"title"=>"{$title}",

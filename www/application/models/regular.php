@@ -4,6 +4,7 @@ class Regular_Model extends App_Model {
 	 	
  	public $title = "";
  	public $teaser = "";
+ 	public $body = "";
  	
 	public function __construct()
 	{
@@ -13,12 +14,15 @@ class Regular_Model extends App_Model {
 		$this->teaser = "";
 	}
 	public function loadFromLocalSource($content){		
-		// Get title						
-		preg_match('/\"regular-title\"\:\"(.*)\",/i',$content,$this->result);						
-		$this->title = $this->getResult();
+		// Get title
+		//$content = unserialize($content);						
+		//preg_match('/\"regular-title\"\:\"(.*)\",/i',$content,$this->result);						
+		//$this->title = $this->getResult();
+		$this->title = (isset($content["regular-title"])?$content["regular-title"]:false);
 		// Get body
-		preg_match('/\"regular-body\"\:\"(.*)\"/i',$content,$this->result);						
-		$body = $this->getResult();
+		//preg_match('/\"regular-body\"\:\"(.*)\"/i',$content,$this->result);						
+		$body = (isset($content["regular-body"])?$content["regular-body"]:false);
+		$this->body = $body;
 		$pos = ($body)?strpos($body,"<!-- more -->"):false;
 		$pos = ($pos!==false)?$pos:$this->findTeaserLength(12,$body);									
 		$this->teaser = ($body)?nl2br(substr(strip_tags($body),0,$pos)):"?";

@@ -13,7 +13,7 @@ class Post_Model extends Model {
 		$this->db = new Database('local');
 		$this->urls = array(
 			"tweets" => 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20twitter.user.timeline%20where%20id%3D%22hardcastle%22&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys',
-			"tumblr" => "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20tumblr.posts%20where%20username%3D'hardcastle'&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys",
+			"tumblr" => "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20tumblr.posts%20where%20username%3D'hardcastle'&format=json&diagnostics=false&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys",
 			"github" => array("jquery"=>"http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20github.repo.commits%20where%20id%3D'jquery'%20and%20repo%3D'jquery'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys")
 		);
 	}
@@ -41,7 +41,7 @@ class Post_Model extends Model {
 		// Parse an external atom feed
 		
 		$obj = new Tumblr_Model;		
-		//$tumNo = $obj->captureFeed($this->urls["tumblr"],$mostRecentPost);
+		$tumNo = $obj->captureFeed($this->urls["tumblr"],$mostRecentPost);
 		$info .= "<p>".(isset($tumNo)?$tumNo:"Didn't request any")." new Tumblr items</p>";
 		
 		$obj = new Tweet_Model;
@@ -49,59 +49,9 @@ class Post_Model extends Model {
 		$info .= "<p>".(isset($tweNo)?$tweNo:"Didn't request any")." new Tweet items</p>";
 		
 		$obj = new Git_Model;
-		$gitNo = $obj->captureFeed($this->urls["github"]["jquery"],$mostRecentPost);
+		//$gitNo = $obj->captureFeed($this->urls["github"]["jquery"],$mostRecentPost);
 		$info .= "<p>".(isset($gitNo)?$gitNo:"Didn't request any")." new Git items</p>";
 		echo $info;
-		/*				
-		$jQueryfeed = file_get_contents($feedUrl);		
-		$xml = new SimpleXMLElement($jQueryfeed);		
-		// jQuery github activity	
-		foreach($xml->results->commits as $post){			
-			foreach($post as $commit){				
-				$created = strtotime($commit->{"committed-date"});
-				// Unless override is on, only include if new				
-				if($created > $mostRecentPost || !$mostRecentPost){					
-					// Yay, a new post, save it!
-					$content = serialize((array) $commit);				
-					$this->db->insert("kh_posts",array(
-						"title"=>"jQuery",
-						"content"=>"{$content}",
-						"created_dt"=>"{$created}",					
-						"modified_dt"=>time(),
-						"type" => "gitcommit"
-					));
-					$numberOfNewPosts++;
-					kohana::log("debug",Kohana::debug("Found a new jquery commit ... saved"));
-				}
-			}						
-		}
-		/* Tweets
-		$xml = new SimpleXMLElement($myTweets);		
-		foreach($xml->results->entry as $post){			
-			$created = strtotime($post->published);
-			// Unless override is on, only include if new	
-			if($created > $mostRecentPost || !$mostRecentPost){
-				// Yay, a new post, save it!				
-				$attributes = array();
-				Kohana::debug("Attributes data:".$post->{"@attributes"});				
-				foreach($post->{"@attributes"} as $key => $value){
-					kohana::log("debug",Kohana::debug("Attributes serial: key:".$key." val:".$value));					
-					$attributes[$key] = $value;						
-				}				
-				$content = serialize($attributes);
-				
-				$this->db->insert("kh_posts",array(
-					"title"=>"tweet",
-					"content"=>"{$content}",
-					"created_dt"=>"{$created}",					
-					"modified_dt"=>time(),
-					"type" => "tweet"
-				));
-				$numberOfNewPosts++;
-				kohana::log("debug",Kohana::debug("Found a new Tweet ... saved"));
-			}			
-		}
-		return $numberOfNewPosts;
 		/* */		
 	}
 	
@@ -128,14 +78,13 @@ SQL;
 		foreach($posts as $key => $value){
 			$content = $value->content;
 			if($value->type == "tumblr"){				
-				$contentSerial = unserialize($content);				
+				$json = unserialize($content);				
 				/* */
-				if(!$contentSerial){					
+				if(!$json){					
 					kohana::log("debug","failed to decode");				
 				}else{					
-					kohana::log("debug","Found json");
-					$json = $contentSerial["@attributes"];
-					if(is_array($json) && isset($json->type)){
+					kohana::log("debug","Found json");					
+					if(is_array($json) && isset($json["type"])){
 						switch($json["type"]){
 							case "photo":
 								$obj = new Photo_Model;
@@ -143,15 +92,15 @@ SQL;
 								break;						
 							case "regular":		
 								$obj = new Regular_Model;				
-								$content = $obj->loadFromLocalSource($content);
+								$content = $obj->loadFromLocalSource($json);
 								break;
 							case "link":	
 								$obj = new Link_Model;					
-								$content = $obj->loadFromLocalSource($content);
+								$content = $obj->loadFromLocalSource($json);
 								break;
 							case "video":		
 								$obj = new Video_Model;													
-								$content = $obj->loadFromLocalSource($content);	
+								$content = $obj->loadFromLocalSource($json);	
 								break;							
 						}
 					}

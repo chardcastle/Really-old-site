@@ -11,10 +11,10 @@ class Link_Model extends App_Model {
 		parent::__construct();		
 	}
 	public function loadFromLocalSource($content){		
-		preg_match('/\"link-text\"\:\"(.*)\",/i',$content,$this->result);
-		$this->title = $this->getResult();
-		preg_match('/\"link-url\"\:\"(.*)\",/i',$content,$this->result);
-		$this->destination = $this->getResult();
+		//preg_match('/\"link-text\"\:\"(.*)\",/i',$content,$this->result);
+		$this->title = $content["link-text"];
+		//preg_match('/\"link-url\"\:\"(.*)\",/i',$content,$this->result);
+		$this->destination = $content["link-url"];
 		// view
 		$view = new View("item_summary/link");
 		$view->set("link",$this);
