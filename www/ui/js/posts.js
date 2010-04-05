@@ -66,8 +66,7 @@ $(function(){
 				left:$(this).css("left")
 			};	
 			originLocations[$(item).attr("id")] = pos;
-		});
-		console.log("OriginLocations was not set");
+		});		
 	}
 	var numberOfPages = 0;
 	$("body")

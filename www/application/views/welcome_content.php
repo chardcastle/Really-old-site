@@ -11,10 +11,15 @@
 			<div class="pubDate"><?php echo $post->date; ?></div>
 			<?php 
 			$features = unserialize($post->content); 
+			if(is_array($features)){
 			foreach($features as $f){
 			?>
 				<div class="body"><?php echo stripslashes($f); ?></div>
-			<?php } ?>				
+			<?php }
+			}else{
+				// Probably homepage blurb, spit out welcome html
+				echo $features;
+			}?>				
 		</div>
 	<?php } ?>
 </div>

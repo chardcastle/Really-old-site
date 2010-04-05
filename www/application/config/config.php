@@ -128,3 +128,15 @@ $config['modules'] = array
  * custom and referenced as Kohana::config("config.number_of_items")
  */
 $config['number_of_items'] = 9;
+/**
+ * Set the date format for items shown in grid
+ */
+$config['by_day_format'] = "dS M y";
+/**
+ * Set the date format for items shown in grid
+ */
+$config['data_source_urls'] = array(
+			"tweets" => 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20twitter.user.timeline%20where%20id%3D%22hardcastle%22&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys',
+			"tumblr" => "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20tumblr.posts%20where%20username%3D'hardcastle'&format=json&diagnostics=false&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys",
+			"github" => array("jquery"=>"http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20github.repo.commits%20where%20id%3D'jquery'%20and%20repo%3D'jquery'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys")
+		);;
