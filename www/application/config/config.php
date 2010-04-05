@@ -5,7 +5,12 @@
  * the path, and a site_protocol is specified, the domain will be auto-detected.
  */
 $config['site_domain'] = 'ee.local.net:8080/';
-
+/**
+ * Environment configuration points to different database settings
+ * Choose one and add it to the current enviroment
+ */
+$config['env_options'] = array(0=>"local",1=>"development",3=>"production");
+$config['environment'] = $config['env_options'][0];
 /**
  * Force a default protocol to be used by the site. If no site_protocol is
  * specified, then the current protocol is used, or when possible, only an
@@ -131,7 +136,7 @@ $config['number_of_items'] = 9;
 /**
  * Set the date format for items shown in grid
  */
-$config['by_day_format'] = "dS M y";
+$config['by_day_format'] = "jS F";
 /**
  * Set the date format for items shown in grid
  */

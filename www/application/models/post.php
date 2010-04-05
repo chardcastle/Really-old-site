@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
  
-class Post_Model extends Model {
+class Post_Model extends App_Model {
 	 	
  	private $urls = array();
  	protected $db; // database instance
@@ -9,10 +9,7 @@ class Post_Model extends Model {
 	
 	public function __construct()
 	{
-		// load database library into $this->db (can be omitted if not required)
-		parent::__construct();
-		
-		$this->db = new Database('local');
+		parent::__construct();		
 		// Get the date format for items shown in grid
 		$this->byDayFormat = Kohana::config("config.by_day_format");
 		// Declare usr		

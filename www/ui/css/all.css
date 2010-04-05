@@ -26,8 +26,7 @@ h1 {
 	background-color: transparent;
 	font-size: 16px;
 	font-weight: bold;
-	margin: 24px 0 2px 0;
-	padding: 5px 0 6px 0;
+	
 }
 h1 a{
 	background:transparent url(images/title.png) no-repeat top left;
@@ -98,6 +97,7 @@ code {
 #navigation{
 	display:none;
 }
+#home,
 #box1{
 	top:0px;
 	left:0px;
@@ -145,4 +145,21 @@ code {
 }
 .regular{
 	background: Lavender;
+}
+#profilePic{
+	float:right;
+	margin-left:6px;
+}
+#home{
+	background:Yellow !important;
+}
+#home strong{
+	font-weight:bold;
+}
+#home h1{
+	margin-bottom:2px;
+}
+.twitterIcon{
+	display:block;
+	text-indent:-9999px;
 }

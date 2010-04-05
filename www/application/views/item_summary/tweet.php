@@ -1,4 +1,4 @@
 <div class="tweet item">
-<p><?php echo date("h:m",$tweet->time); ?>:
+<p><span class="twitterIcon">Tweet</span><?php echo date("H:m",$tweet->time); ?>&nbsp;
 <?php echo $tweet->tweet; ?></p>
 </div>
