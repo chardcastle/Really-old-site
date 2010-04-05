@@ -5,21 +5,29 @@
 		echo $hotlinks;
 	?>
 <div id="container">
-	<?php foreach($posts as $key => $post){ ?>
+	<?php foreach($posts as $key => $post){				 
+		$features = unserialize($post->content); 
+		if(is_array($features)){
+		?>
 		<div id="box<?php echo $key+1; ?>" class="outer">
 			<a href="#" class="close ui-icon ui-icon-close" style="float:right">Close</a>		
 			<div class="pubDate"><?php echo $post->date; ?></div>
 			<?php 
-			$features = unserialize($post->content); 
-			if(is_array($features)){
 			foreach($features as $f){
-			?>
+			?>			
 				<div class="body"><?php echo stripslashes($f); ?></div>
-			<?php }
-			}else{
+			<?php } ?>
+		</div>
+		<?php 	
+		}else{
+		?>
+		<div id="home" class="outer">
+			<?php 	
 				// Probably homepage blurb, spit out welcome html
 				echo $features;
-			}?>				
-		</div>
-	<?php } ?>
+			?>
+		</div>	
+		<?php }
+	} ?>		
+	
 </div>

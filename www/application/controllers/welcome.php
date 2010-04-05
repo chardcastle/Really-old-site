@@ -47,7 +47,7 @@ class Welcome_Controller extends Template_Controller {
 		$this->template->content = new View('welcome_content');
 		$postObj = new Post_Model;
 				
-		$this->template->title = 'Welcome to Kohana!';
+		$this->template->title = 'Welcome to Kohana! ('.Kohana::config("config.environment").')';
 
 		$this->template->content->hotlinks = $this->pagination->render("digg");
 		// Post timeline data

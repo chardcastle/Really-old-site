@@ -4,11 +4,13 @@ class App_Model extends Model {
 	 	
 	public $result = array();
 	protected $db;	 	
+	protected $environment;
 	public function __construct()
 	{
 		// load database library into $this->db (can be omitted if not required)
 		parent::__construct();
-		$this->db = new Database('local');
+		$this->environment = Kohana::config("config.environment");
+		$this->db = new Database($this->environment);
 	}
 	/*
 	 * return the array result for preg matches 
