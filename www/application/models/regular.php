@@ -5,7 +5,7 @@ class Regular_Model extends App_Model {
  	public $title = "";
  	public $teaser = "";
  	public $body = "";
- 	
+
 	public function __construct()
 	{
 		// load database library into $this->db (can be omitted if not required)
@@ -14,10 +14,10 @@ class Regular_Model extends App_Model {
 		$this->teaser = "";
 	}
 	public function loadFromLocalSource($content){		
-		// Get title
-		//$content = unserialize($content);						
+		// Get title								
 		//preg_match('/\"regular-title\"\:\"(.*)\",/i',$content,$this->result);						
 		//$this->title = $this->getResult();
+		//		
 		$this->title = (isset($content["regular-title"])?$content["regular-title"]:false);
 		// Get body
 		//preg_match('/\"regular-body\"\:\"(.*)\"/i',$content,$this->result);						
