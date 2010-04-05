@@ -10,7 +10,7 @@
 		if(is_array($features)){
 		?>
 		<div id="box<?php echo $key+1; ?>" class="outer">
-			<a href="#" class="close ui-icon ui-icon-close" style="float:right">Close</a>		
+			<a href="#" class="close ui-icon ui-icon-search" style="float:right">Close</a>		
 			<div class="pubDate"><?php echo $post->date; ?></div>
 			<?php 
 			foreach($features as $f){

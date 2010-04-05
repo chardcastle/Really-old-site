@@ -12,7 +12,7 @@
 </head>
 <body>
 	<div id="globalOuter">
-		<h1><a href="/">Chris Hardcastle</a></h1>
+		<a href="/"><img src="/ui/images/title.jpg" alt="Chris Hardcastle"/></a>
 		<div id="nav">
 			<p>
 				<a href="#clearup" id="clearUp">Clear up</a>
@@ -24,8 +24,7 @@
 		
 			</ul>
 		</div>
-		<h2><?php echo html::specialchars($title) ?></h2>
-		
+				
 			<?php echo $content ?>
 		
 	</div>

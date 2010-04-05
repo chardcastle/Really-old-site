@@ -28,14 +28,15 @@ h1 {
 	font-weight: bold;
 	
 }
+/* not in use 
 h1 a{
-	background:transparent url(images/title.png) no-repeat top left;
+	background:transparent url(/ui/images/title.jpg) no-repeat top left;
 	display:block;
-	width:232px;
-	height:36px;
+	width:290px;
+	height:22px;
 	text-indent:-9999px;
 }
-
+/*  */
 code {
 	font-family: Monaco, Verdana, Sans-serif;
 	font-size: 12px;
@@ -135,10 +136,11 @@ code {
 	left:508px;
 }
 .item{
-	margin:2px 0;
+	margin:5px 0;
 }
 .tweet{
-	background: DodgerBlue ;
+	padding:2px;
+	border:1px solid #47d1ff;
 }
 .git{
 	background: Gainsboro;
@@ -151,7 +153,7 @@ code {
 	margin-left:6px;
 }
 #home{
-	background:Yellow !important;
+	background:#FFFF99 !important;
 }
 #home strong{
 	font-weight:bold;
@@ -159,7 +161,26 @@ code {
 #home h1{
 	margin-bottom:2px;
 }
-.twitterIcon{
+.tweetTime{
+	font-size:0.8em;
+	text-decoration:itallic;	
+	background:transparent url(/ui/images/twitter_icon_small.gif) no-repeat 12px 14px;
 	display:block;
-	text-indent:-9999px;
+	height:40px;
+	width:40px;
+	float:right;
+}
+
+#nav {
+	display:none;
+}
+.pubDate{
+	font-weight:bold;
+}
+.pagination a{
+	text-decoration:none;
+	color:#000;
+}
+.pagination {
+	margin:5px 0;
 }

@@ -28,7 +28,11 @@ class Tweet_Model extends App_Model {
 					if($link["rel"] == "image"){						
 						$profilePic = $link["href"];
 					}
-				}			
+				}
+				// transform links TODO
+				$tweetText = $tweet["title"];			
+				preg_replace('/\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|](?![^<>]*(?:>|<\/a>))/i', "<a href=\"#\" onclick=\"open_url('\\0')\";return false;>\\0</a>", $tweetText);
+				
 				$content = array(
 					"tweet" => str_ireplace("hardcastle:","",$tweet["title"]),
 					"author "=> $tweet["author"]["name"],
