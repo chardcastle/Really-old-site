@@ -10,22 +10,27 @@
 		if(is_array($features)){
 		?>
 		<div id="box<?php echo $key+1; ?>" class="outer">
-			<a href="#" class="close ui-icon ui-icon-search" style="float:right">Close</a>		
-			<div class="pubDate"><?php echo $post->date; ?></div>
+			<div class="inner">
+				<a href="/view/<?php echo $post->id; ?>" class="close ui-icon ui-icon-search" style="float:right">Close</a>		
+				<div class="pubDate"><?php echo $post->date; ?></div>
+			</div>
 			<?php 
 			foreach($features as $f){
 			?>			
 				<div class="body"><?php echo stripslashes($f); ?></div>
 			<?php } ?>
+			<div class="boxFooter"></div>
 		</div>
 		<?php 	
 		}else{
 		?>
 		<div id="home" class="outer">
+			<div class="inner">
 			<?php 	
 				// Probably homepage blurb, spit out welcome html
 				echo $features;
 			?>
+			</div>
 		</div>	
 		<?php }
 	} ?>		

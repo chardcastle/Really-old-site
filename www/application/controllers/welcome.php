@@ -16,8 +16,7 @@ class Welcome_Controller extends Template_Controller {
 
 	// Set the name of the template to use
 	public $template = 'template';
-	public $pagination = "";
-	public $itemsPerPage = 9;
+	public $pagination = "";	
 	public $links = array();
 	protected $db;
 	private $result = array();	

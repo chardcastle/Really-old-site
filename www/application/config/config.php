@@ -132,7 +132,7 @@ $config['modules'] = array
  * Contains the number of posts on a page.
  * custom and referenced as Kohana::config("config.number_of_items")
  */
-$config['number_of_items'] = 9;
+$config['number_of_items'] = 4;
 /**
  * Set the date format for items shown in grid
  */

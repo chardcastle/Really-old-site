@@ -9,7 +9,7 @@ html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pr
 
 body {
 	background-color: #fff;
-	padding:40px;
+	padding:10px;
 	font-family: Lucida Grande, Verdana, Sans-serif;
 	font-size: 14px;
 	color: #4F5155;
@@ -25,8 +25,7 @@ h1 {
 	color: #444;
 	background-color: transparent;
 	font-size: 16px;
-	font-weight: bold;
-	
+	font-weight: bold;	
 }
 /* not in use 
 h1 a{
@@ -48,13 +47,13 @@ code {
 	padding: 12px 10px 12px 10px;
 }
 
-#thumbs{
+#thumbs {
 	position:relative;
 	z-index:1;
-		width:130px;
+	width:130px;
 	border:1px solid #333;
 }
-#thumbs div{
+#thumbs div {
 	position:relative;
 	z-index:2;
 	width:28px;
@@ -63,26 +62,28 @@ code {
 	margin:10px 10px 10px 0;
 	border:1px solid #333;
 }
-#container{
+#container {
 	position:relative;
 	width:762px;
 	height:300px;
 }
-#container div.outer{
+#container div.outer {
 	position:absolute;
 	/*top:0; left:0;*/
-	border:1px solid #ccc;
-	z-index:3;	
-	width:200px;
-	height:200px;
-	overflow:hidden;
 	background:#fff;
-	padding:17px;
+	border:1px solid #666;
+	z-index:3;	
+	width:234px;
+	height:234px;
+	overflow:hidden;	
 }
-#container div.active{
+#container div.outer .inner{
+	margin:8px 16px 0 16px;	
+}
+#container div.active {
 	border:2px solid #000;
 }
-#container div.fullSize{
+#container div.fullSize {
 	top:0!important;
 	left:0!important;
 	width:762px;
@@ -91,77 +92,84 @@ code {
 	z-index:4;
 	position:absolute;
 }
-#globalOuter{
+#globalOuter {
 	width:762px;
 	margin:20px auto 0 auto;
 }
-#navigation{
+#navigation {
 	display:none;
 }
 #home,
-#box1{
+#box1 {
 	top:0px;
 	left:0px;
 }
-#box2{
+#box2 {
 	top:0px;
 	left:254px;
 }
-#box3{
+#box3 {
 	top:0px;
 	left:508px;
 }
-#box4{
+#box4 {
 	top:250px;
 	left:0px;
 }
-#box5{
+#box5 {
 	top:250px;
 	left:254px;
 }
-#box6{
+#box6 {
 	top:250px;
 	left:508px;
 }
-#box7{
+#box7 {
 	top:500px;
 	left:0px;
 }
-#box8{
+#box8 {
 	top:500px;
 	left:254px;
 }
-#box9{
+#box9 {
 	top:500px;
 	left:508px;
 }
-.item{
+.item {
 	margin:5px 0;
 }
-.tweet{
-	padding:2px;
+.tweet,
+.git{
+	padding:6px;
+}
+.tweet {	
 	border:1px solid #47d1ff;
 }
-.git{
-	background: Gainsboro;
+.git {	background: Gainsboro;
+	
 }
-.regular{
+.regular {
 	background: Lavender;
 }
-#profilePic{
+#profilePic {
 	float:right;
 	margin-left:6px;
 }
-#home{
-	background:#FFFF99 !important;
+#home {
+	background:#FFFF99 !important;	
 }
-#home strong{
+#home .inner{
+	padding:16px;
+	margin:0 !important;
+}
+#home strong {
 	font-weight:bold;
 }
-#home h1{
+#home h1 {
 	margin-bottom:2px;
 }
-.tweetTime{
+.tweetTime {
 	font-size:0.8em;
 	text-decoration:itallic;	
 	background:transparent url(/ui/images/twitter_icon_small.gif) no-repeat 12px 14px;
@@ -170,17 +178,35 @@ code {
 	width:40px;
 	float:right;
 }
-
+.commitTime {
+	background:transparent url(/ui/images/gitSmall.gif) no-repeat 0px 14px;
+	display:block;
+	width:40px;
+	height:40px;
+	font-size:0.8em;
+	text-decoration:itallic;
+	float:right;
+}
 #nav {
 	display:none;
 }
-.pubDate{
+.pubDate {
 	font-weight:bold;
 }
-.pagination a{
+.pagination a {
 	text-decoration:none;
 	color:#000;
 }
 .pagination {
-	margin:5px 0;
+	margin:20px 0;
+}
+.boxFooter{
+	background:transparent url(/ui/images/boxFade.png) repeat-x bottom left;
+	width:100%;
+	position:absolute;
+	bottom:0;
+	height:60px;
+}
+.body{
+	margin:16px;
 }
