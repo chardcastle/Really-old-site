@@ -124,7 +124,8 @@ SQL;
 				$obj->time = $content["time"];
 				// slight difference in parameter for this object 
 				$content = $obj->loadFromLocalSource($obj);				
-			}				
+			}		
+			
 			// load into result array			
 			$key = date($this->byDayFormat,$value->created_dt);
 			if(!array_key_exists($key,$this->posts)){
