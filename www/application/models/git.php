@@ -12,12 +12,24 @@ class Git_Model extends App_Model {
 		// load database library into $this->db (can be omitted if not required)
 		parent::__construct();		
 	}
-	public function loadFromLocalSource($self){		
-		// view
-		$view = new View("item_summary/git");
-		$view->set("commit",$self);
-		return $view->render();		
+	public function loadFromLocalSource($content,$value){
+            // view
+            $this->repoName = $value->title;
+            $this->committer = (isset($content["committer"])?$content["committer"]:false);
+            $this->dateTime = $value->created_dt;
+            $this->message = $content["message"];
+            $view = new View("item_summary/git");
+            $view->set("commit",$this);
+            return $view->render();
 	}
+//        public function loadFull($content){
+//            $this->message = $content["message"];
+//            $this->repoName = $content["repoName"];
+//            $view = new View("item_full/git");
+//            $view->set("commit",$self);
+//            return $view->render();
+//
+//        }
 	public function captureFeed($feedUrl,$mostRecentPost){
 		$numberOfNewPosts = 0;
 		$commits = file_get_contents($feedUrl);

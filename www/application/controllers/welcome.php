@@ -18,15 +18,15 @@ class Welcome_Controller extends Template_Controller {
 	public $template = 'template';
 	public $pagination = "";	
 	public $links = array();
-	protected $db;
-	private $result = array();	
+	protected $db;	
 	
 	public function __construct(){		
-		parent::__construct(); // This must be included		
-		$this->db = new Database('local');
+		parent::__construct(); // This must be included	
+		$env = Kohana::config("config.environment");	
+		$this->db = new Database($env);
 		$this->itemsPerPage = Kohana::config("config.number_of_items");
 		$this->pagination = new Pagination(array(
-		    'base_url'    => 'welcome/page/', // base_url will default to current uri
+		    'base_url'    => '/welcome/page/', // base_url will default to current uri
 		    'uri_segment'    => 'page', // pass a string as uri_segment to trigger former 'label' functionality
 		    'total_items'    => $this->db->count_records("kh_timeline"), // use db count query here of course
 		    'items_per_page' => $this->itemsPerPage, // it may be handy to set defaults for stuff like this in config/pagination.php
@@ -48,7 +48,7 @@ class Welcome_Controller extends Template_Controller {
 				
 		$this->template->title = 'Welcome to Kohana! ('.Kohana::config("config.environment").')';
 
-		$this->template->content->hotlinks = $this->pagination->render("digg");
+		$this->template->content->hotlinks = $this->pagination->render("punbb");
 		// Post timeline data
 		$mostRecentPost = $this->db->select("*")
 		->from("kh_timeline")		
