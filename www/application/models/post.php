@@ -73,59 +73,9 @@ class Post_Model extends App_Model {
 SQL;
 
 		$posts = $this->db->query($sql)->result_array(true);		
-		foreach($posts as $key => $value){
-			$content = $value->content;
-			if($value->type == "tumblr"){				
-				$serialData = unserialize($content);				
-				/* */
-				if(!$serialData){					
-					kohana::log("debug","failed to decode");				
-				}else{					
-					kohana::log("debug","Found json");					
-					if(is_array($serialData) && isset($serialData["type"])){
-						switch($serialData["type"]){
-							case "photo":
-								$obj = new Photo_Model;
-								$content = $obj->loadFromLocalSource($serialData);
-								break;						
-							case "regular":																				
-								$obj = new Regular_Model;				
-								$content = $obj->loadFromLocalSource($serialData);
-								break;
-							case "link":	
-								$obj = new Link_Model;					
-								$content = $obj->loadFromLocalSource($serialData);
-								break;
-							case "video":		
-								$obj = new Video_Model;													
-								$content = $obj->loadFromLocalSource($serialData);	
-								break;							
-						}
-					}
-				}
-			}else if($value->type == "gitcommit"){
-				$obj = new Git_Model;
-				$content = unserialize($value->content);
-				$obj->repoName = $value->title;
-				$obj->committer = (isset($content["committer"])?$content["committer"]:false);
-				$obj->dateTime = $value->created_dt;
-				$obj->message = $content["message"];
-				// slight difference in parameter for this object 
-				$content = $obj->loadFromLocalSource($obj);			
-			}else if($value->type == "tweet"){
-				
-				$content = unserialize($value->content);
-				//preg_replace("#\[(([a-zA-Z]+://)([a-zA-Z0-9?&%.;:/=+_-]*))\]#e", "'<a href=\"$1\" target=\"_blank\">$3</a>'", $content);			
-				//$tweet = preg_replace("/#[a-zA-Z]+/i", "<a href='http://twitter.com/search?q=urlencode($1)' target='_blank'>$1</a>", $content["tweet"]);
-				$tweet = $content["tweet"];
-				$obj = new Tweet_Model;
-				$obj->tweet = $tweet; 
-				$obj->author = "@hardcastle";				
-				$obj->time = $content["time"];
-				// slight difference in parameter for this object 
-				$content = $obj->loadFromLocalSource($obj);				
-			}		
-			
+		foreach($posts as $key => $value){			
+            $serialData = unserialize($value->content);
+            $content = $this->load($serialData,$value);			
 			// load into result array			
 			$key = date($this->byDayFormat,$value->created_dt);
 			if(!array_key_exists($key,$this->posts)){
@@ -176,6 +126,51 @@ SQL;
 		$data = file_get_contents($this->urls[$key]);
 		return substr($data,0,500);		
 	}
+     *
+     */
+    /*
+     * Use the data to find its type
+     * use its object to return its requested HTML style.
+     */
+    private function load($serialData,$value){
+            if($value->type == "tumblr"){
+            /* */
+            if(!$serialData){
+                kohana::log("debug","failed to decode");
+            }else{
+                kohana::log("debug","Found json");
+                if(is_array($serialData) && isset($serialData["type"])){
+                    switch($serialData["type"]){
+                        case "photo":
+                            $obj = new Photo_Model;
+                            return $obj->loadFromLocalSource($serialData);
+                            break;
+                        case "regular":
+                            $obj = new Regular_Model;
+                            return $obj->loadFromLocalSource($serialData);
+                            break;
+                        case "link":
+                            $obj = new Link_Model;
+                            return $obj->loadFromLocalSource($serialData);
+                            break;
+                        case "video":
+                            $obj = new Video_Model;
+                            return $obj->loadFromLocalSource($serialData);
+                            break;
+                    }
+                }
+            }
+        }else if($value->type == "gitcommit"){
+            $obj = new Git_Model;
+            // slight difference in parameter for this object
+            return $obj->loadFromLocalSource($serialData,$value);
+        }else if($value->type == "tweet"){
+            $obj = new Tweet_Model;
+            // slight difference in parameter for this object
+            return $obj->loadFromLocalSource($serialData);
+        }
+
+    }
 	/*
 	 * Get part of the data, for fun
 	 */

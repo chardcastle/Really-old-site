@@ -12,10 +12,15 @@ class Tweet_Model extends App_Model {
 		// load database library into $this->db (can be omitted if not required)
 		parent::__construct();		
 	}
-	public function loadFromLocalSource($self){		
-		// view
+	public function loadFromLocalSource($content){
+                $tweet = $content["tweet"];
+                //preg_replace("#\[(([a-zA-Z]+://)([a-zA-Z0-9?&%.;:/=+_-]*))\]#e", "'<a href=\"$1\" target=\"_blank\">$3</a>'", $content);
+                //$tweet = preg_replace("/#[a-zA-Z]+/i", "<a href='http://twitter.com/search?q=urlencode($1)' target='_blank'>$1</a>", $content["tweet"]);
+                $this->tweet = $tweet;
+                $this->author = "@hardcastle";
+                $this->time = $content["time"];
 		$view = new View("item_summary/tweet");
-		$view->set("tweet",$self);
+		$view->set("tweet",$this);
 		return $view->render();		
 	}
 	public function captureFeed($feedUrl,$mostRecentPost){

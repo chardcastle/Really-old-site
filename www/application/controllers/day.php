@@ -8,48 +8,46 @@
  * @copyright  (c) 2007-2008 Kohana Team
  * @license    http://kohanaphp.com/license.html
  */
-class View_Controller extends Template_Controller {
+class Day_Controller extends Template_Controller {
 
 	// Disable this controller when Kohana is set to production mode.
 	// See http://docs.kohanaphp.com/installation/deployment for more details.
 	const ALLOW_PRODUCTION = FALSE;
 
 	// Set the name of the template to use
-	public $template = 'template';			
-	protected $db;		
-	
-	public function __construct(){		
+	public $template = 'template';
+	protected $db;
+
+	public function __construct(){
 		parent::__construct(); // This must be included
                 $env = Kohana::config("config.environment");
 		$this->db = new Database($env);
 	}
-	
+
 	public function index()
 	{
 		/*
 		 * Useful snippets
 		 * 	$this->template->content->test .= Kohana::debug($xml);
-		 *  kohana::log("debug",Kohana::debug($post));	
+		 *  kohana::log("debug",Kohana::debug($post));
 		 */
 
 
-		
+
 	}
         public function view($postId){
             if($postId>0){
-                $this->template->content = new View('full_width');
-                $postObj = new Post_Model;
+                $this->template->content = new View('full_width');                
                 $this->template->title = 'Welcome to Kohana! ('.Kohana::config("config.environment").')';
                 // Post timeline data
                 $post = $this->db->select("*")
-                ->from("kh_posts")
-                //->where("post_id = ",$postId)
+                ->from("kh_timeline")
+                ->where("id = ",$postId)
                 ->get()
-                ->result_array(true);
-
-                $content = unserialize($post);
-
-                $this->template->content->post = $post;
+                ->result_array(false);
+                $this->template->content->date = $post[0]["date"];
+                $this->template->content->id = $post[0]["id"];
+                $this->template->content->post = unserialize($post[0]["content"]);
             }
 
         }
