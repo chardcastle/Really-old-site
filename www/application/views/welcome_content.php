@@ -6,8 +6,8 @@
 	?>
 <div id="container">
 	<?php foreach($posts as $key => $post){				 
-		$features = unserialize($post->content); 
-		if(is_array($features)){
+		$features = unserialize($post->teaser);
+		if($post->id > 1){
 		?>
 		<div id="box<?php echo $key+1; ?>" class="outer">
 			<div class="inner">
@@ -28,8 +28,10 @@
 			<div class="inner">
 			<?php 	
 				// Probably homepage blurb, spit out welcome html
-				echo $features;
-			?>
+				 foreach($features as $f){
+                     echo $f;
+                 }
+                ?>
 			</div>
 		</div>	
 		<?php }
