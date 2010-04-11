@@ -13,7 +13,7 @@ class Regular_Model extends App_Model {
 		$this->title = "";
 		$this->teaser = "";
 	}
-	public function loadFromLocalSource($content){		
+	public function loadFromLocalSource($content,$size){
 		// Get title								
 		//preg_match('/\"regular-title\"\:\"(.*)\",/i',$content,$this->result);						
 		//$this->title = $this->getResult();
@@ -27,7 +27,7 @@ class Regular_Model extends App_Model {
 		$pos = ($pos!==false)?$pos:$this->findTeaserLength(12,$body);									
 		$this->teaser = ($body)?nl2br(substr(strip_tags($body),0,$pos)):"?";
 		// view						
-		$view = new View("item_summary/regular");
+		$view = new View("item_{$size}/regular");
 		$view->set("article",$this);
 		return $view->render();
 	}

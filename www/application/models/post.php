@@ -72,10 +72,19 @@ class Post_Model extends App_Model {
 				GROUP BY posts.content ORDER BY posts.created_dt DESC
 SQL;
 
-		$posts = $this->db->query($sql)->result_array(true);		
+		$posts = $this->db->query($sql)->result_array(true);
+        // Make homepage snippet which will always be the first item
+        // ... the most recent date
+        $today = date($this->byDayFormat,time());
+        $this->posts[$today] = $this->getHomeSnippet();
+        // traverse the sql result to populate timeline
 		foreach($posts as $key => $value){			
             $serialData = unserialize($value->content);
-            $content = $this->load($serialData,$value);			
+            $content = array(
+                "teaser" =>  $this->load($serialData,$value,"summary"),
+                "content" => $this->load($serialData,$value,"full_width")
+            );
+            //$content =  $this->load($serialData,$value,"summary");
 			// load into result array			
 			$key = date($this->byDayFormat,$value->created_dt);
 			if(!array_key_exists($key,$this->posts)){
@@ -85,37 +94,40 @@ SQL;
 			}	
 		}	
 		// always make first entry the home page blurb		
-		$content = $this->makeHomeSnippet();
-		// traverse and stick into table		
-		$x=0;		
+		//$this->makeHomeSnippet();
+		// traverse and stick into table
+
 		foreach($this->posts as $key => $value){
-			$x++;
-			$content = serialize($value);
-			$this->db->insert("kh_timeline", array(
-				"date" => $key,
-				"content" => "{$content}"
-			));				
+            $teaser = array();
+            $content = array();
+            foreach($value as $post){
+                 $teaser[] = $post["teaser"];
+                 $content[] = $post["content"];
+            }
+            $teaser = (count($teaser)>0)?serialize($teaser):serialize(array());
+            $content = (count($content)>0)?serialize($content):serialize(array());
+            $this->db->insert("kh_timeline", array(
+                "date" => $key,
+                "teaser" => "{$teaser}",
+                "content" => "{$content}"
+            ));
+            
 		}
 	}
+
 	public function getPosts($page){
 		$this->db->select("*")
 		->from("kh_posts")
-		->limit();
-	
+		->limit();	
 	}
-	/*
-	 * Saves home page content as the very first post
-	 * */
-	public function makeHomeSnippet(){
-		// get html
-		$view = new View('home_snippet');
-		// whack into db
-		$content = serialize($view->render());
-		$this->db->insert("kh_timeline", array(
-			"date" => date($this->byDayFormat), // todays date
-			"content" => "{$content}"
-		));	
-	}
+
+    private function getHomeSnippet(){
+         $view = new View('home_snippet');
+        return array(array(
+                "teaser"=>$view->render(),
+                "content"=> "home")
+        );
+    }
 	public function getDataSourceUrls(){
 		return $this->urls;	
 	}
@@ -132,8 +144,8 @@ SQL;
      * Use the data to find its type
      * use its object to return its requested HTML style.
      */
-    private function load($serialData,$value){
-            if($value->type == "tumblr"){
+    private function load($serialData,$value,$size){
+        if($value->type == "tumblr"){
             /* */
             if(!$serialData){
                 kohana::log("debug","failed to decode");
@@ -143,19 +155,21 @@ SQL;
                     switch($serialData["type"]){
                         case "photo":
                             $obj = new Photo_Model;
-                            return $obj->loadFromLocalSource($serialData);
+                            $html = $obj->loadFromLocalSource($serialData,$size);
                             break;
                         case "regular":
                             $obj = new Regular_Model;
-                            return $obj->loadFromLocalSource($serialData);
+                            $html = $obj->loadFromLocalSource($serialData,$size);
                             break;
                         case "link":
                             $obj = new Link_Model;
-                            return $obj->loadFromLocalSource($serialData);
+                            // no size alternative required
+                            $html = $obj->loadFromLocalSource($serialData);
                             break;
                         case "video":
                             $obj = new Video_Model;
-                            return $obj->loadFromLocalSource($serialData);
+                            // no size alternative required
+                            $html = $obj->loadFromLocalSource($serialData);
                             break;
                     }
                 }
@@ -163,13 +177,13 @@ SQL;
         }else if($value->type == "gitcommit"){
             $obj = new Git_Model;
             // slight difference in parameter for this object
-            return $obj->loadFromLocalSource($serialData,$value);
+            $html = $obj->loadFromLocalSource($serialData,$value,$size);
         }else if($value->type == "tweet"){
             $obj = new Tweet_Model;
             // slight difference in parameter for this object
-            return $obj->loadFromLocalSource($serialData);
+            $html =  $obj->loadFromLocalSource($serialData,$size);
         }
-
+        return $html;
     }
 	/*
 	 * Get part of the data, for fun

@@ -48,7 +48,7 @@ class Welcome_Controller extends Template_Controller {
 				
 		$this->template->title = 'Welcome to Kohana! ('.Kohana::config("config.environment").')';
 
-		$this->template->content->hotlinks = $this->pagination->render("punbb");
+		$this->template->content->hotlinks = $this->pagination->render("digg");
 		// Post timeline data
 		$mostRecentPost = $this->db->select("*")
 		->from("kh_timeline")		

@@ -14,12 +14,12 @@ class Photo_Model extends App_Model {
 			"large" => ""
 		);
 	}
-	public function loadFromLocalSource($content){		
+	public function loadFromLocalSource($content,$size){
 		$this->urls["small"] = (isset($content["small"])?$content["small"]:false);
 		$this->urls["medium"] = (isset($content["medium"])?$content["small"]:false);
 		$this->urls["large"] = (isset($content["large"])?$content["large"]:false);
 		$this->title = (isset($content["photo-caption"])?$content["photo-caption"]:false);
-		$view = new View("item_summary/photo");
+		$view = new View("item_{$size}/photo");
 		$view->set("photo",$this);
 		return $view->render();		
 	}

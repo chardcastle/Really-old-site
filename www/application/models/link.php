@@ -10,7 +10,7 @@ class Link_Model extends App_Model {
 		// load database library into $this->db (can be omitted if not required)
 		parent::__construct();		
 	}
-	public function loadFromLocalSource($content){		
+	public function loadFromLocalSource($content){        
 		//preg_match('/\"link-text\"\:\"(.*)\",/i',$content,$this->result);
 		$this->title = $content["link-text"];
 		//preg_match('/\"link-url\"\:\"(.*)\",/i',$content,$this->result);
