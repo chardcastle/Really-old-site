@@ -20,7 +20,7 @@ class Day_Controller extends Template_Controller {
 
 	public function __construct(){
 		parent::__construct(); // This must be included
-                $env = Kohana::config("config.environment");
+        $env = Kohana::config("config.environment");
 		$this->db = new Database($env);
 	}
 
@@ -37,14 +37,12 @@ class Day_Controller extends Template_Controller {
 	}
         public function view($postId){
             if($postId>0){
+                $postObj = new Post_Model();
                 $this->template->content = new View('full_width');                
-                $this->template->title = 'Welcome to Kohana! ('.Kohana::config("config.environment").')';
+                $this->template->title = 'Chris Hardcastle ('.Kohana::config("config.environment").')';
+                $this->template->description = $postObj->getSiteDescription();
                 // Post timeline data
-                $post = $this->db->select("*")
-                ->from("kh_timeline")
-                ->where("id = ",$postId)
-                ->get()
-                ->result_array(false);
+                $post = $postObj->getPost($postId);
                 $this->template->content->date = $post[0]["date"];
                 $this->template->content->id = $post[0]["id"];
                 $this->template->content->post = unserialize($post[0]["content"]);

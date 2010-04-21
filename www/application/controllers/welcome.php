@@ -16,10 +16,11 @@ class Welcome_Controller extends Template_Controller {
 
 	// Set the name of the template to use
 	public $template = 'template';
+    public $siteDesc = "";
 	public $pagination = "";	
 	public $links = array();
 	protected $db;	
-	
+	protected $siteObj;
 	public function __construct(){		
 		parent::__construct(); // This must be included	
 		$env = Kohana::config("config.environment");	
@@ -31,7 +32,9 @@ class Welcome_Controller extends Template_Controller {
 		    'total_items'    => $this->db->count_records("kh_timeline"), // use db count query here of course
 		    'items_per_page' => $this->itemsPerPage, // it may be handy to set defaults for stuff like this in config/pagination.php
 		    'style'          => 'classic' // pick one from: classic (default), digg, extended, punbb, or add your own!		
-		));		
+		));
+        $this->siteObj = new Post_Model();
+        $this->siteDesc = $this->siteObj->getSiteDescription();
 	}
 	
 	public function index()
@@ -43,21 +46,20 @@ class Welcome_Controller extends Template_Controller {
 		 */
 	
 		// Load template
-		$this->template->content = new View('welcome_content');
-		$postObj = new Post_Model;
+		$this->template->content = new View('welcome_content');		
 				
-		$this->template->title = 'Welcome to Kohana! ('.Kohana::config("config.environment").')';
-
+		$this->template->title = 'Chris Hardcastle ('.Kohana::config("config.environment").')';
+        $this->template->description = $this->siteObj->getSiteDescription();
 		$this->template->content->hotlinks = $this->pagination->render("digg");
 		// Post timeline data
-		$mostRecentPost = $this->db->select("*")
+		$mostRecentPosts = $this->db->select("*")
 		->from("kh_timeline")		
 		->limit($this->itemsPerPage)
 		->orderby("id","asc")
 		->get()
 		->result_array(true);
 		
-		$this->template->content->posts = $mostRecentPost;		
+		$this->template->content->posts = $mostRecentPosts;
 		
 	}
 	/*
@@ -80,6 +82,7 @@ class Welcome_Controller extends Template_Controller {
 			->result_array(true);
 			
 			$this->template->title = "Chris";//var_dump($this->pagination);
+            $this->template->description = $this->siteDesc;
 		}
 	}
 	private function getPageSqlEnd($pageId){

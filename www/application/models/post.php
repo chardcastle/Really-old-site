@@ -50,7 +50,9 @@ class Post_Model extends App_Model {
 		$gitNo = $obj->captureFeed($this->urls["github"]["jquery"],$mostRecentPost);
 		$info .= "<p>".(isset($gitNo)?$gitNo:"Didn't request any")." new Git items</p>";
 		echo $info;
-		/* */		
+		// update website description
+        $this->updateHomeDescription();
+
 	}
 	
 	/*
@@ -75,7 +77,7 @@ SQL;
 		$posts = $this->db->query($sql)->result_array(true);
         // Make homepage snippet which will always be the first item
         // ... the most recent date
-        $today = date($this->byDayFormat,time());
+        $today = date($this->byDayFormat,(time()+86400));
         $this->posts[$today] = $this->getHomeSnippet();
         // traverse the sql result to populate timeline
 		foreach($posts as $key => $value){			
@@ -122,12 +124,26 @@ SQL;
 	}
 
     private function getHomeSnippet(){
-         $view = new View('home_snippet');
+        $view = new View('home_snippet');
         return array(array(
                 "teaser"=>$view->render(),
                 "content"=> "home")
         );
     }
+    /*
+     * Get the website description from the 
+     * Tumblr account description
+     */
+    private function updateHomeDescription(){
+        $data = file_get_contents($this->urls["homedesc"]);
+        $data = json_decode($data,true);
+        $desc = $data["query"]["results"]["tumblelog"]["content"];
+        if(!$desc){
+           $desc = "A blog by";
+        }
+        $this->db->update("kh_stash",array("value"=>"{$desc}"),array("key"=>"home_desc"));
+    }
+    
 	public function getDataSourceUrls(){
 		return $this->urls;	
 	}
@@ -191,7 +207,23 @@ SQL;
 	public function getDataSourceDataSchemea($key){		
 		return (Kohana::config("config.pop"))?"Pop is on":"Pop is off";
 				
-	}	
+	}
+    public function getSiteDescription(){
+        $data = $this->db->select("value")
+                ->from("kh_stash")
+                ->where("key=","home_desc")
+                ->get()
+                ->result_array(true);
+        return $data[0]->value;
+
+    }
+    public function getPost($postId){
+        return $this->db->select("*")
+                ->from("kh_timeline")
+                ->where("id = ",$postId)
+                ->get()
+                ->result_array(false);
+    }
 /*
 
  * */ 
