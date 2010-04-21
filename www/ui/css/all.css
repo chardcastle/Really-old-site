@@ -220,3 +220,6 @@ code {
     clear:both;
     display:block;
 }
+.pagination .forwards{
+    float:right;
+}

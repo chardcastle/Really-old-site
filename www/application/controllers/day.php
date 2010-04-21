@@ -45,6 +45,7 @@ class Day_Controller extends Template_Controller {
                 $post = $postObj->getPost($postId);
                 $this->template->content->date = $post[0]["date"];
                 $this->template->content->id = $post[0]["id"];
+                $this->template->content->token = md5(rand(0,20));
                 $this->template->content->post = unserialize($post[0]["content"]);
             }
 
