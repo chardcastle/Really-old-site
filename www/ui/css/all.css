@@ -65,7 +65,7 @@ code {
 #container {
 	position:relative;
 	width:762px;
-	height:300px;
+	height:500px;
 }
 #container div.outer {
 	position:absolute;
@@ -198,7 +198,9 @@ code {
 	color:#000;
 }
 .pagination {
+    
 	margin:20px 0;
+    clear:both;
 }
 .boxFooter{
 	background:transparent url(/ui/images/boxFade.png) repeat-x bottom left;
@@ -209,4 +211,12 @@ code {
 }
 .body{
 	margin:16px;
+}
+#header p{
+    float:left;
+}
+
+#header img{
+    clear:both;
+    display:block;
 }
