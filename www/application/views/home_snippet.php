@@ -1,7 +1,7 @@
 <div class="home none-item">
 	<h1>WELCOME</h1>
 	<div id="profilePic">
-		<img src="/ui/images/profilepic_med.jpg" alt="Profile Pic"/>
+		<img src="/ui/images/profilepic_med.jpg" alt="Profile Pic"/>        
 	</div>
 	<ul>
 		<li><strong>Bio:</strong><br/>Website developer, husband and father of one. Linux, PHP, C# and social media lover.</li>
