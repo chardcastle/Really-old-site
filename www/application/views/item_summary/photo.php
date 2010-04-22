@@ -1,4 +1,6 @@
 <div class="photo item">
 <p><?php echo $photo->title; ?></p>
-<img src="<?php echo $photo->urls["medium"]; ?>" alt="Templated"/>
+<?php if(strlen($photo->urls["medium"])>0){ ?>
+    <img src="<?php echo $photo->urls["medium"]; ?>" alt="Image"/>
+<?php } ?>
 </div>

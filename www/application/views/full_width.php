@@ -10,6 +10,7 @@
 <?php foreach($post as $key=>$value){
     echo $value;
 } ?>
+<h2 class="comment-title"></h2>
 <div id="profileControls">
     <div id="twitter-connect-placeholder"></div>
     <div id="twitter-connect-logout"></div>
@@ -26,6 +27,8 @@
 </div>
 <script type="text/javascript">
     twttr.anywhere(function (T) {
+        // Only offer comment feature if js is available.
+        $(".comment-title").text("Comment with your Twitter account:");
         // connect with twitter
         var currentUser,
             screenName,
