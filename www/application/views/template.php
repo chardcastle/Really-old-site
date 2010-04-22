@@ -8,8 +8,8 @@
 	<link rel='stylesheet' type='text/css' media='all' href='/ui/css/custom-theme/jquery-ui-1.8rc3.custom.css' />
     <script src="http://platform.twitter.com/anywhere.js?id=yDrjhJ7gJHtyPb7JAMklA&v=1" type="text/javascript"></script>
 	<script type="text/javascript" src="/ui/js/jquery-1.4.2.min.js"></script>
-	<!--script type="text/javascript" src="/ui/js/jquery-ui-1.8rc3.custom.min.js"></script>
-	<script type="text/javascript" src="/ui/js/posts.js"></script -->
+	<!--script type="text/javascript" src="/ui/js/jquery-ui-1.8rc3.custom.min.js"></script -->
+	<script type="text/javascript" src="/ui/js/site.js"></script>
     <link rel='stylesheet' href='/ui/css/screen.css' type='text/css' media='Screen' />
     <link rel='stylesheet' href='/ui/css/handheld.css' type='text/css' media='handheld' />
 

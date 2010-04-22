@@ -5,7 +5,8 @@ class Post_Model extends App_Model {
  	private $urls = array();
  	protected $db; // database instance
  	public $posts = array();
-	public $byDayFormat; 	
+	public $byDayFormat;
+    public $totalTimeLineItems = 0;
 	
 	public function __construct()
 	{
@@ -14,6 +15,8 @@ class Post_Model extends App_Model {
 		$this->byDayFormat = Kohana::config("config.by_day_format");
 		// Declare usr		
 		$this->urls = Kohana::config("config.data_source_urls");
+        $this->totalTimeLineItems = $this->db->count_records('kh_timeline');
+
 	}
 	
 	/*

@@ -14,8 +14,7 @@ class Tweet_Model extends App_Model {
 	}
 	public function loadFromLocalSource($content,$size){
         $tweet = $content["tweet"];
-        //preg_replace("#\[(([a-zA-Z]+://)([a-zA-Z0-9?&%.;:/=+_-]*))\]#e", "'<a href=\"$1\" target=\"_blank\">$3</a>'", $content);
-        //$tweet = preg_replace("/#[a-zA-Z]+/i", "<a href='http://twitter.com/search?q=urlencode($1)' target='_blank'>$1</a>", $content["tweet"]);
+        // TODO: test autolink (its core, should be ok)
         $this->tweet = text::auto_link_urls($tweet);
         $this->author = "@hardcastle";
         $this->time = $content["time"];
