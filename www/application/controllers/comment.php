@@ -8,7 +8,7 @@
  * @copyright  (c) 2007-2008 Kohana Team
  * @license    http://kohanaphp.com/license.html
  */
-class Day_Controller extends Template_Controller {
+class Comment_Controller extends Template_Controller {
 
 	// Disable this controller when Kohana is set to production mode.
 	// See http://docs.kohanaphp.com/installation/deployment for more details.
@@ -31,31 +31,32 @@ class Day_Controller extends Template_Controller {
 		 * 	$this->template->content->test .= Kohana::debug($xml);
 		 *  kohana::log("debug",Kohana::debug($post));
 		 */
-
-
-
 	}
-    
-    public function view($postId){
-        if($postId>0){
-            $postObj = new Post_Model();
-            $this->template->content = new View('full_width');
-            $this->template->title = 'Chris Hardcastle ('.Kohana::config("config.environment").')';
-            $this->template->description = $postObj->getSiteDescription();
-            $this->template->content->paginationLimit = $postObj->totalTimeLineItems;
-            // set comment token
-            $token = md5(rand(0,20));
-            $this->session->set_flash("token",$token);
-            $this->template->content->token = $token;
-            // Post timeline data
-            $post = $postObj->getPost($postId);
-            $this->template->content->date = $post[0]["date"];
-            $this->template->content->id = $post[0]["id"];
-            $this->template->content->post = unserialize($post[0]["content"]);
+    public function obfuscateUserName(){
+        echo json_encode(array("username"=>base64_encode($this->input->post("username","unknown"))));
+        exit;
+    }
+    public function makeComment(){
+        $sessToken = $this->session->get("token");
+        if($sessToken == $this->input->post("token")){
+            $userName = base64_decode($this->input->post("username"));
+            $commentObj = new Comment_Model();
+            $commentObj->author = $userName;
+            $commentObj->body = $this->input->post("body");
+            $commentObj->timeLineRef = $this->input->post("time_line_ref");
+            $this->thankForComment();
+        }else{
+            kohana::log("debug","Invalid token detected in comment submission");
+            $this->failForComment();
         }
-
     }
 
+    public function thankForComment(){
+
+    }
+    public function failForComment(){
+
+    }
 	public function __call($method, $arguments)
 	{
 		// Disable auto-rendering
