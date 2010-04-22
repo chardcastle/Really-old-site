@@ -182,4 +182,4 @@
 		});
 	});    
 	// make new navigation stucture
-})(jQuery)
+})(jQuery);

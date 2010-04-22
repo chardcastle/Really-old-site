@@ -1,6 +1,10 @@
-<p class="pagination">    
+<p class="pagination">
+    <?php if($id < $paginationLimit){ ?>
     <a href="/day/view/<?php echo $id+1;?>" class="forwards">forwards&nbsp;&raquo;</a>
-    <a href="/day/view/<?php echo $id-1;?>">&laquo;&nbsp;backwards</a>
+    <?php } ?>
+    <?php if($id > 2){?>
+        <a href="/day/view/<?php echo $id-1;?>">&laquo;&nbsp;backwards</a>
+    <?php } ?>
 </p>
 <h1><?php echo $date; ?></h1>
 <?php foreach($post as $key=>$value){

@@ -41,6 +41,7 @@ class Day_Controller extends Template_Controller {
                 $this->template->content = new View('full_width');                
                 $this->template->title = 'Chris Hardcastle ('.Kohana::config("config.environment").')';
                 $this->template->description = $postObj->getSiteDescription();
+                $this->template->content->paginationLimit = $postObj->totalTimeLineItems;
                 // Post timeline data
                 $post = $postObj->getPost($postId);
                 $this->template->content->date = $post[0]["date"];
