@@ -4,7 +4,7 @@
  */
 
 ?>
-<div class="tweet item">
+<div class="tweet fullItem">
     <div>
         <span class="tweetTime"><?php echo date("H:m",$tweet->time); ?></span>
         <div><?php echo $tweet->tweet; ?></div>
