@@ -35,8 +35,8 @@
 			<?php echo $content ?>
         <div id="footer">
             <ul>
-                <li class="first">ABOUT</li>
-                <li>CONTACT</li>
+                <li class="first">About</li>
+                <li>Contact</li>
             </ul>            
         </div>
 	</div>
