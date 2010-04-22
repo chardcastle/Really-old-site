@@ -21,13 +21,13 @@ a {
 	font-weight: normal;
 }
 
-h1,h5 {
+h1,h2,h5 {
 	color: #444;
 	background-color: transparent;
 	font-size: 1.2em;
 	font-weight: bold;	
 }
-h5{
+h5,h3{
     font-size:1em;
 }
 code {
@@ -133,18 +133,10 @@ code {
 .item {
 	margin:5px 0;
 }
-.tweet,
-.git{
-	padding:6px;
-}
-.tweet {	
-	border:1px solid #47d1ff;
-}
-.git {	background: Gainsboro;
-	
-}
-.regular {
-	background: Lavender;
+
+.regular div {
+	background: #eee;
+    padding-left:10px;
 }
 #profilePic {
 	float:right;
@@ -163,23 +155,24 @@ code {
 #home h1 {
 	margin-bottom:2px;
 }
-.tweetTime {
-	font-size:0.8em;
-	text-decoration:itallic;	
-	background:transparent url(/ui/images/twitter_icon_small.gif) no-repeat 12px 14px;
+.tweetTime,
+.commitTime{
+    margin-left:6px;
+    font-size: 0.8em;
+	color:#111;
+    fontsize:bold;
+	text-decoration:itallic;		
 	display:block;
 	height:40px;
 	width:40px;
+    clear:both;
 	float:right;
 }
+.tweetTime{
+    background:transparent url(/ui/images/twitter_icon_small.jpg) no-repeat 12px 14px;
+}
 .commitTime {
-	background:transparent url(/ui/images/gitSmall.gif) no-repeat 0px 14px;
-	display:block;
-	width:40px;
-	height:40px;
-	font-size:0.8em;
-	text-decoration:itallic;
-	float:right;
+	background:transparent url(/ui/images/git_icon_small.jpg) no-repeat 0px 14px;
 }
 #nav {
 	display:none;
@@ -191,8 +184,15 @@ code {
 	text-decoration:none;
 	color:#000;
 }
-.pagination {
-    
+.git div{
+    background:#eee;
+    padding:0 10px;
+}
+.tweet div{
+    background:LightCyan;
+    padding:0 10px;
+}
+.pagination {    
 	margin:20px 0;
     clear:both;
 }
@@ -229,4 +229,41 @@ code {
 }
 #footer ul li.first{
     border-left:none;
+}
+.b1ftw, .b2ftw, .b3ftw, .b4ftw{font-size:1px; overflow:hidden; display:block;}
+.b1ftw {height:1px; background:LightCyan ; margin:0 5px;}
+.b2ftw {height:1px; background:LightCyan ; margin:0 3px;}
+.b3ftw {height:1px; background:LightCyan ; margin:0 2px;}
+.b4ftw {height:2px; background:LightCyan ; margin:0 1px;}
+.b1frg, .b2frg, .b3frg, .b4frg{font-size:1px; overflow:hidden; display:block;}
+.b1frg {height:1px; background:#eee ; margin:0 5px;}
+.b2frg {height:1px; background:#eee ; margin:0 3px;}
+.b3frg {height:1px; background:#eee ; margin:0 2px;}
+.b4frg {height:2px; background:#eee ; margin:0 1px;}
+.fullItem{
+    margin:10px 0;
+}
+.tweet a{
+    color:#47D1FF;
+    text-decoration: none;
+    font-weight: bold;
+}
+.fullItem div{
+    min-height:46px;
+}
+#container img{
+    border:1px solid #888;
+    padding:4px 4px 10px 4px;
+    display:block;
+    margin:10px;
+}
+.home img{
+    border:none!important;
+    margin:0!important;
+}
+.quote{   
+    margin:20px 0;
+}
+.comment-title{
+    margin-bottom:10px;
 }
