@@ -164,6 +164,7 @@ SQL;
      * use its object to return its requested HTML style.
      */
     private function load($serialData,$value,$size){
+        $html = "";
         if($value->type == "tumblr"){
             /* */
             if(!$serialData){
@@ -187,6 +188,11 @@ SQL;
                             break;
                         case "video":
                             $obj = new Video_Model;
+                            // no size alternative required
+                            $html = $obj->loadFromLocalSource($serialData);
+                            break;
+                        case "conversation":
+                            $obj = new Quote_Model;
                             // no size alternative required
                             $html = $obj->loadFromLocalSource($serialData);
                             break;
