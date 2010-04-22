@@ -43,12 +43,22 @@
           $('#author').val(screenName);
           $('#twitter-connect-placeholder').append("Logged in as " + profileImageTag + " " + screenName);
           $("#twitter-connect-placeholder").append('<button id="signout" type="button">Sign out of Twitter</button>');
-          $("#signout").bind("click", function () {
-              twttr.anywhere.signOut();
+          $("#signout").bind("click", function () {              
+              twttr.anywhere.signOut();             
             });
            $("#comment").show(0);
         } else {
-          T("#twitter-connect-placeholder").connectButton();
-        };
+          T("#twitter-connect-placeholder").connectButton({authComplete: function(user) {
+            // triggered when auth completed successfully            
+            $("#comment").show(300);
+            $('#author').val(user.attributes.name);
+          },
+          signOut: function() {
+            // triggered when user logs out
+                $("#comment").hide(300,function(){
+                    $(this).value("You have been signed out of Twitter.");
+                });
+            }});
+          }
     });
 </script>
