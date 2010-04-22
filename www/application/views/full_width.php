@@ -21,7 +21,9 @@
         <h4>Submit a comment to my site</h4>
         <input type="hidden" name="author" id="author" value=""/>
         <input type="hidden" name="token" value="<?php echo $token; ?>"/>
-        <textarea rows="6" cols="30" name="comment" id="comment"></textarea>
+        <input type="hidden" name="time_line_ref" value="<?php echo $id; ?>"/>
+        <textarea rows="6" cols="30" name="body" id="body"></textarea>
+        <br/>
         <button type="submit">Publish</button>
     </form>
 </div>
@@ -40,7 +42,9 @@
           screenName = currentUser.data('screen_name');
           profileImage = currentUser.data('profile_image_url');
           profileImageTag = "<img src='" + profileImage + "'/>";
-          $('#author').val(screenName);
+          $.post("/comment/obfuscateUserName",{"username":screenName},function(json){
+            $('#author').val(json.username);
+        },"json");
           $('#twitter-connect-placeholder').append("Logged in as " + profileImageTag + " " + screenName);
           $("#twitter-connect-placeholder").append('<button id="signout" type="button">Sign out of Twitter</button>');
           $("#signout").bind("click", function () {              
@@ -51,7 +55,10 @@
           T("#twitter-connect-placeholder").connectButton({authComplete: function(user) {
             // triggered when auth completed successfully            
             $("#comment").show(300);
-            $('#author').val(user.attributes.name);
+            // Protect username
+            $.post("/comment/obfuscateUserName",{"username":user.attributes.name},function(json){
+                $('#author').val(json.username);
+            },"json");
           },
           signOut: function() {
             // triggered when user logs out
