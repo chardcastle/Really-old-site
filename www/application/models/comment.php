@@ -13,9 +13,10 @@ class Comment_Model extends App_Model {
 	}
 	public function create(){
         $status = $this->db->insert("kh_comments",array(
-            "author" => $commentObj->author,
-            "body" => $commentObj->body,
-            "time_line_ref" => $commentObj->timeLineRef));
+            "author" => $this->author,
+            "body" => $this->body,
+            "created" => time(),
+            "time_line_ref" => $this->timeLineRef));
         // count how many rows were inserted
         return count($status);
 	}

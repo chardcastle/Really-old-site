@@ -17,11 +17,12 @@ class Day_Controller extends Template_Controller {
 	// Set the name of the template to use
 	public $template = 'template';
 	protected $db;
-
+    public $session = false;
 	public function __construct(){
 		parent::__construct(); // This must be included
         $env = Kohana::config("config.environment");
 		$this->db = new Database($env);
+        $this->session = Session::instance();
 	}
 
 	public function index()
@@ -31,9 +32,6 @@ class Day_Controller extends Template_Controller {
 		 * 	$this->template->content->test .= Kohana::debug($xml);
 		 *  kohana::log("debug",Kohana::debug($post));
 		 */
-
-
-
 	}
     
     public function view($postId){
@@ -44,8 +42,9 @@ class Day_Controller extends Template_Controller {
             $this->template->description = $postObj->getSiteDescription();
             $this->template->content->paginationLimit = $postObj->totalTimeLineItems;
             // set comment token
+            $this->session->delete("token");
             $token = md5(rand(0,20));
-            $this->session->set_flash("token",$token);
+            $this->session->set("token",$token);
             $this->template->content->token = $token;
             // Post timeline data
             $post = $postObj->getPost($postId);

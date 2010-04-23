@@ -17,11 +17,13 @@ class Comment_Controller extends Template_Controller {
 	// Set the name of the template to use
 	public $template = 'template';
 	protected $db;
+    public $session = false;
 
 	public function __construct(){
 		parent::__construct(); // This must be included
         $env = Kohana::config("config.environment");
 		$this->db = new Database($env);
+        $this->session = Session::instance();
 	}
 
 	public function index()
@@ -36,26 +38,45 @@ class Comment_Controller extends Template_Controller {
         echo json_encode(array("username"=>base64_encode($this->input->post("username","unknown"))));
         exit;
     }
-    public function makeComment(){
+    public function create(){
+        $errors = 0;
         $sessToken = $this->session->get("token");
+        // reset token       
         if($sessToken == $this->input->post("token")){
-            $userName = base64_decode($this->input->post("username"));
+            $userName = base64_decode($this->input->post("author"));
             $commentObj = new Comment_Model();
             $commentObj->author = $userName;
             $commentObj->body = $this->input->post("body");
             $commentObj->timeLineRef = $this->input->post("time_line_ref");
-            $this->thankForComment();
+            if(!$commentObj->create()){
+                $errors++;
+            }
         }else{
+            $errors++;
+        }
+        if($errors >0){
             kohana::log("debug","Invalid token detected in comment submission");
             $this->failForComment();
+        }else{
+            $this->thankForComment();
         }
     }
 
-    public function thankForComment(){
-
+    public function thankForComment(){        
+		$this->template->title = "Chris";//var_dump($this->pagination);
+        $siteDesc = new Post_Model();        
+        $this->template->description = $siteDesc->getSiteDescription();
+        $this->template->content = new View('user_message');
+        $this->template->content->title = "Thanks for commenting!";
+        $this->template->content->body = "I consider your feedback to be extremely important, many thanks for reading.";
     }
     public function failForComment(){
-
+		$this->template->title = "Chris";//var_dump($this->pagination);
+        $siteDesc = new Post_Model();
+        $this->template->description = $siteDesc->getSiteDescription();
+        $this->template->content = new View('user_message');
+        $this->template->content->title = "Whoops, something went wrong :(";
+        $this->template->content->body = "It may not be your fault, but a problem was detected with your submission. Please try again later.";
     }
 	public function __call($method, $arguments)
 	{
