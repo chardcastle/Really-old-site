@@ -16,7 +16,8 @@
     <div id="twitter-connect-logout"></div>
 </div>
 
-<div id="comment" style="display:none;">
+<!-- div id="comment" style="display:none;" -->
+<div id="comment">
     <form method="post" action="/comment/create">
         <h4>Submit a comment to my site</h4>
         <input type="hidden" name="author" id="author" value=""/>
