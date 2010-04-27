@@ -15,9 +15,11 @@
     <div id="twitter-connect-placeholder"></div>
     <div id="twitter-connect-logout"></div>
 </div>
+<div>
+    <?php echo "Comments:".$comments;?>
 
-<!-- div id="comment" style="display:none;" -->
-<div id="comment">
+</div>
+<div id="comment" style="display:none;">
     <form method="post" action="/comment/create">
         <h4>Submit a comment to my site</h4>
         <input type="hidden" name="author" id="author" value=""/>
