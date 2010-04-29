@@ -25,7 +25,9 @@ class Git_Model extends App_Model {
 
 	public function captureFeed($feedUrl,$mostRecentPost){
 		$numberOfNewPosts = 0;
-		$commits = file_get_contents($feedUrl);
+		if(!$commits = file_get_contents($feedUrl)){
+            return 0;
+        }
 		$commits = json_decode($commits,true);
 			foreach($commits["query"]["results"]["commits"]["commit"] as $commit){					
 				$content = array(
