@@ -24,8 +24,9 @@ class Tweet_Model extends App_Model {
 	}
 	public function captureFeed($feedUrl,$mostRecentPost){
 		$numberOfNewPosts = 0;
-		$myTweets = file_get_contents($feedUrl);
-
+		if(!$myTweets = file_get_contents($feedUrl)){
+            return 0;
+        }
 		$tweets = json_decode($myTweets,true);
 		foreach($tweets["query"]["results"]["entry"] as $tweet){
 				foreach($tweet["link"] as $link){

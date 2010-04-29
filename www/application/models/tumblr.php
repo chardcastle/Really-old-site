@@ -14,7 +14,9 @@ class Tumblr_Model extends App_Model {
 	}
 	public function captureFeed($feedUrl,$mostRecentPost){
 		$numberOfNewPosts = 0;		 
-		$myTummy = file_get_contents($feedUrl);
+		if(!$myTummy = file_get_contents($feedUrl)){
+            return 0;
+        }
 		$myTummy = json_decode($myTummy,true);
 		foreach($myTummy["query"]["results"]["posts"]["post"] as $post){			
 			$created = strtotime($post["date"]);			
