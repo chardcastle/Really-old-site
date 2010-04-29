@@ -1,16 +1,23 @@
 <?php defined('SYSPATH') OR die('No direct access allowed.');
 /**
+ * Custom environment settings
+ */
+$local = array("name"=>"local","url"=>"ee.local.net:8080/");
+$dev = array("name"=>"development","url"=>"stage.chrishardcastle.co.uk/");
+$prod = array("name"=>"production","url"=>"chrishardcastle.co.uk/");
+$context = array(0=>$local,1=>$dev,3=>$prod);
+$environment = $context[0];
+/**
  * Base path of the web site. If this includes a domain, eg: localhost/kohana/
  * then a full URL will be used, eg: http://localhost/kohana/. If it only includes
  * the path, and a site_protocol is specified, the domain will be auto-detected.
  */
-$config['site_domain'] = 'ee.local.net:8080/';
+$config['site_domain'] = $environment["url"];
 /**
  * Environment configuration points to different database settings
  * Choose one and add it to the current enviroment
  */
-$config['env_options'] = array(0=>"local",1=>"development",3=>"production");
-$config['environment'] = $config['env_options'][0];
+$config['environment'] = $environment["name"];
 /**
  * Force a default protocol to be used by the site. If no site_protocol is
  * specified, then the current protocol is used, or when possible, only an
