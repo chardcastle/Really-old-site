@@ -40,8 +40,5 @@ class Comment_Model extends App_Model {
         $this->collection = $data;
 	
 	}
-	public function loadComment($commentObj){
-		$this->author = "x";//$commentObj["author"];
-		$this->body = "y";//$commentObj["body"];
-	}
+
 }

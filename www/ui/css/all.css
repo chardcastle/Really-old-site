@@ -21,13 +21,13 @@ a {
 	font-weight: normal;
 }
 
-h1,h2,h5 {
+h1,h2,h4,h5 {
 	color: #444;
 	background-color: transparent;
 	font-size: 1.2em;
 	font-weight: bold;	
 }
-h5,h3{
+h5,h4,h3{
     font-size:1em;
 }
 code {
@@ -266,7 +266,36 @@ code {
 }
 .comment-title{
     margin-bottom:10px;
+    clear:both;
 }
-#comments{
 
+#user-comments,
+h4.comment-title{
+    margin:5px 0;
+}
+#user-comments .right{
+   float:left; 
+}
+#user-comments .left{
+    float:left;
+    width:200px;    
+}
+#user-comments br{
+    clear:both;
+}
+.strQ,
+.endQ{
+    background:#fff url("/ui/images/quote.jpg") no-repeat top left;
+    width:14px;
+    height:12px;
+    display:block;
+    text-indent: -9999px;
+}
+.right p{
+    margin:0 6px;
+}
+.strQ,
+.endQ,
+#user-comments .right p{
+    float:left;
 }
