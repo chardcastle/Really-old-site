@@ -10,15 +10,19 @@
 <?php foreach($post as $key=>$value){
     echo $value;
 } ?>
-<h2 class="comment-title"></h2>
+<div id="user-comments">
+    <?php if($comments){
+        echo "<h4>User comments</h4>".$comments;
+        }else{?>
+      <p>Nobody has commented, why don't you?</p>
+    <?php  } ?>
+</div>
+<h4 class="comment-title"></h4>
 <div id="profileControls">
     <div id="twitter-connect-placeholder"></div>
     <div id="twitter-connect-logout"></div>
 </div>
-<div>
-    <?php echo "Comments:".$comments;?>
 
-</div>
 <div id="comment" style="display:none;">
     <form method="post" action="/comment/create">
         <h4>Submit a comment to my site</h4>

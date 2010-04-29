@@ -51,13 +51,13 @@ class Day_Controller extends Template_Controller {
 	    $comments = new Comment_Model($postId);		
         $commentHtml = "";
 	    if(count($comments)>0){
-		foreach($comments->collection as $key => $comment){
-			$html = new View("comment/single");
-			$commentObj = new Comment_Model();
-			$html->set("comment",$commentObj->loadComment($comment));
-            kohana::log("debug",Kohana::debug($comment));
-			$commentHtml .= $html->render();
-		}
+			foreach($comments->collection as $key => $comment){
+				$html = new View("comment/single");
+				$commentObj = new Comment_Model();
+				$html->set("comment",$comment);
+		        kohana::log("debug",Kohana::debug($comment));
+				$commentHtml .= $html->render();
+			}
 		}	
 	    $this->template->content->comments = $commentHtml;
             $this->template->content->date = $post[0]["date"];
