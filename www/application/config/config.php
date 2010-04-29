@@ -5,8 +5,8 @@
 $local = array("name"=>"local","url"=>"ee.local.net:8080/");
 $dev = array("name"=>"development","url"=>"stage.chrishardcastle.co.uk/");
 $prod = array("name"=>"production","url"=>"chrishardcastle.co.uk/");
-$context = array(0=>$local,1=>$dev,3=>$prod);
-$environment = $context[0];
+
+$environment = $dev;
 /**
  * Base path of the web site. If this includes a domain, eg: localhost/kohana/
  * then a full URL will be used, eg: http://localhost/kohana/. If it only includes
