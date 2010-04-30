@@ -113,25 +113,28 @@ class Welcome_Controller extends Template_Controller {
 		return json_encode($returned);		
 		
 	}	
-	/*
-	 * To be called by cron
-	 * */
+
 	public function saveNewPosts(){		
 		$postObj = new Post_Model;		
 		$inserts = $postObj->searchForNewPosts();
 		echo "The function 'saveNewPosts' has run and ".Kohana::debug($inserts)." records have been added.";
 		exit;
 	}
-	/*
-	 * To be called by cron
-	 * */	
+
 	public function digestNewPosts(){
 		$postObj = new Post_Model;
 		$postObj->digestNewPosts();
 		echo "The system has digested the posts tabel. HTML is now refreshed.";
 		exit;
 	}
-
+	/*
+	 * To be called by cron
+	 * */
+    public function runCron(){
+        $this->digestNewPosts();
+        $this->saveNewPosts();
+        echo "Cron ran ok";
+    }
 	public function __call($method, $arguments)
 	{
 		// Disable auto-rendering
