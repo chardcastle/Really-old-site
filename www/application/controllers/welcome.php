@@ -133,7 +133,7 @@ class Welcome_Controller extends Template_Controller {
     public function runCron(){
         $this->digestNewPosts();
         $this->saveNewPosts();
-        echo "Cron ran ok";
+        kohana::log("debug","Cron ran ok.");
     }
 	public function __call($method, $arguments)
 	{
