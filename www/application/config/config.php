@@ -2,11 +2,11 @@
 /**
  * Custom environment settings
  */
-$local = array("name"=>"local","url"=>"ee.local.net:8080/");
-$dev = array("name"=>"development","url"=>"stage.chrishardcastle.co.uk/");
-$prod = array("name"=>"production","url"=>"chrishardcastle.co.uk/");
+$local = array("name"=>"local","url"=>"ee.local.net:8080/","logLevel"=>4);
+$dev = array("name"=>"development","url"=>"stage.chrishardcastle.co.uk/","logLevel"=>2);
+$prod = array("name"=>"production","url"=>"chrishardcastle.co.uk/","logLevel"=>0);
 
-$environment = $dev;
+$environment = $local;
 /**
  * Base path of the web site. If this includes a domain, eg: localhost/kohana/
  * then a full URL will be used, eg: http://localhost/kohana/. If it only includes
@@ -95,7 +95,7 @@ $config['enable_hooks'] = FALSE;
  *  3 - Notices
  *  4 - Debugging
  */
-$config['log_threshold'] = 4;
+$config['log_threshold'] = $environment["logLevel"];;
 
 /**
  * Message logging directory.
