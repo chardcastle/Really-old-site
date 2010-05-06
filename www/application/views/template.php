@@ -12,7 +12,7 @@
 	<script type="text/javascript" src="/ui/js/site.js"></script>
     <link rel='stylesheet' href='/ui/css/screen.css' type='text/css' media='Screen' />
     <link rel='stylesheet' href='/ui/css/handheld.css' type='text/css' media='handheld' />
-
+    <link rel='shortcut icon' href='/ui/images/favicon.ico'></link>
 </head>
 <body>
 	<div id="globalOuter">
@@ -39,6 +39,7 @@
                 <li>Contact</li>
             </ul>            
         </div>
+		<br/>
 	</div>
 
     <script type="text/javascript">
