@@ -16,7 +16,7 @@ body {
 }
 
 a {
-	color: #003399;
+	color: #999;
 	background-color: transparent;
 	font-weight: normal;
 }
@@ -298,4 +298,8 @@ h4.comment-title{
 .endQ,
 #user-comments .right p{
     float:left;
+}
+h3#app-error{
+	margin:30px 0;
+	font-weight:bold;
 }

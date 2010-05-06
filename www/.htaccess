@@ -1,3 +1,7 @@
+#AuthType Basic
+#AuthName "Staging"
+#AuthUserFile "/home/chrishar/.htpasswds/public_html/stage/passwd"
+#require valid-user
 # Turn on URL rewriting
 RewriteEngine On
 

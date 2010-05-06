@@ -117,22 +117,22 @@ class Welcome_Controller extends Template_Controller {
 	public function saveNewPosts(){		
 		$postObj = new Post_Model;		
 		$inserts = $postObj->searchForNewPosts();
-		echo "The function 'saveNewPosts' has run and ".Kohana::debug($inserts)." records have been added.";
+		kohana::log("debug","The function 'saveNewPosts' has run.");
 		exit;
 	}
 
 	public function digestNewPosts(){
 		$postObj = new Post_Model;
 		$postObj->digestNewPosts();
-		echo "The system has digested the posts tabel. HTML is now refreshed.";
+		kohana::log("debug","The system has digested the posts tabel. HTML is now refreshed.");
 		exit;
 	}
 	/*
 	 * To be called by cron
 	 * */
     public function runCron(){
-        $this->digestNewPosts();
-        $this->saveNewPosts();
+     //   $this->digestNewPosts();
+     //   $this->saveNewPosts();
         kohana::log("debug","Cron ran ok.");
     }
 	public function __call($method, $arguments)

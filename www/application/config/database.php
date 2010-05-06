@@ -50,12 +50,12 @@ $config['development'] = array
 	'connection'    => array
 	(
 		'type'     => 'mysql',
-		'user'     => 'chris',
-		'pass'     => 'chris1982',
+		'user'     => 'chrishar_wpuser',
+		'pass'     => 'Tyhn98zz',
 		'host'     => 'localhost',
 		'port'     => FALSE,
 		'socket'   => FALSE,
-		'database' => 'ch'
+		'database' => 'chrishar_khstg'
 	),
 	'character_set' => 'utf8',
 	'table_prefix'  => '',
@@ -70,12 +70,12 @@ $config['production'] = array
 	'connection'    => array
 	(
 		'type'     => 'mysql',
-		'user'     => 'chris',
-		'pass'     => 'chris1982',
+		'user'     => 'chrishar_wpuser',
+		'pass'     => 'Tyhn98zz',
 		'host'     => 'localhost',
 		'port'     => FALSE,
 		'socket'   => FALSE,
-		'database' => 'ch'
+		'database' => 'chrishar_kh'
 	),
 	'character_set' => 'utf8',
 	'table_prefix'  => '',
