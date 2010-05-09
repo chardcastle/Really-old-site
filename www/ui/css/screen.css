@@ -303,3 +303,7 @@ h3#app-error{
 	margin:30px 0;
 	font-weight:bold;
 }
+#header a{
+	width:292px;
+	display:block;
+}

@@ -115,17 +115,22 @@ class Welcome_Controller extends Template_Controller {
 	}	
 
 	public function saveNewPosts(){		
-		$postObj = new Post_Model;		
-		$inserts = $postObj->searchForNewPosts();
-		kohana::log("debug","The function 'saveNewPosts' has run.");
-		exit;
+		if (PHP_SAPI === 'cli'){
+			$postObj = new Post_Model;		
+			$postObj->searchForNewPosts();
+			kohana::log("debug","The function 'saveNewPosts' has run.");
+		}		
 	}
 
 	public function digestNewPosts(){
-		$postObj = new Post_Model;
-		$postObj->digestNewPosts();
-		kohana::log("debug","The system has digested the posts tabel. HTML is now refreshed.");
-		exit;
+		if (PHP_SAPI === 'cli'){
+			$postObj = new Post_Model;
+			$postObj->digestNewPosts();
+			kohana::log("debug","The system has digested the posts tabel. HTML is now refreshed.");
+			exit;
+		}else{
+			throw new Kohana_User_Exception('Cannot call over the web', 'This is a function that can only be called via the command line.');
+		}
 	}
 	/*
 	 * To be called by cron
