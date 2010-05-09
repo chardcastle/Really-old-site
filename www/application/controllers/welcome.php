@@ -119,6 +119,8 @@ class Welcome_Controller extends Template_Controller {
 			$postObj = new Post_Model;		
 			$postObj->searchForNewPosts();
 			kohana::log("debug","The function 'saveNewPosts' has run.");
+		}else{
+			throw new Kohana_User_Exception('Cannot call over the web', 'This is a function that can only be called via the command line.');
 		}		
 	}
 

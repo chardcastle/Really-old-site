@@ -11,7 +11,7 @@
 <body>
 	<div id="globalOuter">
 		<div id="header">                        
-            <a href="/"><img src="http://<?php echo kohana::config('config.site_domain');?>ui/images/title.jpg" alt="Chris Hardcastle"/></a>
+            <a href="/"><img src="http://<?php echo kohana::config('config.site_domain');?>/ui/images/title.jpg" alt="Chris Hardcastle"/></a>
         </div>
 		<h3 id="app-error"><?php echo strtoupper(html::specialchars($error)) ?></h3>
 		<p><?php echo $description; ?></p>
