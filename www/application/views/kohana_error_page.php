@@ -3,8 +3,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<link rel='stylesheet' type='text/css' media='all' href='/ui/css/all.css' />
-	<link rel='stylesheet' type='text/css' media='all' href='/ui/css/custom-theme/jquery-ui-1.8rc3.custom.css' />
+    <link rel='stylesheet' href='/ui/css/screen.css' type='text/css' media='Screen' />
+    <link rel='stylesheet' href='/ui/css/handheld.css' type='text/css' media='handheld' />
+    <link rel='shortcut icon' href='/ui/images/favicon.ico'></link>
 	<title><?php echo $error ?></title>
 </head>
 <body>
