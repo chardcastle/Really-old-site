@@ -5,7 +5,7 @@ class permalink{
 	function find()
 	{
 		// TODO use the uri to look it up in the database
-		echo "I don't have that address";
+		echo "The ".Router::$current_uri." is not known.";
 		die();
 	}
 }
