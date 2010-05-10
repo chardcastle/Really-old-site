@@ -5,12 +5,11 @@ class permalink{
 	function find()
 	{
 			
-			//$postId = $postObj->findAPost(Router::$current_uri);
-			//if(!$postId){
-			//	throw new Kohana_404_Exception("Page not found");
-			//}
 			$db = new App_Model();
 			$postId = $db->getPostIdFromSlug(Router::$current_uri);			
+			if(!$postId){
+				throw new Kohana_404_Exception("Page not found");
+			}
 			Router::$controller = "day";
 			Router::$method = "view";
 			Router::$arguments = array($postId);
