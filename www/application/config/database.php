@@ -50,21 +50,12 @@ $config['development'] = array
 	'connection'    => array
 	(
 		'type'     => 'mysql',
-<<<<<<< HEAD:www/application/config/database.php
 		'user'     => 'x',
 		'pass'     => 'x',
 		'host'     => 'localhost',
 		'port'     => FALSE,
 		'socket'   => FALSE,
 		'database' => 'x'
-=======
-		'user'     => 'chrishar_wpuser',
-		'pass'     => 'Tyhn98zz',
-		'host'     => 'localhost',
-		'port'     => FALSE,
-		'socket'   => FALSE,
-		'database' => 'chrishar_khstg'
->>>>>>> 7a8900055177936cc0ab92d7a2cbaa470cfd0a67:www/application/config/database.php
 	),
 	'character_set' => 'utf8',
 	'table_prefix'  => '',
@@ -79,21 +70,12 @@ $config['production'] = array
 	'connection'    => array
 	(
 		'type'     => 'mysql',
-<<<<<<< HEAD:www/application/config/database.php
 		'user'     => 'x',
 		'pass'     => 'x',
 		'host'     => 'localhost',
 		'port'     => FALSE,
 		'socket'   => FALSE,
 		'database' => 'x'
-=======
-		'user'     => 'chrishar_wpuser',
-		'pass'     => 'Tyhn98zz',
-		'host'     => 'localhost',
-		'port'     => FALSE,
-		'socket'   => FALSE,
-		'database' => 'chrishar_kh'
->>>>>>> 7a8900055177936cc0ab92d7a2cbaa470cfd0a67:www/application/config/database.php
 	),
 	'character_set' => 'utf8',
 	'table_prefix'  => '',

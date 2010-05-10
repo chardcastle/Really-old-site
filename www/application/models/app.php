@@ -19,5 +19,17 @@ class App_Model extends Model {
 		return (isset($this->result[1]))?$this->result[1]:false;
 		
 	}
+	public function getPostIdFromSlug($urlSlug){
+		$data =	$this->db->select("id")
+			->from("kh_timeline")		
+			->where(array("slug"=>$urlSlug))
+			->get()
+			->result_array(true);
+		if(isset($data[0])){
+			return $data[0]->id;
+		}else{
+			return false;
+		}
+	}
  
 }

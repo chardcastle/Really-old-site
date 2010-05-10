@@ -4,9 +4,23 @@ Event::replace('system.404', array('Kohana', 'show_404'), array('permalink','fin
 class permalink{
 	function find()
 	{
-		// TODO use the uri to look it up in the database
-		echo "The ".Router::$current_uri." is not known.";
-		die();
+			
+			//$postId = $postObj->findAPost(Router::$current_uri);
+			//if(!$postId){
+			//	throw new Kohana_404_Exception("Page not found");
+			//}
+			$db = new App_Model();
+			$postId = $db->getPostIdFromSlug(Router::$current_uri);			
+			Router::$controller = "day";
+			Router::$method = "view";
+			Router::$arguments = array($postId);
+			$path = APPPATH."controllers/day.php";
+			Router::$controller_path =  $path;
+			//echo Router::$current_uri."ere";
+			//Event::run('system.execute');	
+			Event::run('system.post_controller_constructor');
+			// Clean up and exit
+			Event::run('system.shutdown');
 	}
 }
 ?>
