@@ -51,8 +51,7 @@ class Post_Model extends App_Model {
 		
 		$obj = new Git_Model;
 		$gitNo = $obj->captureFeed($this->urls["github"]["jquery"],$mostRecentPost);
-		$info .= "<p>".(isset($gitNo)?$gitNo:"Didn't request any")." new Git items</p>";
-		echo $info;
+		$info .= "<p>".(isset($gitNo)?$gitNo:"Didn't request any")." new Git items</p>";		
 		// update website description
         $this->updateHomeDescription();
 
@@ -150,15 +149,6 @@ SQL;
 	public function getDataSourceUrls(){
 		return $this->urls;	
 	}
-	/*
-	 * Get part of the data, for fun
-	 
-	public function getDataSourceDataSchemea($key){		
-		$data = file_get_contents($this->urls[$key]);
-		return substr($data,0,500);		
-	}
-     *
-     */
     /*
      * Use the data to find its type
      * use its object to return its requested HTML style.
@@ -233,7 +223,5 @@ SQL;
                 ->get()
                 ->result_array(false);
     }
-/*
-
- * */ 
+/* */ 
 }

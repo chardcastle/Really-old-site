@@ -1,14 +1,4 @@
 <?php
-//a:5:{s:4:"type";s:4:"home";s:13:"regular-title";s:7:"Welcome";s:12:"regular-body";s:84:"Website developer, husband and father of one. Linux, PHP, C# and social media lover.";s:8:"location";s:19:"London (Central) UK";s:6:"mobile";s:11:"07947628500";}
-/*  
-print_r(serialize(array(
-	"type"=>"home",
-	"regular-title"=>"Welcome",
-	"regular-body"=>"Website developer, husband and father of one. Linux, PHP, C# and social media lover.",
-	"location" => "London (Central) UK",
-	"mobile" => "07947 628 500"
-))).die();
-/* */
 /**
  * This file acts as the "front controller" to your application. You can
  * configure your application, modules, and system directories here.
