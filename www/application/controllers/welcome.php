@@ -115,22 +115,22 @@ class Welcome_Controller extends Template_Controller {
 	}	
 
 	public function saveNewPosts(){		
-		if (PHP_SAPI !== 'cgi-fcgi' || PHP_SAPI !== 'cli'){
-			throw new Kohana_User_Exception('Cannot call over the web', 'This is a function that can only be called via the command line.');
-		}else{
+		if (PHP_SAPI === 'cgi-fcgi' || PHP_SAPI === 'cli'){
 			$postObj = new Post_Model;		
 			$postObj->searchForNewPosts();
 			kohana::log("debug","The function 'saveNewPosts' has run.");
+		}else{
+			throw new Kohana_User_Exception('Cannot call over the web', 'This is a function that can only be called via the command line.');
 		}		
 	}
 
 	public function digestNewPosts(){
-		if (PHP_SAPI !== 'cgi-fcgi' || PHP_SAPI !== 'cli'){
-			throw new Kohana_User_Exception('Cannot call over the web', 'This is a function that can only be called via the command line.');
-		}else{
+		if (PHP_SAPI === 'cgi-fcgi' || PHP_SAPI === 'cli'){
 			$postObj = new Post_Model;
 			$postObj->digestNewPosts();
 			kohana::log("debug","The system has digested the posts tabel. HTML is now refreshed.");
+		}else{
+			throw new Kohana_User_Exception('Cannot call over the web', 'This is a function that can only be called via the command line.');
 		}
 	}
 	/*

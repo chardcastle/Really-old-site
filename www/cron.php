@@ -146,8 +146,11 @@ echo (isset($_SERVER["argv"][1]))?$_SERVER["argv"][1]."\n":"Argv 1 not found\n";
 echo (isset($_SERVER["argv"][2]))?$_SERVER["argv"][2]."\n":"Argv 2 not found\n";
 */
 echo "PHP SAPI value = ".PHP_SAPI."\n";
-Router::$controller = (isset($_SERVER["argv"][1]))?str_replace("--","",$_SERVER["argv"][1]):false;
-Router::$method = (isset($_SERVER["argv"][2]))?str_replace("--","",$_SERVER["argv"][2]):false;
+$controller = (isset($_SERVER["argv"][1]))?str_replace("--","",$_SERVER["argv"][1]):false;
+$method = (isset($_SERVER["argv"][2]))?str_replace("--","",$_SERVER["argv"][2]):false;
+echo $controller."\n".$method."\n";
+Router::$controller = $controller;
+Router::$method = $method;
 Router::$arguments = array();
 $path = APPPATH."controllers/welcome.php";
 Router::$controller_path =  $path;
