@@ -115,7 +115,7 @@ class Welcome_Controller extends Template_Controller {
 	}	
 
 	public function saveNewPosts(){		
-		if (PHP_SAPI === 'cgi-fcgi' || PHP_SAPI !== 'cli'){
+		if (PHP_SAPI !== 'cgi-fcgi' || PHP_SAPI !== 'cli'){
 			throw new Kohana_User_Exception('Cannot call over the web', 'This is a function that can only be called via the command line.');
 		}else{
 			$postObj = new Post_Model;		

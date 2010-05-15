@@ -140,18 +140,20 @@ Event::run('system.routing');
 // End system_initialization
 Benchmark::stop(SYSTEM_BENCHMARK.'_system_initialization');
 
-// My own
-//echo (isset($_SERVER["argv"][0]))?$_SERVER["argv"][0]."<br/>":"Argv 0 not found";
-//echo (isset($_SERVER["argv"][1]))?$_SERVER["argv"][1]."<br/>":"Argv 1 not found";
-Router::$controller = "welcome";
-Router::$method = "digestNewPosts";
+/* Debug
+echo (isset($_SERVER["argv"][0]))?$_SERVER["argv"][0]."\n":"Argv 0 not found\n";
+echo (isset($_SERVER["argv"][1]))?$_SERVER["argv"][1]."\n":"Argv 1 not found\n";
+echo (isset($_SERVER["argv"][2]))?$_SERVER["argv"][2]."\n":"Argv 2 not found\n";
+*/
+echo "PHP SAPI value = ".PHP_SAPI."\n";
+Router::$controller = (isset($_SERVER["argv"][1]))?str_replace("--","",$_SERVER["argv"][1]):false;
+Router::$method = (isset($_SERVER["argv"][2]))?str_replace("--","",$_SERVER["argv"][2]):false;
 Router::$arguments = array();
 $path = APPPATH."controllers/welcome.php";
 Router::$controller_path =  $path;
-//Event::run('system.execute');	
+
 // Make the magic happen!
 Event::run('system.execute');
-//Event::run('system.post_controller_constructor');
 
 // Clean up and exit
 Event::run('system.shutdown');
