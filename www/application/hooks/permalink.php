@@ -8,6 +8,7 @@ class permalink{
 			$db = new App_Model();
 			$postId = $db->getPostIdFromSlug(Router::$current_uri);			
 			if(!$postId){
+                kohana::log("error","404 exception thrown, could not find ".Router::$current_uri);
 				throw new Kohana_404_Exception("Page not found");
 			}
 			Router::$controller = "day";
@@ -15,7 +16,6 @@ class permalink{
 			Router::$arguments = array($postId);
 			$path = APPPATH."controllers/day.php";
 			Router::$controller_path =  $path;
-			//echo Router::$current_uri."ere";
 			//Event::run('system.execute');	
 			Event::run('system.post_controller_constructor');
 			// Clean up and exit
