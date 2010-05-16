@@ -1,7 +1,6 @@
 <?php defined('SYSPATH') OR die('No direct access allowed.');
 /**
  * Custom environment settings
- * Note that the twitter-api-key is publicly exposed anyhow.
  */
 $local = array(
 	"name"=>"local",
@@ -23,9 +22,9 @@ $prod = array(
 
 $environment = $local;
 /**
- * Base path of the web site. If this includes a domain, eg: localhost/kohana/
- * then a full URL will be used, eg: http://localhost/kohana/. If it only includes
- * the path, and a site_protocol is specified, the domain will be auto-detected.
+ * This is a key required for using twitter based resources
+ * see http://developer.twitter.com for details.
+ * NOTE: the twitter-api-key is a public key.
  */
 $config['anywhere_key'] = $environment["twitter-api-key"];
 /**
