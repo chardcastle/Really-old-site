@@ -6,19 +6,22 @@ $local = array(
 	"name"=>"local",
 	"url"=>"ee.local.net:8080/",
 	"logLevel"=>4,
-	"twitter-api-key"=>"69EJ3HAJ4R8KFJtGrfLPg");
+	"twitter-api-key"=>"69EJ3HAJ4R8KFJtGrfLPg",
+	"cache-time"=>0); // no cache time
 
 $dev = array(
 	"name"=>"development",
 	"url"=>"stage.chrishardcastle.co.uk/",
 	"logLevel"=>2,
-	"twitter-api-key"=>"69EJ3HAJ4R8KFJtGrfLPg");
+	"twitter-api-key"=>"69EJ3HAJ4R8KFJtGrfLPg",
+	"cache-time"=>5); // 5 second cache time
 
 $prod = array(
 	"name"=>"production",
 	"url"=>"chrishardcastle.co.uk/",
 	"logLevel"=>0,
-	"twitter-api-key"=>"yDrjhJ7gJHtyPb7JAMklA");
+	"twitter-api-key"=>"yDrjhJ7gJHtyPb7JAMklA",
+	"cache-time"=>120); // 2 minute cache time
 
 $environment = $local;
 /**
@@ -63,7 +66,7 @@ $config['url_suffix'] = '';
  * The internal cache stores file paths and config entries across requests and
  * can give significant speed improvements at the expense of delayed updating.
  */
-$config['internal_cache'] = FALSE;
+$config['internal_cache'] = $environment["cache-time"];
 
 /**
  * Internal cache directory.
@@ -85,7 +88,7 @@ $config['internal_cache_encrypt'] = FALSE;
  *
  * The cache is deleted when/if the key changes.
  */
-$config['internal_cache_key'] = 'foobar-changeme';
+$config['internal_cache_key'] = '9954577554512558';
 
 /**
  * Enable or disable gzip output compression. This can dramatically decrease
