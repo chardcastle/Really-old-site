@@ -1,12 +1,33 @@
 <?php defined('SYSPATH') OR die('No direct access allowed.');
 /**
  * Custom environment settings
+ * Note that the twitter-api-key is publicly exposed anyhow.
  */
-$local = array("name"=>"local","url"=>"ee.local.net:8080/","logLevel"=>4);
-$dev = array("name"=>"development","url"=>"stage.chrishardcastle.co.uk/","logLevel"=>2);
-$prod = array("name"=>"production","url"=>"chrishardcastle.co.uk/","logLevel"=>0);
+$local = array(
+	"name"=>"local",
+	"url"=>"ee.local.net:8080/",
+	"logLevel"=>4,
+	"twitter-api-key"=>"69EJ3HAJ4R8KFJtGrfLPg");
+
+$dev = array(
+	"name"=>"development",
+	"url"=>"stage.chrishardcastle.co.uk/",
+	"logLevel"=>2,
+	"twitter-api-key"=>"69EJ3HAJ4R8KFJtGrfLPg");
+
+$prod = array(
+	"name"=>"production",
+	"url"=>"chrishardcastle.co.uk/",
+	"logLevel"=>0,
+	"twitter-api-key"=>"yDrjhJ7gJHtyPb7JAMklA");
 
 $environment = $local;
+/**
+ * Base path of the web site. If this includes a domain, eg: localhost/kohana/
+ * then a full URL will be used, eg: http://localhost/kohana/. If it only includes
+ * the path, and a site_protocol is specified, the domain will be auto-detected.
+ */
+$config['anywhere_key'] = $environment["twitter-api-key"];
 /**
  * Base path of the web site. If this includes a domain, eg: localhost/kohana/
  * then a full URL will be used, eg: http://localhost/kohana/. If it only includes
