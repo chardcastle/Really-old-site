@@ -174,3 +174,11 @@ $config['data_source_urls'] = array(
 			"github" => array("jquery"=>"http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20github.repo.commits%20where%20id%3D'jquery'%20and%20repo%3D'jquery'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys"),
             "homedesc" => "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20tumblr.tumblelog%20where%20username%3D'hardcastle'&format=json&diagnostics=false&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys"
 		);
+/*
+ * Meta description
+*/
+$config["description"] = "Personal website of Chris Hardcastle. Opensource based website developer who uses PHP MySQL, Sproutcore, AJAX, jQuery";
+/*
+ * Meta keywords
+*/
+$config["keywords"] = "PHP, MySQL, Sproutcore, AJAX, jQuery, Ubuntu";

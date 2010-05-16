@@ -4,12 +4,7 @@
  * Created by Chris Hardcastle to run cron jobs
  * Based on ./index.php
  * First, ensure that it's use is permitted with denial for HTTP requests
- */
-//if (PHP_SAPI !== 'cgi-fcgi'){
-//	die("Cannot be called over http");
-//}
-
-/**
+ *
  * Define the website environment status. When this flag is set to TRUE, some
  * module demonstration controllers will result in 404 errors. For more information
  * about this option, read the documentation about deploying Kohana.
@@ -140,15 +135,18 @@ Event::run('system.routing');
 // End system_initialization
 Benchmark::stop(SYSTEM_BENCHMARK.'_system_initialization');
 
-/* Debug
-echo (isset($_SERVER["argv"][0]))?$_SERVER["argv"][0]."\n":"Argv 0 not found\n";
-echo (isset($_SERVER["argv"][1]))?$_SERVER["argv"][1]."\n":"Argv 1 not found\n";
-echo (isset($_SERVER["argv"][2]))?$_SERVER["argv"][2]."\n":"Argv 2 not found\n";
+/* 
+ * Set the required
 */
-echo "PHP SAPI value = ".PHP_SAPI."\n";
 $controller = (isset($_SERVER["argv"][1]))?str_replace("--","",$_SERVER["argv"][1]):false;
 $method = (isset($_SERVER["argv"][2]))?str_replace("--","",$_SERVER["argv"][2]):false;
-echo $controller."\n".$method."\n";
+
+$h = fopen('./application/logs/cron.txt','a+');
+$str = "Running Cron using PHP SAPI value: ".PHP_SAPI." with controller:{$controller} method:{$method}\n";
+//kohana::debug("debug","";
+fwrite($h, $str);
+fclose($h);
+//
 Router::$controller = $controller;
 Router::$method = $method;
 Router::$arguments = array();
