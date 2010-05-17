@@ -12,7 +12,7 @@
 	<?php } ?>
 	<script type="text/javascript" src="/ui/js/jquery-1.4.2.min.js"></script>
 	<!--script type="text/javascript" src="/ui/js/jquery-ui-1.8.1.custom.min.js"></script -->
-	<script type="text/javascript" src="/ui/js/site.js"></script>
+
     <link rel='stylesheet' href='/ui/css/screen.css' type='text/css' media='Screen' />
     <link rel='stylesheet' href='/ui/css/handheld.css' type='text/css' media='handheld' />
     <link rel='shortcut icon' href='/ui/images/favicon.ico' />
@@ -65,5 +65,6 @@
         pageTracker._trackPageview();
         } catch(err) {}</script>
     <?php } ?>
+	<script type="text/javascript" src="/ui/js/site.js"></script>
 </body>
 </html>

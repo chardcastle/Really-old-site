@@ -8,7 +8,7 @@ $local = array(
 	"logLevel"=>4,
 	//"twitter-api-key"=>"69EJ3HAJ4R8KFJtGrfLPg",
 	"twitter-api-key" => false,
-	"cache-time"=>180); // no cache time
+	"cache-time"=>false); // no cache time
 
 $dev = array(
 	"name"=>"development",
