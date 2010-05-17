@@ -1,4 +1,4 @@
-<?php defined('SYSPATH') or die('No direct script access.'); ?>
+<?php defined('SYSPATH') or die('No direct script access.log2'); ?>
 
 2010-05-06 23:23:05 +01:00 --- debug: Global GET, POST and COOKIE data sanitized
 2010-05-06 23:23:05 +01:00 --- debug: MySQL Database Driver Initialized

@@ -1,10 +1,19 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 (function($){
-	alert("here");
+	console.log("init"+$("body").find(".pagination").html());
     $("body")
+	.find(".pagination")
+	.children("a")
+	.each(function(){
+	//   console.log($(this).text());
+		console.log("found");
+		/* */
+		$(item).click(function(e){
+		    e.preventDefault();
+		    console.log($(this).text());
+		});
+		/**/
+	})
+	.end()
     .find("#container")
     .children("div")
     .each(function(i,item){
@@ -16,15 +25,6 @@
                 $(this).delay(200).animate({backgroundColor:"#fff"}, 500);
             })
     })
-   .end()
-	.find(".pagination")
-	.children("a",function(i,item){
-	   console.log($(this).text());
-		/* */
-		$(item).click(function(e){
-		    e.preventDefault();
-		    console.log($(this).text());
-		});
-		/**/
-	});
+   .end();
+
 })(jQuery);
