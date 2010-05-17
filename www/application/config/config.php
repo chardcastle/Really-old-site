@@ -6,7 +6,8 @@ $local = array(
 	"name"=>"local",
 	"url"=>"ee.local.net:8080/",
 	"logLevel"=>4,
-	"twitter-api-key"=>"69EJ3HAJ4R8KFJtGrfLPg",
+	//"twitter-api-key"=>"69EJ3HAJ4R8KFJtGrfLPg",
+	"twitter-api-key" => false,
 	"cache-time"=>0); // no cache time
 
 $dev = array(
