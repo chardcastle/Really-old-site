@@ -11,7 +11,7 @@
     <script src="http://platform.twitter.com/anywhere.js?id=<?php echo kohana::config('config.anywhere_key'); ?>&amp;v=1" type="text/javascript"></script>
 	<?php } ?>
 	<script type="text/javascript" src="/ui/js/jquery-1.4.2.min.js"></script>
-	<!--script type="text/javascript" src="/ui/js/jquery-ui-1.8rc3.custom.min.js"></script -->
+	<!--script type="text/javascript" src="/ui/js/jquery-ui-1.8.1.custom.min.js"></script -->
 	<script type="text/javascript" src="/ui/js/site.js"></script>
     <link rel='stylesheet' href='/ui/css/screen.css' type='text/css' media='Screen' />
     <link rel='stylesheet' href='/ui/css/handheld.css' type='text/css' media='handheld' />
