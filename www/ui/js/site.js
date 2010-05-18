@@ -68,27 +68,7 @@
  * One long init function
 */
 (function($){
-	if(!hardcastle){
-		var hardcastle = {}
-	}
-	hardcastle.page = {	
-		origins:[],	
-		setOrigins: function(){
-			var lim = $("#container").width()-$("#container div:first").width();		
-			hardcastle.page.origins = [];
-			$("#container")
-			.children("div")
-			.each(function(i,item){
-				var pos = {
-					top:$(this).css("top"),
-					left:$(this).css("left")
-				};
-				hardcastle.page.origins[$(item).attr("id")] = pos;
-			});		
-			return this;
-		}
-	}
-console.log("run");
+
    $("body")
 	.fadeTo(0,1,function(){
 		// use fadeTo as forced link in this chain
@@ -117,20 +97,29 @@ console.log("run");
 				$.getJSON($(this).attr("href")+"/true",function(json){
 					$.each(json,function(key,value){
 						var ele = $("#"+value["index"]);
-						//console.log(value["index"]);
-
 						ele
 						.find(".body")
 						.html(value["body"])
 						.end()
 						.find(".pubDate")
 						.html(value["title"])
-						.end();
+						.end()
+						.find(".close")
+						.attr("href","/day/view/"+value["id"]);
 						/**/
 					});
 				});
+				$(".pagination")
+				.find("a")
+				.removeClass("selected")
+				.end()
+				.find("a[href="+$(this).attr("href")+"]")
+				.addClass("selected");
 			return false;
 		});
-	});    
+	})
+	.end()
+	.find(".pagination")
+	.attr("class","paginationjs")    
 	// make new navigation stucture
 })(jQuery);

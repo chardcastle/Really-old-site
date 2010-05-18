@@ -307,3 +307,11 @@ h3#app-error{
 	width:292px;
 	display:block;
 }
+.paginationjs .selected{
+	color:#333!important;
+	font-weight:bold;
+	text-decoration:underline!important;
+}
+.paginationjs{
+	color:#777;
+}
