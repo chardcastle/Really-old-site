@@ -25,7 +25,6 @@
 			.css("left",left+"px");	  	
 		}
 	  });
-	  // return
 	  return this;
 	};
 	/*
@@ -52,46 +51,82 @@
 		// return
 		return this;	
 	};
-})(jQuery);
-
-(function($){    
-	var lim = $("#container").width()-$("#container div:first").width();
-	if(!originLocations){
-		var originLocations = [];
-		$("#container")
-		.children("div")
-		.each(function(i,item){
-			var pos = {
-				top:$(this).css("top"),
-				left:$(this).css("left")
-			};
-			originLocations[$(item).attr("id")] = pos;
+	/*
+	Stop animation to restart
+	*/
+	$.fn.loadOrigins = function(){
+		this.each(function(){
+			if(!$(this).is(".fullsize")){
+				$(this).attr("style","");
+			}		
 		});
+		// return
+		return this;	
+	};
+})(jQuery);
+/*
+ * One long init function
+*/
+(function($){
+	if(!hardcastle){
+		var hardcastle = {}
 	}
-	var numberOfPages = 0;
-    
-	$("body")
+	hardcastle.page = {	
+		origins:[],	
+		setOrigins: function(){
+			var lim = $("#container").width()-$("#container div:first").width();		
+			hardcastle.page.origins = [];
+			$("#container")
+			.children("div")
+			.each(function(i,item){
+				var pos = {
+					top:$(this).css("top"),
+					left:$(this).css("left")
+				};
+				hardcastle.page.origins[$(item).attr("id")] = pos;
+			});		
+			return this;
+		}
+	}
+console.log("run");
+   $("body")
+	.fadeTo(0,1,function(){
+		// use fadeTo as forced link in this chain
+		// save required data
+		var ch = {};
+		$.data(ch, "lim",$("#container").width()-$("#container div:first").width());
+		// make data for each element
+		$("#container")
+		.children("div.outer")
+		.each(function(i,item){
+			console.log("ere alright");
+			$.data(item,"pos",{top:$(item).css("top"),left:$(item).css("left")});
+			
+		});
+		// TEST via console
+		$("#container")
+		.children("div.outer")
+		.each(function(i,item){
+			console.log($.data(item,"pos").left);
+		});	
+	})
 	.find(".pagination a")
 	.each(function(i,item){
-		$(item)
-			.click(function(e){
+		$(item).click(function(e){
 				e.preventDefault();
-				$.getJSON($(this).attr("href")+"/true",function(data){
-					$.each(data,function(key,value){
-						var className = value["index"];
-						//console.log(className);
-						var top = originLocations[className].top;
-						var left = originLocations[className].left;
-						$("#"+value["index"])
-						//.scrambel({limit:lim,animate:true,speed:300})
+				$.getJSON($(this).attr("href")+"/true",function(json){
+					$.each(json,function(key,value){
+						var ele = $("#"+value["index"]);
+						//console.log(value["index"]);
+
+						ele
 						.find(".body")
 						.html(value["body"])
 						.end()
-						.find("h1")
+						.find(".pubDate")
 						.html(value["title"])
-						.end()
-						.animate({top:top,left:left},300)
-						.show();
+						.end();
+						/**/
 					});
 				});
 			return false;

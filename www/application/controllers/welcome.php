@@ -99,13 +99,19 @@ class Welcome_Controller extends Template_Controller {
 		->result_array(true);		
 		$x = 0;
 		$returned = array();
+		kohana::log("debug","load page as JSON");
 		foreach($data as $key => $value){
 			$x++;		
 			$contents = unserialize($value->content);
-			
+			$html = "";
+			if(is_array($contents)){
+				foreach($contents as $str){
+					$html .= $str;
+				}
+			}			
 			$returned[$key] = array(
 				"index"=>"box{$x}",
-				"body"=>$contents,
+				"body"=>$html,
 				"title"=>$value->date);			 			
 		}
 		echo json_encode($returned);		
