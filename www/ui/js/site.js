@@ -79,7 +79,7 @@
 		$("#container")
 		.children("div.outer")
 		.each(function(i,item){
-			console.log("ere alright");
+			//console.log("ere alright");
 			$.data(item,"pos",{top:$(item).css("top"),left:$(item).css("left")});
 			
 		});
@@ -87,33 +87,40 @@
 		$("#container")
 		.children("div.outer")
 		.each(function(i,item){
-			console.log($.data(item,"pos").left);
+			//console.log($.data(item,"pos").left);
 		});	
 	})
 	.find(".pagination a")
 	.each(function(i,item){
 		$(item).click(function(e){
 				e.preventDefault();
-				$.getJSON($(this).attr("href")+"/true",function(json){
-					$.each(json,function(key,value){
-						var ele = $("#"+value["index"]);
-						ele
-						.find(".body")
-						.html(value["body"])
-						.end()
-						.find(".pubDate")
-						.html(value["title"])
-						.end()
-						.find(".close")
-						.attr("href","/day/view/"+value["id"]);
-						/**/
+				var url = $(this).attr("href");
+				$("#container")
+				.animate({left:-$("#container").width()},600,function(){
+					$.getJSON(url+"/true",function(json){
+						$.each(json,function(key,value){
+							var ele = $("#"+value["index"]);
+							ele
+							.find(".body")
+							.html(value["body"])
+							.end()
+							.find(".pubDate")
+							.html(value["title"])
+							.end()
+							.find(".close")
+							.attr("href","/day/view/"+value["id"]);
+							/**/
+						});
 					});
+					$("#container").css("left","0px");
 				});
-				$(".pagination")
+				
+				//
+				$(".paginationjs")
 				.find("a")
 				.removeClass("selected")
 				.end()
-				.find("a[href="+$(this).attr("href")+"]")
+				.find("a[href="+url+"]")
 				.addClass("selected");
 			return false;
 		});

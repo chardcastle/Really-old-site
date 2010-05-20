@@ -5,6 +5,9 @@
 		echo $hotlinks;
 	?>
 <div id="container">
+	<span style="display:none" id="linkItems">
+		<?php echo $this->pagination->total_items/$this->pagination->items_per_page; ?>
+	</span>
 	<?php foreach($posts as $key => $post){				 
 		$features = unserialize($post->teaser);
 		if($post->id > 1){

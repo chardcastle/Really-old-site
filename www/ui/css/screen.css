@@ -229,7 +229,8 @@ code {
     background:LightCyan;
     padding:0 10px;
 }
-.pagination {    
+.pagination,
+.paginationjs {    
 	margin:20px 0;
     clear:both;
 }
