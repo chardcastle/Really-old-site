@@ -131,6 +131,43 @@ code {
 	top:500px;
 	left:508px;
 }
+/**/
+#prev1 {
+	top:0px;
+	left:0px;
+}
+#prev2 {
+	top:0px;
+	left:-254px;
+}
+#prev3 {
+	top:0px;
+	left:-508px;
+}
+#prev4 {
+	top:250px;
+	left:0px;
+}
+#prev5 {
+	top:250px;
+	left:-254px;
+}
+#prev6 {
+	top:250px;
+	left:-508px;
+}
+#prev7 {
+	top:500px;
+	left:0px;
+}
+#prev8 {
+	top:500px;
+	left:-254px;
+}
+#prev9 {
+	top:500px;
+	left:-508px;
+}
 #next1 {
 	top:0px;
 	left:762px;

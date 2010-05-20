@@ -8,6 +8,21 @@
 	<span style="display:none" id="linkItems">
 		<?php echo $this->pagination->total_items/$this->pagination->items_per_page; ?>
 	</span>
+	<!-- 
+		PREVIOUS CONTENT
+	-->
+	<?php $i = 0; do{$i++; ?>
+		<div id="prev<?php echo $i; ?>" class="outer">
+			<div class="inner">
+				<a href="/day/view/">Close</a>
+				<div class="pubDate"></div>
+				<div class="body"></div>
+			</div>
+		</div>
+	<?php }while($i < kohana::config("config.number_of_items")); ?>
+	<!-- 
+		MAIN CONTENT 
+	-->
 	<?php foreach($posts as $key => $post){				 
 		$features = unserialize($post->teaser);
 		if($post->id > 1){
@@ -40,8 +55,16 @@
 		</div>	
 		<?php }
 	} ?>		
+	<!-- 
+		PREVIOUS CONTENT 
+	-->
 	<?php $i = 0; do{$i++; ?>
-		<div id="next<?php echo $i; ?>" class="outer"></div>
-		
-	<?php }while($i < 6); ?>
+		<div id="next<?php echo $i; ?>" class="outer">
+			<div class="inner">
+				<a href="/day/view/">Close</a>
+				<div class="pubDate"></div>
+				<div class="body"></div>
+			</div>
+		</div>
+	<?php }while($i < kohana::config("config.number_of_items")); ?>
 </div>

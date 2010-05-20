@@ -74,14 +74,15 @@
 		// use fadeTo as forced link in this chain
 		// save required data
 		var ch = {};
-		$.data(ch, "lim",$("#container").width()-$("#container div:first").width());
+		$.data(ch,"lim",$("#container").width()-$("#container div:first").width());
+		$.data(ch,"linkItems",$("#linkItems").text());
+		//console.log("Result is"+$.data(ch,"linkItems"));
 		// make data for each element
 		$("#container")
 		.children("div.outer")
 		.each(function(i,item){
 			//console.log("ere alright");
-			$.data(item,"pos",{top:$(item).css("top"),left:$(item).css("left")});
-			
+			$.data(item,"pos",{top:$(item).css("top"),left:$(item).css("left")});			
 		});
 		// TEST via console
 		$("#container")
@@ -99,7 +100,7 @@
 				.animate({left:-$("#container").width()},600,function(){
 					$.getJSON(url+"/true",function(json){
 						$.each(json,function(key,value){
-							var ele = $("#"+value["index"]);
+							var ele = $("#next"+value["index"]);
 							ele
 							.find(".body")
 							.html(value["body"])
@@ -113,6 +114,14 @@
 						});
 					});
 					$("#container").css("left","0px");
+				})
+				.find("div[id^=box]")
+				.each(function(){
+					console.log($(this).attr("id",$(this).attr("id").replace("box","prev")));
+				})
+				.find("div[id^=next]")
+				.each(function(){
+					console.log($(this).attr("id",$(this).attr("id").replace("next","box")));
 				});
 				
 				//

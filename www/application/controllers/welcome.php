@@ -110,7 +110,7 @@ class Welcome_Controller extends Template_Controller {
 				}
 			}			
 			$returned[$key] = array(
-				"index"=>"box{$x}",
+				"index"=>"{$x}",
 				"body"=>$html,
 				"id"=>$value->id,	
 				"title"=>$value->date);			 			
