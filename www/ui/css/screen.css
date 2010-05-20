@@ -89,6 +89,7 @@ code {
 #globalOuter {
 	width:762px;
 	margin:20px auto 0 auto;
+	overflow-x:hidden;
 }
 #navigation {
 	display:none;
@@ -129,6 +130,42 @@ code {
 #box9 {
 	top:500px;
 	left:508px;
+}
+#next1 {
+	top:0px;
+	left:762px;
+}
+#next2 {
+	top:0px;
+	left:1016px;
+}
+#next3 {
+	top:0px;
+	left:1270px;
+}
+#next4 {
+	top:250px;
+	left:762px;
+}
+#next5 {
+	top:250px;
+	left:1016px;
+}
+#next6 {
+	top:250px;
+	left:1270px;
+}
+#next7 {
+	top:500px;
+	left:762px;
+}
+#next8 {
+	top:500px;
+	left:1016px;
+}
+#next9 {
+	top:500px;
+	left:1270px;
 }
 .item {
 	margin:5px 0;

@@ -37,5 +37,8 @@
 		</div>	
 		<?php }
 	} ?>		
-	
+	<?php $i = 0; do{$i++; ?>
+		<div id="next<?php echo $i; ?>" class="outer"></div>
+		
+	<?php }while($i < 6); ?>
 </div>
