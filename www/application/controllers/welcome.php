@@ -57,14 +57,14 @@ class Welcome_Controller extends Template_Controller {
 		->get()
 		->result_array(true);
 		
-		/* Just this once, load next posts, required for JS scrolling idea */
+		/* Just this once, load next posts, required for JS scrolling idea 
 		$this->template->content->nextPosts = $this->db->select("*")
 		->from("kh_timeline")		
 		->limit($this->itemsPerPage,($this->itemsPerPage*2))
 		->orderby("id","asc")
 		->get()
 		->result_array(true);
-		//
+		/* */
 		
 		
 		

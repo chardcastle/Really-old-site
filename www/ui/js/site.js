@@ -100,60 +100,35 @@
 				var url = $(this).attr("href");
 				$("#container")
 				.animate({left:-$("#container").width()},600,function(){
-					$.getJSON(url+"/true",function(json){
-						$.each(json,function(key,value){
-							var ele = $("#next"+value["index"]);
-							ele
-							.find(".body")
-							.html(value["body"])
-							.end()
-							.find(".pubDate")
-							.html(value["title"])
-							.end()
-							.find(".close")
-							.attr("href","/day/view/"+value["id"]);
-							/**/
+					// return to original position
+					$("body")
+					.find("div[id^=box] .inner")
+					.fadeOut(0)
+					.end()
+					.fadeTo(0,1,function(){
+						$.getJSON(url+"/true",function(json){
+							$.each(json,function(key,value){
+								var ele = $("#box"+value["index"]);
+								ele							
+								.find(".body")
+								.html(value["body"])
+								.end()
+								.find(".pubDate")
+								.html(value["title"])
+								.end()
+								.find(".close")
+								.attr("href","/day/view/"+value["id"]);							
+							});
 						});
-					});
-					$("#container").css("left","0px");
+
+					})				
+					.find("#container")
+					.css("left",0)
+					.end()
+					.find("div[id^=box] .inner")
+					.fadeIn(600);					
 				})
-				// move the old previous page to next (temporary)
-				.find("div[id^=prev]")
-				.each(function(){
-					console.log("set prev --> new next");
-					$(this).attr("id",$(this).attr("id").replace("prev","newnext"));
-				})
-				.end()
-				// update next tab to be current
-				.find("div[id^=next]")
-				.each(function(){
-					console.log("set next --> current");
-					$(this).attr("id",$(this).attr("id").replace("next","tempcurrent"));
-				})
-				.end()
-				// make old current page the new previous page (temporary)
-				.find("div[id^=box]")
-				.each(function(){
-					console.log("old current --> new prev page");
-					$(this).attr("id",$(this).attr("id").replace("box","prev"));
-				})	
-				.end()	
-				// all moves complete,
-				// set current
-				.find("div[id^=tempcurrent]")
-				.each(function(){
-					console.log("set current");
-					$(this).attr("id",$(this).attr("id").replace("tempcurrent","box"));
-				})		
-				.end()
-				// set next				
-				.find("div[id^=newnext]")
-				.each(function(){
-					console.log("set next");
-					$(this).attr("id",$(this).attr("id").replace("newnext","next"));
-				});
-				
-				//
+				// Update navigation selection
 				$(".paginationjs")
 				.find("a")
 				.removeClass("selected")
