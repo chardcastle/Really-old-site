@@ -216,17 +216,17 @@ code {
 	float:right;
 	margin-left:6px;
 }
-#home {
-	background:#FFFF99 !important;	
+#boxHome {
+	background:#FF8040 !important;	
 }
-#home .inner{
+#boxHome .inner{
 	padding:16px;
 	margin:0 !important;
 }
-#home strong {
+#boxHome strong {
 	font-weight:bold;
 }
-#home h1 {
+#boxHome h1 {
 	margin-bottom:2px;
 }
 .tweetTime,

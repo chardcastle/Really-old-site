@@ -76,6 +76,8 @@
 		var ch = {};
 		$.data(ch,"lim",$("#container").width()-$("#container div:first").width());
 		$.data(ch,"linkItems",$("#linkItems").text());
+		// store current page digit
+		$.data(ch,"currentPage",1);
 		//console.log("Result is"+$.data(ch,"linkItems"));
 		// make data for each element
 		$("#container")
@@ -115,13 +117,40 @@
 					});
 					$("#container").css("left","0px");
 				})
-				.find("div[id^=box]")
+				// move the old previous page to next (temporary)
+				.find("div[id^=prev]")
 				.each(function(){
-					console.log($(this).attr("id",$(this).attr("id").replace("box","prev")));
+					console.log("set prev --> new next");
+					$(this).attr("id",$(this).attr("id").replace("prev","newnext"));
 				})
+				.end()
+				// update next tab to be current
 				.find("div[id^=next]")
 				.each(function(){
-					console.log($(this).attr("id",$(this).attr("id").replace("next","box")));
+					console.log("set next --> current");
+					$(this).attr("id",$(this).attr("id").replace("next","tempcurrent"));
+				})
+				.end()
+				// make old current page the new previous page (temporary)
+				.find("div[id^=box]")
+				.each(function(){
+					console.log("old current --> new prev page");
+					$(this).attr("id",$(this).attr("id").replace("box","prev"));
+				})	
+				.end()	
+				// all moves complete,
+				// set current
+				.find("div[id^=tempcurrent]")
+				.each(function(){
+					console.log("set current");
+					$(this).attr("id",$(this).attr("id").replace("tempcurrent","box"));
+				})		
+				.end()
+				// set next				
+				.find("div[id^=newnext]")
+				.each(function(){
+					console.log("set next");
+					$(this).attr("id",$(this).attr("id").replace("newnext","next"));
 				});
 				
 				//

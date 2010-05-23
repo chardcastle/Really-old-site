@@ -43,7 +43,7 @@
 		<?php 	
 		}else{
 		?>
-		<div id="home" class="outer">
+		<div id="boxHome" class="outer">
 			<div class="inner">
 			<?php 	
 				// Probably homepage blurb, spit out welcome html
@@ -58,13 +58,22 @@
 	<!-- 
 		PREVIOUS CONTENT 
 	-->
-	<?php $i = 0; do{$i++; ?>
-		<div id="next<?php echo $i; ?>" class="outer">
+	<?php foreach($nextPosts as $k => $nextPost){				 
+		$features = unserialize($nextPost->teaser);
+		if($nextPost->id > 1){ ?>
+		<div id="next<?php echo $key+1; ?>" class="outer">
 			<div class="inner">
-				<a href="/day/view/">Close</a>
-				<div class="pubDate"></div>
-				<div class="body"></div>
+				<a href="/day/view/<?php echo $nextPost->id; ?>" class="close ui-icon ui-icon-search" style="float:right">Close</a>
+				<div class="pubDate"><?php echo $nextPost->date; ?></div>			
+				<div class="body">
+					<?php 
+				        foreach($features as $f){
+						 echo stripslashes($f);
+					 } ?>
+				</div>
 			</div>
+			<div class="boxFooter"></div>
 		</div>
-	<?php }while($i < kohana::config("config.number_of_items")); ?>
+	<?php }
+		} ?>
 </div>

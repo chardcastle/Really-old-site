@@ -50,14 +50,23 @@ class Welcome_Controller extends Template_Controller {
         $this->template->description = $this->siteObj->getSiteDescription();
 		$this->template->content->hotlinks = $this->pagination->render("digg");
 		// Post timeline data
-		$mostRecentPosts = $this->db->select("*")
+		$this->template->content->posts = $this->db->select("*")
 		->from("kh_timeline")		
 		->limit($this->itemsPerPage)
 		->orderby("id","asc")
 		->get()
 		->result_array(true);
 		
-		$this->template->content->posts = $mostRecentPosts;
+		/* Just this once, load next posts, required for JS scrolling idea */
+		$this->template->content->nextPosts = $this->db->select("*")
+		->from("kh_timeline")		
+		->limit($this->itemsPerPage,($this->itemsPerPage*2))
+		->orderby("id","asc")
+		->get()
+		->result_array(true);
+		//
+		
+		
 		
 	}
 	/*
@@ -78,7 +87,8 @@ class Welcome_Controller extends Template_Controller {
 			->orderby("id","asc")
 			->get()
 			->result_array(true);
-			
+			//
+
 			$this->template->title = "Chris";//var_dump($this->pagination);
             $this->template->description = $this->siteDesc;
 		}
