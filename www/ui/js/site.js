@@ -77,7 +77,7 @@
 		$.data(ch,"lim",$("#container").width()-$("#container div:first").width());
 		$.data(ch,"linkItems",$("#linkItems").text());
 		// store current page digit
-		$.data(ch,"currentPage",1);
+		$.data(document.body,"currentPage",1);
 		//console.log("Result is"+$.data(ch,"linkItems"));
 		// make data for each element
 		$("#container")
@@ -97,9 +97,17 @@
 	.each(function(i,item){
 		$(item).click(function(e){
 				e.preventDefault();
+				// decide direction based on last choice
+				// * forward is the addition of viewport width to contents left position
+				// * backwards is minus move value of the viewport				
 				var url = $(this).attr("href");
+				var req = url.split("/").reverse();
+				var isForward = ($.data(document.body,"currentPage") < req[0])?'-':'';
+				// save request for decision on next click
+				$.data(document.body,"currentPage",req[0]);	
+				// respond			
 				$("#container")
-				.animate({left:-$("#container").width()},600,function(){
+				.animate({left:(isForward)+$("#container").width()},600,function(){
 					// return to original position
 					$("body")
 					.find("div[id^=box] .inner")
@@ -109,12 +117,13 @@
 						$.getJSON(url+"/true",function(json){
 							$.each(json,function(key,value){
 								var ele = $("div[id*=box"+value["index"]+"]");
+								// its a pain, but consider the homepage
 								if(value["index"] !== 1){
 									ele.removeClass("home");
 								}else{
 									ele.addClass("home");
 								}		
-								ele
+								ele // update the div with new content
 								.find(".body")
 								.html(value["body"])
 								.end()
