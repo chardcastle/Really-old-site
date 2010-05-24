@@ -110,7 +110,7 @@
 							$.each(json,function(key,value){
 								var ele = $("div[id*=box"+value["index"]+"]");
 								if(value["index"] !== 1){
-									console.log("found home");
+									ele.removeClass("home");
 								}else{
 									ele.addClass("home");
 								}		
