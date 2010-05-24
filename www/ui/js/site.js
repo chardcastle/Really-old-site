@@ -1,14 +1,46 @@
 (function($){
 	// blank plugin definition .. should I need one
-	$.fn.pluginSkeleton = function(options) {
+	$.fn.runHardcastleMove = function(options) {
 	  var defaults = {
-	    property: 1000
+		url: '',
+		req: [], 
+		isForward: '' 
 	  };
 	  // Extend our default options with those provided.
 	  var opts = $.extend(defaults, options);
 	  // Our plugin implementation code goes here.
 	  this.each(function(){
-
+			$(this)
+			.find("div[id^=box] .inner")
+			.fadeOut(0)
+			.end() // hide data targets and force call back for request
+			.fadeTo(0,1,function(){
+				$.getJSON(opts.url+"/true",function(json){
+					$.each(json,function(key,value){
+						var ele = $("div[id*=box"+value["index"]+"]");
+						// its a pain, but consider the homepage
+						if(value["index"] !== 1){
+							ele.removeClass("home");
+						}else{
+							ele.addClass("home");
+						}		
+						ele // update the div with new content
+						.find(".body")
+						.html(value["body"])
+						.end()
+						.find(".pubDate")
+						.html(value["title"])
+						.end()
+						.find(".close")
+						.attr("href","/day/view/"+value["id"]);							
+					});
+				});
+			})				
+			.find("#container") // Snap the container back in position 		
+			.css("left",0)		// trick usr into thinking its not moved?
+			.end()
+			.find("div[id^=box] .inner") // Slowly fade content in ... mmm nice
+			.fadeIn(600);
 	  });
 	  return this;
 	};
@@ -58,42 +90,7 @@
 				// respond			
 				$("#container")
 				.animate({left:(click.isForward)+$("#container").width()},600,function(){
-					/* 
-					1) Hide target data and 
-					use a callback to populate it with new content/
-					2) Snap back to position and fade content in
-					*/
-					$("body")
-					.find("div[id^=box] .inner")
-					.fadeOut(0)
-					.end() // hide data targets and force call back for request
-					.fadeTo(0,1,function(){
-						$.getJSON(click.url+"/true",function(json){
-							$.each(json,function(key,value){
-								var ele = $("div[id*=box"+value["index"]+"]");
-								// its a pain, but consider the homepage
-								if(value["index"] !== 1){
-									ele.removeClass("home");
-								}else{
-									ele.addClass("home");
-								}		
-								ele // update the div with new content
-								.find(".body")
-								.html(value["body"])
-								.end()
-								.find(".pubDate")
-								.html(value["title"])
-								.end()
-								.find(".close")
-								.attr("href","/day/view/"+value["id"]);							
-							});
-						});
-					})				
-					.find("#container") // Snap the container back in position 		
-					.css("left",0)		// trick usr into thinking its not moved?
-					.end()
-					.find("div[id^=box] .inner") // Slowly fade content in ... mmm nice
-					.fadeIn(600);					
+					$("body").runHardcastleMove(click);					
 				})
 				// Update navigation selection
 				$(".paginationjs")
