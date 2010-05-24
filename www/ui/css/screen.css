@@ -216,18 +216,23 @@ code {
 	float:right;
 	margin-left:6px;
 }
-#boxHome {
+.home {
 	background:#FF8040 !important;	
 }
-#boxHome .inner{
+.home .inner{
 	padding:16px;
 	margin:0 !important;
 }
-#boxHome strong {
+.home strong {
 	font-weight:bold;
 }
-#boxHome h1 {
+.home h1 {
 	margin-bottom:2px;
+}
+.home .pubDate,
+.home a.close,
+.home .boxFooter{
+	display:none;
 }
 .tweetTime,
 .commitTime{
@@ -277,9 +282,6 @@ code {
 	position:absolute;
 	bottom:0;
 	height:60px;
-}
-.body{
-	margin:16px;
 }
 #header p{
     float:left;

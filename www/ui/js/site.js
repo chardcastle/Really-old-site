@@ -108,8 +108,13 @@
 					.fadeTo(0,1,function(){
 						$.getJSON(url+"/true",function(json){
 							$.each(json,function(key,value){
-								var ele = $("#box"+value["index"]);
-								ele							
+								var ele = $("div[id*=box"+value["index"]+"]");
+								if(value["index"] !== 1){
+									console.log("found home");
+								}else{
+									ele.addClass("home");
+								}		
+								ele
 								.find(".body")
 								.html(value["body"])
 								.end()
@@ -120,12 +125,11 @@
 								.attr("href","/day/view/"+value["id"]);							
 							});
 						});
-
 					})				
-					.find("#container")
-					.css("left",0)
+					.find("#container") // Snap the container back in position 		
+					.css("left",0)		// trick usr into thinking its not moved?
 					.end()
-					.find("div[id^=box] .inner")
+					.find("div[id^=box] .inner") // Slowly fade content in ... mmm nice
 					.fadeIn(600);					
 				})
 				// Update navigation selection
