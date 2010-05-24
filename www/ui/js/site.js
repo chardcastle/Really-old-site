@@ -45,22 +45,30 @@
 				e.preventDefault();
 				// decide direction based on last choice
 				// * forward is the addition of viewport width to contents left position
-				// * backwards is minus move value of the viewport				
-				var url = $(this).attr("href");
-				var req = url.split("/").reverse();
-				var isForward = ($.data(document.body,"currentPage") < req[0])?'-':'';
+				// * backwards is minus move value of the viewport
+				var click = {
+					url: $(this).attr("href"),
+					req: [], 
+					isForward: '' 
+				}				
+				click.req = click.url.split("/").reverse();				
+				click.isForward = ($.data(document.body,"currentPage") < click.req[0])?'-':'';
 				// save request for decision on next click
-				$.data(document.body,"currentPage",req[0]);	
+				$.data(document.body,"currentPage",click.req[0]);	
 				// respond			
 				$("#container")
-				.animate({left:(isForward)+$("#container").width()},600,function(){
-					// return to original position
+				.animate({left:(click.isForward)+$("#container").width()},600,function(){
+					/* 
+					1) Hide target data and 
+					use a callback to populate it with new content/
+					2) Snap back to position and fade content in
+					*/
 					$("body")
 					.find("div[id^=box] .inner")
 					.fadeOut(0)
 					.end() // hide data targets and force call back for request
 					.fadeTo(0,1,function(){
-						$.getJSON(url+"/true",function(json){
+						$.getJSON(click.url+"/true",function(json){
 							$.each(json,function(key,value){
 								var ele = $("div[id*=box"+value["index"]+"]");
 								// its a pain, but consider the homepage
@@ -92,13 +100,19 @@
 				.find("a")
 				.removeClass("selected")
 				.end()
-				.find("a[href="+url+"]")
+				.find("a[href="+click.url+"]")
 				.addClass("selected");
 			return false;
 		});
 	})
 	.end()
 	.find(".pagination")
-	.attr("class","paginationjs")    
+	.attr("class","paginationjs")
+	.click(function(){
+		/*
+		 no link for that .. was either first page
+		 or "previous" which will always be first page
+		*/
+	})	
 	// make new navigation stucture
 })(jQuery);
