@@ -14,7 +14,7 @@
 	<?php $i = 0; do{$i++; ?>
 		<div id="prev<?php echo $i; ?>" class="outer">
 			<div class="inner">
-				<a href="/day/view/">Close</a>
+				<a href="/day/view/" class="ui-icon ui-icon-blank">Close</a>
 				<div class="pubDate"></div>
 				<div class="body"></div>
 			</div>
@@ -49,7 +49,7 @@
 	<?php $i = 0; do{$i++; ?>
 		<div id="next<?php echo $i; ?>" class="outer">
 			<div class="inner">
-				<a href="/day/view/">Close</a>
+				<a href="/day/view/" class="ui-icon ui-icon-blank">Close</a>
 				<div class="pubDate"></div>
 				<div class="body"></div>
 			</div>
