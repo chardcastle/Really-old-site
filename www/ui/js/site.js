@@ -64,52 +64,73 @@
 			//console.log("ere alright");
 			$.data(item,"pos",{top:$(item).css("top"),left:$(item).css("left")});			
 		});
-		// TEST via console
-		$("#container")
-		.children("div.outer")
-		.each(function(i,item){
-			//console.log($.data(item,"pos").left);
-		});	
+		$.data(document.body,"homeHtml",$("#box1").html());		
 	})
 	.find(".pagination a")
 	.each(function(i,item){
 		$(item).click(function(e){
-				e.preventDefault();
-				// decide direction based on last choice
-				// * forward is the addition of viewport width to contents left position
-				// * backwards is minus move value of the viewport
-				var click = {
-					url: $(this).attr("href"),
-					req: [], 
-					isForward: '' 
-				}				
-				click.req = click.url.split("/").reverse();				
-				click.isForward = ($.data(document.body,"currentPage") < click.req[0])?'-':'';
-				// save request for decision on next click
-				$.data(document.body,"currentPage",click.req[0]);	
-				// respond			
-				$("#container")
-				.animate({left:(click.isForward)+$("#container").width()},600,function(){
-					$("body").runHardcastleMove(click);					
-				})
-				// Update navigation selection
-				$(".paginationjs")
-				.find("a")
-				.removeClass("selected")
-				.end()
-				.find("a[href="+click.url+"]")
-				.addClass("selected");
+			e.preventDefault();
+			// decide direction based on last choice
+			// * forward is the addition of viewport width to contents left position
+			// * backwards is minus move value of the viewport
+			var click = {
+				url: $(this).attr("href"),
+				req: [], 
+				isForward: '' 
+			}				
+			click.req = click.url.split("/").reverse();				
+			click.isForward = ($.data(document.body,"currentPage") < click.req[0])?'-':'';
+			// save request for decision on next click
+			$.data(document.body,"currentPage",click.req[0]);	
+			// respond			
+			$("#container")
+			.animate({left:(click.isForward)+$("#container").width()},600,function(){
+				$("body").runHardcastleMove(click);					
+			})
+			// Update navigation selection
+			$(".paginationjs")
+			.find("a")
+			.removeClass("selected")
+			.end()
+			.find("a[href="+click.url+"]")
+			.addClass("selected");
 			return false;
 		});
 	})
 	.end()
 	.find(".pagination")
 	.attr("class","paginationjs")
-	.click(function(){
+	.click(function(e){
 		/*
 		 no link for that .. was either first page
 		 or "previous" which will always be first page
 		*/
+		e.preventDefault();
+		var click = {
+			url: "/welcome/page/1",
+			req: [], 
+			isForward: '-' 
+		}				
+		click.req = 1;		
+		// save request for decision on next click
+		$.data(document.body,"currentPage",1);	
+		// respond			
+		$("#container")
+		.animate({left:(click.isForward)+$("#container").width()},600,function(){
+			$("body")
+			.runHardcastleMove(click)
+			.find("#box1")
+			.html($.data(document.body,"homeHtml"));			
+			console.log($.data(document.body,"homeHtml"));
+		})
+		// Update navigation selection
+		$(".paginationjs")
+		.find("a")
+		.removeClass("selected")
+		.end()
+		.find("a[href="+click.url+"]")
+		.addClass("selected");
+		return false;
 	})	
 	// make new navigation stucture
 })(jQuery);
