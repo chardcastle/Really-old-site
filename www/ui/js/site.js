@@ -1,67 +1,16 @@
 (function($){
-	// plugin definition
-	$.fn.scrambel = function(options) {
+	// blank plugin definition .. should I need one
+	$.fn.pluginSkeleton = function(options) {
 	  var defaults = {
-	    speed: 1000,
-	    limit: 300,
-	    animate:false
+	    property: 1000
 	  };
 	  // Extend our default options with those provided.
 	  var opts = $.extend(defaults, options);
 	  // Our plugin implementation code goes here.
 	  this.each(function(){
-		var top = Math.floor(Math.random()*opts.limit);
-		var left = Math.floor(Math.random()*opts.limit);
-			//console.log(top+" "+left+" "+lim);
-		if(opts.animate){
-			if($(this).is(":animated")){
-				$(this).stop();
-			}
-			$(this)
-			.animate({top:top+"px",left:left+"px"},opts.speed);	
-		}else{			
-			$(this)
-			.css("top",top+"px")
-			.css("left",left+"px");	  	
-		}
+
 	  });
 	  return this;
-	};
-	/*
-	Stop animation to restart
-	*/
-	$.fn.stopIfAnimated = function(){
-		this.each(function(){
-			if($(this).is(":animated")){
-				$(this).stop();
-			}		
-		});
-		// return
-		return this;	
-	};
-	/*
-	Stop animation to restart
-	*/
-	$.fn.resizeIfNecessary = function(){
-		this.each(function(){
-			if(!$(this).is(".fullsize")){
-				$(this).attr("style","");
-			}		
-		});
-		// return
-		return this;	
-	};
-	/*
-	Stop animation to restart
-	*/
-	$.fn.loadOrigins = function(){
-		this.each(function(){
-			if(!$(this).is(".fullsize")){
-				$(this).attr("style","");
-			}		
-		});
-		// return
-		return this;	
 	};
 })(jQuery);
 /*
@@ -71,14 +20,11 @@
 
    $("body")
 	.fadeTo(0,1,function(){
-		// use fadeTo as forced link in this chain
-		// save required data
-		var ch = {};
-		$.data(ch,"lim",$("#container").width()-$("#container div:first").width());
-		$.data(ch,"linkItems",$("#linkItems").text());
+		/* use fadeTo as forced link in this chain
+		 * save required data
+		*/ 
 		// store current page digit
 		$.data(document.body,"currentPage",1);
-		//console.log("Result is"+$.data(ch,"linkItems"));
 		// make data for each element
 		$("#container")
 		.children("div.outer")
@@ -112,7 +58,7 @@
 					$("body")
 					.find("div[id^=box] .inner")
 					.fadeOut(0)
-					.end()
+					.end() // hide data targets and force call back for request
 					.fadeTo(0,1,function(){
 						$.getJSON(url+"/true",function(json){
 							$.each(json,function(key,value){
