@@ -272,7 +272,8 @@ code {
     padding:0 10px;
 }
 .pagination,
-.paginationjs {    
+.paginationjs,
+.paginationFullWidth {    
 	margin:20px 0;
     clear:both;
 }
@@ -291,7 +292,7 @@ code {
     clear:both;
     display:block;
 }
-.pagination .forwards{
+.paginationFullWidth .forwards{
     float:right;
 }
 #footer ul{

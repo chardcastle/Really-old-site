@@ -1,4 +1,4 @@
-<p class="pagination">
+<p class="paginationFullWidth">
     <?php if($id < $paginationLimit){ ?>
     <a href="/day/view/<?php echo $id+1;?>" class="forwards">forwards&nbsp;&raquo;</a>
     <?php } ?>
