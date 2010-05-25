@@ -1,4 +1,4 @@
-<h4>Content</h4>
+<h4 class="pageTitle">Content</h4>
 <p>Most of what you see on this site has been collected from other resources.
 These are other website services that I use such as <a href="http://twitter.com">Twitter</a> and <a href="http://github.com/chardcastle">GitHub</a>. Jump in and engage!</p>
 <h4>Technology</h4>

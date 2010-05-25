@@ -38,8 +38,8 @@
 			<?php echo $content ?>
         <div id="footer">
             <ul>
-                <li class="first">About</li>
-                <li>Contact</li>
+                <li class="first"><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
             </ul>            
         </div>
 		<br/>
