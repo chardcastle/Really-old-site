@@ -131,6 +131,5 @@
 		.find("a[href="+click.url+"]")
 		.addClass("selected");
 		return false;
-	})	
-	// make new navigation stucture
+	});
 })(jQuery);

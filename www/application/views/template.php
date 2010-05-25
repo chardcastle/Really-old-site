@@ -17,7 +17,7 @@
     <link rel='stylesheet' href='/ui/css/handheld.css' type='text/css' media='handheld' />
     <link rel='shortcut icon' href='/ui/images/favicon.ico' />
 </head>
-<body>
+<body>	
 	<div id="globalOuter">
 		<div id="header">            
             <p><?php echo $description; ?></p>
