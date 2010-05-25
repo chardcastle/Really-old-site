@@ -29,7 +29,7 @@ class Welcome_Controller extends Template_Controller {
 		    'uri_segment'    => 'page', // pass a string as uri_segment to trigger former 'label' functionality
 		    'total_items'    => $this->db->count_records("kh_timeline"), // use db count query here of course
 		    'items_per_page' => $this->itemsPerPage, 
-		    'style'          => 'punbb' // pick one from: classic (default), digg, extended, punbb, or add your own!		
+		    'style'          => 'hardcastle' // pick one from: classic (default), digg, extended, punbb, or add your own!		
 		));
         $this->siteObj = new Post_Model();
         $this->siteDesc = $this->siteObj->getSiteDescription();
@@ -147,16 +147,6 @@ class Welcome_Controller extends Template_Controller {
 		}else{
 			throw new Kohana_User_Exception('Cannot call over the web', 'This is a function that can only be called via the command line.');
 		}
-	}
-	/*
-	 * Show about page
-	*/
-	public function about()
-	{		
-		$content = new View('about');
-		$this->template->title = "About";
-		$this->template->description = $this->siteDesc;
-		$this->template->content = $content->render();	
 	}
 
 	public function __call($method, $arguments)
