@@ -4,13 +4,14 @@
 	  var defaults = {
 		url: '',
 		req: [], 
-		isForward: '' 
+		isForward: '',
+		homeHtml: '' 
 	  };
 	  // Extend our default options with those provided.
 	  var opts = $.extend(defaults, options);
 	  // Our plugin implementation code goes here.
-	  this.each(function(){
-			$(this)
+	  
+			$("body")
 			.find("div[id^=box] .inner")
 			.fadeOut(0)
 			.end() // hide data targets and force call back for request
@@ -19,20 +20,20 @@
 					$.each(json,function(key,value){
 						var ele = $("div[id*=box"+value["index"]+"]");
 						// its a pain, but consider the homepage
-						if(value["index"] !== 1){
-							ele.removeClass("home");
-						}else{
-							ele.addClass("home");
-						}		
-						ele // update the div with new content
-						.find(".body")
-						.html(value["body"])
-						.end()
-						.find(".pubDate")
-						.html(value["title"])
-						.end()
-						.find(".close")
-						.attr("href","/day/view/"+value["id"]);							
+						if(value["id"] !== "1"){
+							ele.removeClass("home")
+							.find(".body")
+							.html(value["body"])
+							.end()
+							.find(".pubDate")
+							.html(value["title"])
+							.end()
+							.find(".close")
+							.attr("href","/day/view/"+value["id"]);	
+						}else{										
+							ele.addClass("home")
+							.html(opts.homeHtml);
+						}						
 					});
 				});
 			})				
@@ -41,7 +42,7 @@
 			.end()
 			.find("div[id^=box] .inner") // Slowly fade content in ... mmm nice
 			.fadeIn(600);
-	  });
+	  
 	  return this;
 	};
 })(jQuery);
@@ -76,7 +77,8 @@
 			var click = {
 				url: $(this).attr("href"),
 				req: [], 
-				isForward: '' 
+				isForward: '',
+				homeHtml: $.data(document.body,"homeHtml")
 			}				
 			click.req = click.url.split("/").reverse();				
 			click.isForward = ($.data(document.body,"currentPage") < click.req[0])?'-':'';
@@ -109,19 +111,17 @@
 		var click = {
 			url: "/welcome/page/1",
 			req: [], 
-			isForward: '-' 
-		}				
-		click.req = 1;		
+			isForward: '-',
+			homeHtml: $.data(document.body,"homeHtml")
+		}						
+		click.req = click.url.split("/").reverse();				
 		// save request for decision on next click
 		$.data(document.body,"currentPage",1);	
 		// respond			
 		$("#container")
 		.animate({left:(click.isForward)+$("#container").width()},600,function(){
 			$("body")
-			.runHardcastleMove(click)
-			.find("#box1")
-			.html($.data(document.body,"homeHtml"));			
-			console.log($.data(document.body,"homeHtml"));
+			.runHardcastleMove(click);			
 		})
 		// Update navigation selection
 		$(".paginationjs")

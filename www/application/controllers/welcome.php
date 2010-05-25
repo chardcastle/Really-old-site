@@ -29,7 +29,7 @@ class Welcome_Controller extends Template_Controller {
 		    'uri_segment'    => 'page', // pass a string as uri_segment to trigger former 'label' functionality
 		    'total_items'    => $this->db->count_records("kh_timeline"), // use db count query here of course
 		    'items_per_page' => $this->itemsPerPage, 
-		    'style'          => 'classic' // pick one from: classic (default), digg, extended, punbb, or add your own!		
+		    'style'          => 'punbb' // pick one from: classic (default), digg, extended, punbb, or add your own!		
 		));
         $this->siteObj = new Post_Model();
         $this->siteDesc = $this->siteObj->getSiteDescription();

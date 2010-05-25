@@ -48,18 +48,18 @@ class Day_Controller extends Template_Controller {
             $this->template->content->token = $token;
             // Post timeline data
             $post = $postObj->getPost($postId);
-	    $comments = new Comment_Model($postId);		
-        $commentHtml = "";
-	    if(count($comments)>0){
-			foreach($comments->collection as $key => $comment){
-				$html = new View("comment/single");
-				$commentObj = new Comment_Model();
-				$html->set("comment",$comment);
-		        kohana::log("debug",Kohana::debug($comment));
-				$commentHtml .= $html->render();
-			}
-		}	
-	    $this->template->content->comments = $commentHtml;
+			$comments = new Comment_Model($postId);		
+		    $commentHtml = "";
+			if(count($comments)>0){
+				foreach($comments->collection as $key => $comment){
+					$html = new View("comment/single");
+					$commentObj = new Comment_Model();
+					$html->set("comment",$comment);
+				    kohana::log("debug",Kohana::debug($comment));
+					$commentHtml .= $html->render();
+				}
+			}	
+			$this->template->content->comments = $commentHtml;
             $this->template->content->date = $post[0]["date"];
             $this->template->content->id = $post[0]["id"];
             $this->template->content->post = unserialize($post[0]["content"]);
