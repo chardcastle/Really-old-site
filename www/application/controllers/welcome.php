@@ -7,6 +7,9 @@
  * @copyright  (c) 2007-2008 Kohana Team
  * @license    http://kohanaphp.com/license.html
  * @version	   2.3.4
+ * 	Useful snippets
+ * 	# $this->template->content->test .= Kohana::debug($xml);
+ *  # kohana::log("debug",Kohana::debug($post));	
  * See http://docs.kohanaphp.com/installation/deployment for more details.
  */
 class Welcome_Controller extends Template_Controller {
@@ -37,12 +40,6 @@ class Welcome_Controller extends Template_Controller {
 	
 	public function index()
 	{
-		/*
-		 * Useful snippets
-		 * 	$this->template->content->test .= Kohana::debug($xml);
-		 *  kohana::log("debug",Kohana::debug($post));	
-		 */
-	
 		// Load template
 		$this->template->content = new View('welcome_content');		
 				
