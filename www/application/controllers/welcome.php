@@ -16,8 +16,8 @@ class Welcome_Controller extends Template_Controller {
 
 	// Set the name of the (master) template to use
 	public $template = 'template';
-    public $siteDesc = "";
-	public $pagination = "";	
+    public $siteDesc = '';
+	public $pagination = '';	
 	public $links = array();
 	protected $db;	
 	protected $siteObj;
@@ -28,8 +28,8 @@ class Welcome_Controller extends Template_Controller {
 		$this->db = new Database($env);
 		$this->itemsPerPage = Kohana::config("config.number_of_items");
 		$this->pagination = new Pagination(array(
-		    'base_url'    => '/welcome/page/', // base_url will default to current uri
-		    'uri_segment'    => 'page', // pass a string as uri_segment to trigger former 'label' functionality
+		    'base_url'    => '/page/view/', // base_url will default to current uri
+		    'uri_segment'    => 'view', // pass a string as uri_segment to trigger former 'label' functionality
 		    'total_items'    => $this->db->count_records("kh_timeline"), // use db count query here of course
 		    'items_per_page' => $this->itemsPerPage, 
 		    'style'          => 'hardcastle' // pick one from: classic (default), digg, extended, punbb, or add your own!		
@@ -43,7 +43,8 @@ class Welcome_Controller extends Template_Controller {
 		// Load template
 		$this->template->content = new View('welcome_content');		
 				
-		$this->template->title = 'Chris Hardcastle ('.Kohana::config("config.environment").')';
+		$env = Kohana::config("config.environment");
+		$this->template->title = ($env != 'production')?"Welcome ({$env})":'Welcome';
         $this->template->description = $this->siteObj->getSiteDescription();
 		$this->template->content->hotlinks = $this->pagination->render("digg");
 		// Post timeline data
@@ -55,65 +56,7 @@ class Welcome_Controller extends Template_Controller {
 		->result_array(true);
 		
 	}
-	/*
-	 * Provide data to static pages
-	 * */
-	public function page($pageId,$ajax=false){
-		if($ajax){
-			echo $this->pageAsJson($pageId);
-			exit;			
-		}else{
-			$this->template->content = new View('welcome_content');
-			
-			$this->template->content->hotlinks = $this->pagination->render();
-			$end = $this->getPageSqlEnd($pageId);
-			$this->template->content->posts = $this->db->select("*")
-			->from("kh_timeline")		
-			->limit($this->itemsPerPage,$end)
-			->orderby("id","asc")
-			->get()
-			->result_array(true);
-			//
 
-			$this->template->title = "Chris";//var_dump($this->pagination);
-            $this->template->description = $this->siteDesc;
-		}
-	}
-	private function getPageSqlEnd($pageId){
-		return ($pageId * $this->itemsPerPage)-$this->itemsPerPage;		
-	}
-	/*
-	 * Provide data as JSON
-	 * */
-	public function pageAsJson($pageId){				
-		$end = $this->getPageSqlEnd($pageId);
-		$data = $this->db->select("*")
-		->from("kh_timeline")		
-		->limit($this->itemsPerPage,$end)
-		->orderby("id","asc")
-		->get()
-		->result_array(true);		
-		$x = 0;
-		$returned = array();
-		kohana::log("debug","load page as JSON");
-		foreach($data as $key => $value){
-			$x++;		
-			$contents = unserialize($value->content);
-			$html = "";
-			if(is_array($contents)){
-				foreach($contents as $str){
-					$html .= $str;
-				}
-			}			
-			$returned[$key] = array(
-				"index"=>"{$x}",
-				"body"=>$html,
-				"id"=>$value->id,	
-				"title"=>$value->date);			 			
-		}
-		echo json_encode($returned);		
-		exit;		
-	}	
 
 	public function saveNewPosts(){		
 		if (PHP_SAPI === 'cgi-fcgi' || PHP_SAPI === 'cli'){
