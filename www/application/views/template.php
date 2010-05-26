@@ -16,6 +16,9 @@
     <link rel='stylesheet' href='/ui/css/screen.css' type='text/css' media='Screen' />
     <link rel='stylesheet' href='/ui/css/handheld.css' type='text/css' media='handheld' />
     <link rel='shortcut icon' href='/ui/images/favicon.ico' />
+	<!--[if IE 6]>
+	    <link rel='stylesheet' href='/ui/css/ie6.css' type='text/css' media='Screen' />	
+	<![endif]-->
 </head>
 <body>	
 	<div id="globalOuter">
