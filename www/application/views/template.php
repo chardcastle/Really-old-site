@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-	<title><?php echo html::specialchars($title) ?></title>
+	<title>Chris Hardcastle | <?php echo html::specialchars($title) ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<meta name="keywords" content="<?php echo kohana::config('config.keywords');?>"/>
 	<meta name="description" content="<?php echo kohana::config('config.description');?>"/>
@@ -38,8 +38,9 @@
 			<?php echo $content ?>
         <div id="footer">
             <ul>
-                <li class="first"><a href="/about">About</a></li>
-                <li><a href="/contact">Contact</a></li>
+                <li class="first"><a href="/page/about">About</a></li>
+                <li><a href="/page/contact">Contact</a></li>
+                <li><a href="/page/disclaimer">Disclaimer</a></li>
             </ul>            
         </div>
 		<br/>

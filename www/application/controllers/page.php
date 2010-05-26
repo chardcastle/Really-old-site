@@ -2,7 +2,7 @@
 /**
  * Show static about content
  */
-class Contact_Controller extends Template_Controller {
+class Page_Controller extends Template_Controller {
 
 	public $template = 'template';
 	public $siteDesc = '';
@@ -12,17 +12,8 @@ class Contact_Controller extends Template_Controller {
 	public function __construct(){		
 		parent::__construct(); // This must be included	
 		$this->siteObj = new Post_Model();
-        $this->siteDesc = $this->siteObj->getSiteDescription();
-		$this->content = new View('contact');
-		$this->template->title = "Contact";
+        $this->siteDesc = $this->siteObj->getSiteDescription();		
 		$this->template->description = $this->siteDesc;
-	}
-	/*
-	 * return as regular html
-	*/	
-	public function index()
-	{
-		$this->template->content = $this->content->render();
 	}
 	/*
 	 * return as json
@@ -31,7 +22,24 @@ class Contact_Controller extends Template_Controller {
 		echo json_encode(array("html"=>$this->content->render()));
 		exit;
 	}
-
+	public function contact()
+	{
+		$this->content = new View('contact');
+		$this->template->title = "Contact";
+		$this->template->content = $this->content->render();
+	}
+	public function about()
+	{
+		$this->content = new View('about');
+		$this->template->title = "About";
+		$this->template->content = $this->content->render();
+	}
+	public function disclaimer()
+	{
+		$this->content = new View('disclaimer');
+		$this->template->title = "Disclaimer";
+		$this->template->content = $this->content->render();
+	}
 	public function __call($method, $arguments)
 	{
 		// Disable auto-rendering
