@@ -109,7 +109,7 @@
 		*/
 		e.preventDefault();
 		var click = {
-			url: "/welcome/page/1",
+			url: "/page/view/1",
 			req: [], 
 			isForward: '-',
 			homeHtml: $.data(document.body,"homeHtml")

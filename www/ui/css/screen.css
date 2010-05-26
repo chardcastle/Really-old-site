@@ -90,6 +90,7 @@ code {
 	position:absolute;
 }
 #globalOuter {
+	position:relative;
 	width:762px;
 	margin:20px auto 0 auto;
 	overflow-x:hidden;
@@ -291,9 +292,6 @@ code {
 	position:absolute;
 	bottom:0;
 	height:60px;
-}
-#header p{
-    float:left;
 }
 
 #header img{
