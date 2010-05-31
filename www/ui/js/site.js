@@ -1,20 +1,26 @@
 (function($){
-	// blank plugin definition .. should I need one
+	/*
+		Gracefully moves the HTML either left or right,
+		loads the content and returns to its position
+		* Home html contains the entire home snippet for
+		quick reference
+	*/
 	$.fn.runHardcastleMove = function(options) {
 	  var defaults = {
 		url: '',
 		req: [], 
 		isForward: '',
-		homeHtml: '' 
+		homeHtml: '',
+		distance: $("#container").width() 
 	  };
-	  // Extend our default options with those provided.
+		// blend options
 	  var opts = $.extend(defaults, options);
-	  // Our plugin implementation code goes here.
-	  
-			$("body")
+	  		// Find all divs whos id's start with "box"
+			this
 			.find("div[id^=box] .inner")
 			.fadeOut(0)
 			.end() // hide data targets and force call back for request
+			.find("#container")
 			.fadeTo(0,1,function(){
 				$.getJSON(opts.url+"/true",function(json){
 					$.each(json,function(key,value){
@@ -30,19 +36,17 @@
 							.end()
 							.find(".close")
 							.attr("href","/day/view/"+value["id"]);	
-						}else{										
+						}else{	
+							// re-draw home snippet									
 							ele.addClass("home")
 							.html(opts.homeHtml);
 						}						
-					});
-				});
-			})				
-			.find("#container") // Snap the container back in position 		
-			.css("left",0)		// trick usr into thinking its not moved?
-			.end()
-			.find("div[id^=box] .inner") // Slowly fade content in ... mmm nice
-			.fadeIn(600);
-	  
+					});					
+				})
+			})
+			.animate({left:(opts.isForward)+opts.distance},600,function(){
+				$(this).css("left","0").find("div[id^=box] .inner").fadeIn(600);
+			})
 	  return this;
 	};
 })(jQuery);
@@ -62,7 +66,6 @@
 		$("#container")
 		.children("div.outer")
 		.each(function(i,item){
-			//console.log("ere alright");
 			$.data(item,"pos",{top:$(item).css("top"),left:$(item).css("left")});			
 		});
 		$.data(document.body,"homeHtml",$("#box1").html());		
@@ -84,12 +87,9 @@
 			click.isForward = ($.data(document.body,"currentPage") < click.req[0])?'-':'';
 			// save request for decision on next click
 			$.data(document.body,"currentPage",click.req[0]);	
-			// respond			
-			$("#container")
-			.animate({left:(click.isForward)+$("#container").width()},600,function(){
-				$("body").runHardcastleMove(click);					
-			})
-			// Update navigation selection
+
+			$("body").runHardcastleMove(click);					
+
 			$(".paginationjs")
 			.find("a")
 			.removeClass("selected")
@@ -117,12 +117,8 @@
 		click.req = click.url.split("/").reverse();				
 		// save request for decision on next click
 		$.data(document.body,"currentPage",1);	
-		// respond			
-		$("#container")
-		.animate({left:(click.isForward)+$("#container").width()},600,function(){
-			$("body")
-			.runHardcastleMove(click);			
-		})
+		// respond					
+		$("body").runHardcastleMove(click);					
 		// Update navigation selection
 		$(".paginationjs")
 		.find("a")

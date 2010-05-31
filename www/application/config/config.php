@@ -168,7 +168,7 @@ $config['number_of_items'] = 6;
 /**
  * Set the date format for items shown in grid
  */
-$config['by_day_format'] = "jS F";
+$config['by_day_format'] = "jS F 'y";
 /**
  * Set the date format for items shown in grid
  */
