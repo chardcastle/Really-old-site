@@ -43,16 +43,17 @@ class Post_Model extends App_Model {
 		
 		$obj = new Tumblr_Model;		
 		$tumNo = $obj->captureFeed($this->urls["tumblr"],$mostRecentPost);
-		$info .= "<p>".(isset($tumNo)?$tumNo:"Didn't request any")." new Tumblr items</p>";
+		$info .= (isset($tumNo)?$tumNo:"Didn't request any")." new Tumblr items";		
 		
 		$obj = new Tweet_Model;
 		$tweNo = $obj->captureFeed($this->urls["tweets"],$mostRecentPost);
-		$info .= "<p>".(isset($tweNo)?$tweNo:"Didn't request any")." new Tweet items</p>";
+		$info .= (isset($tweNo)?$tweNo:"Didn't request any")." new Tweet items";
 		
 		$obj = new Git_Model;
 		$gitNo = $obj->captureFeed($this->urls["github"]["jquery"],$mostRecentPost);
-		$info .= "<p>".(isset($gitNo)?$gitNo:"Didn't request any")." new Git items</p>";		
+		$info .= (isset($gitNo)?$gitNo:"Didn't request any")." new Git items";		
 		// update website description
+		kohana::log("debug",$info);
         $this->updateHomeDescription();
 
 	}

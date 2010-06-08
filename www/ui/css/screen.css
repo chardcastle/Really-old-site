@@ -27,6 +27,9 @@ h1,h2,h4,h5 {
 	font-size: 1.2em;
 	font-weight: bold;	
 }
+h5{
+	margin:10px 0;
+}
 h5,h4,h3{
     font-size:1em;
 }
@@ -87,8 +90,10 @@ code {
 	position:absolute;
 }
 #globalOuter {
+	position:relative;
 	width:762px;
 	margin:20px auto 0 auto;
+	overflow-x:hidden;
 }
 #navigation {
 	display:none;
@@ -130,6 +135,79 @@ code {
 	top:500px;
 	left:508px;
 }
+/**/
+#prev1 {
+	top:0px;
+	left:0px;
+}
+#prev2 {
+	top:0px;
+	left:-254px;
+}
+#prev3 {
+	top:0px;
+	left:-508px;
+}
+#prev4 {
+	top:250px;
+	left:0px;
+}
+#prev5 {
+	top:250px;
+	left:-254px;
+}
+#prev6 {
+	top:250px;
+	left:-508px;
+}
+#prev7 {
+	top:500px;
+	left:0px;
+}
+#prev8 {
+	top:500px;
+	left:-254px;
+}
+#prev9 {
+	top:500px;
+	left:-508px;
+}
+#next1 {
+	top:0px;
+	left:762px;
+}
+#next2 {
+	top:0px;
+	left:1016px;
+}
+#next3 {
+	top:0px;
+	left:1270px;
+}
+#next4 {
+	top:250px;
+	left:762px;
+}
+#next5 {
+	top:250px;
+	left:1016px;
+}
+#next6 {
+	top:250px;
+	left:1270px;
+}
+#next7 {
+	top:500px;
+	left:762px;
+}
+#next8 {
+	top:500px;
+	left:1016px;
+}
+#next9 {
+	top:500px;
+	left:1270px;
+}
 .item {
 	margin:5px 0;
 }
@@ -140,20 +218,30 @@ code {
 }
 #profilePic {
 	float:right;
-	margin-left:6px;
+	margin:0 0 6px 6px;
 }
-#home {
-	background:#FFFF99 !important;	
+#profilePic img{
+	display:block;
+	border:2px solid #fff!important;
+	padding:0!important;
 }
-#home .inner{
+.home {
+	background:#b0b0b0 !important;	
+}
+.home .inner{
 	padding:16px;
 	margin:0 !important;
 }
-#home strong {
+.home strong {
 	font-weight:bold;
 }
-#home h1 {
+.home h1 {
 	margin-bottom:2px;
+}
+.home .pubDate,
+.home a.close,
+.home .boxFooter{
+	display:none;
 }
 .tweetTime,
 .commitTime{
@@ -192,7 +280,9 @@ code {
     background:LightCyan;
     padding:0 10px;
 }
-.pagination {    
+.pagination,
+.paginationjs,
+.paginationFullWidth {    
 	margin:20px 0;
     clear:both;
 }
@@ -203,18 +293,12 @@ code {
 	bottom:0;
 	height:60px;
 }
-.body{
-	margin:16px;
-}
-#header p{
-    float:left;
-}
 
 #header img{
     clear:both;
     display:block;
 }
-.pagination .forwards{
+.paginationFullWidth .forwards{
     float:right;
 }
 #footer ul{
@@ -222,8 +306,8 @@ code {
 }
 #footer ul li{   
     border-left:1px solid #777;
-    padding-left:5px;
-    margin-right:5px;
+    padding-left:14px;
+    margin-right:14px;
     float:left;
 }
 #footer ul li.first{
@@ -306,4 +390,15 @@ h3#app-error{
 #header a{
 	width:292px;
 	display:block;
+}
+.paginationjs .selected{
+	color:#333!important;
+	font-weight:bold;
+	text-decoration:underline!important;
+}
+.paginationjs{
+	color:#777;
+}
+.pageTitle{
+	margin:20px 0;
 }

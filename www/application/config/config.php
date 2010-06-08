@@ -1,4 +1,4 @@
-<?php defined('SYSPATH') OR die('No direct access allowed.');
+<?php defined('SYSPATH') OR die('No direct access allowed.conf1');
 /**
  * Custom environment settings
  */
@@ -6,7 +6,8 @@ $local = array(
 	"name"=>"local",
 	"url"=>"ee.local.net:8080/",
 	"logLevel"=>4,
-	"twitter-api-key"=>"69EJ3HAJ4R8KFJtGrfLPg",
+	//"twitter-api-key"=>"69EJ3HAJ4R8KFJtGrfLPg",
+	"twitter-api-key" => false,
 	"cache-time"=>false); // no cache time
 
 $dev = array(
@@ -167,7 +168,7 @@ $config['number_of_items'] = 6;
 /**
  * Set the date format for items shown in grid
  */
-$config['by_day_format'] = "jS F";
+$config['by_day_format'] = "jS F 'y";
 /**
  * Set the date format for items shown in grid
  */

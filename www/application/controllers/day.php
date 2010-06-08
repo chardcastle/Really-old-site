@@ -2,17 +2,8 @@
 /**
  * Default Kohana controller. This controller should NOT be used in production.
  * It is for demonstration purposes only!
- *
- * @package    Core
- * @author     Kohana Team
- * @copyright  (c) 2007-2008 Kohana Team
- * @license    http://kohanaphp.com/license.html
  */
 class Day_Controller extends Template_Controller {
-
-	// Disable this controller when Kohana is set to production mode.
-	// See http://docs.kohanaphp.com/installation/deployment for more details.
-	const ALLOW_PRODUCTION = FALSE;
 
 	// Set the name of the template to use
 	public $template = 'template';
@@ -36,9 +27,9 @@ class Day_Controller extends Template_Controller {
     
     public function view($postId){
         if($postId>0){
+			$env = Kohana::config("config.environment");
             $postObj = new Post_Model();
             $this->template->content = new View('full_width');
-            $this->template->title = 'Chris Hardcastle ('.Kohana::config("config.environment").')';
             $this->template->description = $postObj->getSiteDescription();
             $this->template->content->paginationLimit = $postObj->totalTimeLineItems;
             // set comment token
@@ -48,19 +39,20 @@ class Day_Controller extends Template_Controller {
             $this->template->content->token = $token;
             // Post timeline data
             $post = $postObj->getPost($postId);
-	    $comments = new Comment_Model($postId);		
-        $commentHtml = "";
-	    if(count($comments)>0){
-			foreach($comments->collection as $key => $comment){
-				$html = new View("comment/single");
-				$commentObj = new Comment_Model();
-				$html->set("comment",$comment);
-		        kohana::log("debug",Kohana::debug($comment));
-				$commentHtml .= $html->render();
-			}
-		}	
-	    $this->template->content->comments = $commentHtml;
+			$comments = new Comment_Model($postId);		
+		    $commentHtml = "";
+			if(count($comments)>0){
+				foreach($comments->collection as $key => $comment){
+					$html = new View("comment/single");
+					$commentObj = new Comment_Model();
+					$html->set("comment",$comment);
+				    kohana::log("debug",Kohana::debug($comment));
+					$commentHtml .= $html->render();
+				}
+			}	
+			$this->template->content->comments = $commentHtml;
             $this->template->content->date = $post[0]["date"];
+            $this->template->title = ($env != 'production')?"{$post[0]["date"]} ({$env})":$post[0]["date"];
             $this->template->content->id = $post[0]["id"];
             $this->template->content->post = unserialize($post[0]["content"]);
         }

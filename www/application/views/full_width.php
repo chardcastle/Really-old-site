@@ -1,4 +1,4 @@
-<p class="pagination">
+<p class="paginationFullWidth">
     <?php if($id < $paginationLimit){ ?>
     <a href="/day/view/<?php echo $id+1;?>" class="forwards">forwards&nbsp;&raquo;</a>
     <?php } ?>
@@ -10,6 +10,7 @@
 <?php foreach($post as $key=>$value){
     echo $value;
 } ?>
+<p>&nbsp;</p>
 <div id="user-comments">
     <?php if($comments){
         echo "<h4>User comments</h4>".$comments;
@@ -17,12 +18,13 @@
       <p>Nobody has commented, why don't you?</p>
     <?php  } ?>
 </div>
+<p>&nbsp;</p>
 <h4 class="comment-title"></h4>
 <div id="profileControls">
     <div id="twitter-connect-placeholder"></div>
     <div id="twitter-connect-logout"></div>
 </div>
-
+<p>&nbsp;</p>
 <div id="comment" style="display:none;">
     <form method="post" action="/comment/create">
         <h4>Submit a comment to my site</h4>

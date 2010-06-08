@@ -1,4 +1,4 @@
-<?php defined('SYSPATH') or die('No direct script access.'); ?>
+<?php defined('SYSPATH') or die('No direct script access.log1'); ?>
 
 2010-04-30 01:28:15 +01:00 --- debug: Disable magic_quotes_gpc! It is evil and deprecated: http://php.net/magic_quotes
 2010-04-30 01:28:15 +01:00 --- debug: Global GET, POST and COOKIE data sanitized
