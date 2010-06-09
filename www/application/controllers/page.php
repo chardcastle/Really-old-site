@@ -94,6 +94,24 @@ class Page_Controller extends Template_Controller {
 	/*
 	 * Static content
 	*/	
+	public function about()
+	{
+		$tpl = new View("about");
+		$this->template->title = "About";
+		$this->template->content = $tpl->render();
+	}
+	public function contact()
+	{
+		$tpl = new View("contact");
+		$this->template->title = "Contact";
+		$this->template->content = $tpl->render();
+	}
+	public function disclaimer()
+	{
+		$tpl = new View("disclaimer");
+		$this->template->title = "Disclaimer";
+		$this->template->content = $tpl->render();
+	}
 	public function __call($method, $arguments)
 	{
 		// Disable auto-rendering
