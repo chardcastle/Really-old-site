@@ -12,7 +12,7 @@ class Content_Controller extends Template_Controller {
 	 * Use the post model to:
 	 * Find new content that I've written on the interwebs
 	 */
-	public function saveNewPosts(){		
+	public function saveNewPosts(){
 		if (PHP_SAPI === 'cgi-fcgi' || PHP_SAPI === 'cli' || kohana::config('config.name') !== "production"){
 			$postObj = new Post_Model;		
 			$postObj->searchForNewPosts();
@@ -20,7 +20,6 @@ class Content_Controller extends Template_Controller {
 		}else{
 			throw new Kohana_User_Exception('Cannot call over the web', 'This is a function that can only be called via the command line.');
 		}		
-		exit;
 	}
 	/*
 	 * Use the post model to:
@@ -34,7 +33,6 @@ class Content_Controller extends Template_Controller {
 		}else{
 			throw new Kohana_User_Exception('Cannot call over the web', 'This is a function that can only be called via the command line.');
 		}
-		exit;
 	}
 
 	public function __call($method, $arguments)

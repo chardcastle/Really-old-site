@@ -1,16 +1,13 @@
 <?php
-#!/usr/bin/php
 /**
- * Created by Chris Hardcastle to run cron jobs
- * Based on ./index.php
- * First, ensure that it's use is permitted with denial for HTTP requests
- *
- * Define the website environment status. When this flag is set to TRUE, some
- * module demonstration controllers will result in 404 errors. For more information
- * about this option, read the documentation about deploying Kohana.
- *
- * @see http://docs.kohanaphp.com/installation/deployment
- */
+* Created by Chris Hardcastle to run cron jobs
+* Based on the default kohana 2.3.4 index.php
+* Note the required #! stated above
+* CRON TAB USAGE (To run twice a day)
+  0 0,12 * * * /usr/bin/php [root][site]/cron.php --controller --method
+*
+* Use the shebang --> #!/usr/bin/php (should you need it, thanks @spolster)
+*/
 define('IN_PRODUCTION', FALSE);
 
 /**
@@ -136,25 +133,38 @@ Event::run('system.routing');
 Benchmark::stop(SYSTEM_BENCHMARK.'_system_initialization');
 
 /* 
- * Set the required
+ * Set the required vars for action
 */
 $controller = (isset($_SERVER["argv"][1]))?str_replace("--","",$_SERVER["argv"][1]):false;
 $method = (isset($_SERVER["argv"][2]))?str_replace("--","",$_SERVER["argv"][2]):false;
 
 $h = fopen('./application/logs/cron.txt','a+');
-$str = "Running Cron using PHP SAPI value: ".PHP_SAPI." with controller:{$controller} method:{$method}\n";
-//kohana::debug("debug","";
-fwrite($h, $str);
-fclose($h);
-//
+$str = "Running Cron using PHP SAPI value: ".PHP_SAPI." with controller:{$controller} method:{$method} date:".date('d/m/y')."\n";
+
+/* 
+ * Clear out all the data arrays because they can trigger
+ * a "Disallowed key characters in global data." error
+*/
+$_POST = array();
+$_GET = array();
+$_COOKIE = array();
+// Load up the action!
 Router::$controller = $controller;
 Router::$method = $method;
 Router::$arguments = array();
-$path = APPPATH."controllers/welcome.php";
+$path = APPPATH."controllers/content.php";
 Router::$controller_path =  $path;
 
 // Make the magic happen!
 Event::run('system.execute');
-
 // Clean up and exit
 Event::run('system.shutdown');
+// Close file writer
+fwrite($h, $str);
+fclose($h);
+/* clear out any out put and leave log message behind,
+* which, in my case gets sent to me via email
+*/
+ob_ end_ clean();
+echo $str;
+exit;
