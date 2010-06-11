@@ -36,7 +36,7 @@ class Post_Model extends App_Model {
 		->result_array(true);				
 		
 		$mostRecentPost = (isset($mostRecentPost[0]))?$mostRecentPost[0]->created_dt:false;
-				
+		$this->db->update('kh_posts',array('is_last_updated'=>1),array('created_dt'=>$mostRecentPost));		
 		$info = "Looking for posts newer than ".date("d-m-y",$mostRecentPost);
 		// return nothing, just capture feeds
 		// Parse an external atom feed
