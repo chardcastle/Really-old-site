@@ -55,7 +55,8 @@ class Post_Model extends App_Model {
 		// update website description
 		kohana::log("debug",$info);
         $this->updateHomeDescription();
-
+		// tell the next function, where to start eating...
+		return $mostRecentPost;
 	}
 	
 	/*
@@ -64,22 +65,41 @@ class Post_Model extends App_Model {
 	 * */
 	public function digestNewPosts(){
 		$this->posts = array();
-		// remove old records
-		$this->db->query("TRUNCATE TABLE kh_timeline");
-		//$this->db->update("kh_timeline",array("id"=>0));	
+		// find the last post
+		$mostRecentPost = $this->db->select("*")
+		->from("kh_posts")		
+		->limit(1)
+		->orderby("created_dt","desc")
+		->get()
+		->result_array(true);				
+		
+		$mostRecentPost = (isset($mostRecentPost[0]))?$mostRecentPost[0]->created_dt:false;		
+		if(!$mostRecentPost){
+			Kohana::log("debug","Could not determine the most recent post {$mostRecentPost}");
+			exit;
+		}
+		//$this->db->query("TRUNCATE TABLE kh_timeline");
+		// only update timeline table with new records
 		$sql = <<<SQL
 			SELECT posts.type,
 				from_unixtime(posts.created_dt,'%d-%m-%y') AS dateKey,
 				posts.content, 
 				posts.* 
-				FROM (select * from kh_posts) AS posts 
-				INNER JOIN kh_posts AS dates ON posts.created_dt = dates.created_dt 
+			FROM 
+				(select * from kh_posts) 
+				AS posts 
+			INNER JOIN kh_posts AS dates 
+				ON posts.created_dt = dates.created_dt 
+			WHERE posts.created_dt > {$mostRecentPost}
 				GROUP BY posts.content ORDER BY posts.created_dt DESC
+
 SQL;
 
 		$posts = $this->db->query($sql)->result_array(true);
-        // Make homepage snippet which will always be the first item
-        // ... the most recent date
+        /* Make homepage snippet which will always be the first item
+         * ... the most recent date
+		 * there's 86400 seconds in a day
+		 */
         $today = date($this->byDayFormat,(time()+86400));
         $this->posts[$today] = $this->getHomeSnippet();
         // traverse the sql result to populate timeline
@@ -98,8 +118,7 @@ SQL;
 				$this->posts[$key][] = $content;				
 			}	
 		}	
-		// always make first entry the home page blurb		
-		//$this->makeHomeSnippet();
+
 		// traverse and stick into table
 
 		foreach($this->posts as $key => $value){
