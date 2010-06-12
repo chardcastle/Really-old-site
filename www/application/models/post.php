@@ -65,17 +65,12 @@ class Post_Model extends App_Model {
 	 * */
 	public function digestNewPosts(){
 		$this->posts = array();
-		// find the last post
-		$mostRecentPost = $this->db->select("*")
-		->from("kh_posts")		
-		->limit(1)
-		->orderby("created_dt","desc")
-		->get()
-		->result_array(true);				
 		
+		// Get the last time the posts were updated
+		$mostRecentPost = $this->db->query('SELECT created_dt FROM kh_posts where is_last_updated = 1');
 		$mostRecentPost = (isset($mostRecentPost[0]))?$mostRecentPost[0]->created_dt:false;		
 		if(!$mostRecentPost){
-			Kohana::log("debug","Could not determine the most recent post {$mostRecentPost}");
+			Kohana::log("debug","Could not get the most recent post created_dt {$mostRecentPost}");
 			exit;
 		}
 		//$this->db->query("TRUNCATE TABLE kh_timeline");
@@ -94,7 +89,10 @@ class Post_Model extends App_Model {
 				GROUP BY posts.content ORDER BY posts.created_dt DESC
 
 SQL;
-
+		// remove the last updated indicator
+		// to ensure all is reset for the next time save posts is run
+		$this->db->query('UPDATE kh_posts SET is_last_updated = 0 where is_last_updated = 1');
+		 
 		$posts = $this->db->query($sql)->result_array(true);
         /* Make homepage snippet which will always be the first item
          * ... the most recent date
