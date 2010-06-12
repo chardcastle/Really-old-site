@@ -28,7 +28,7 @@ h1,h2,h4,h5 {
 	font-weight: bold;	
 }
 h5{
-	margin:10px 0;
+	margin:10px 0;color:#888;
 }
 h5,h4,h3{
     font-size:1em;
