@@ -36,7 +36,11 @@ class Post_Model extends App_Model {
 		->result_array(true);				
 		
 		$mostRecentPost = (isset($mostRecentPost[0]))?$mostRecentPost[0]->created_dt:false;
-		$this->db->update('kh_posts',array('is_last_updated'=>1),array('created_dt'=>$mostRecentPost));		
+		if($mostRecentPost != false){
+			// mark the one that was updated last
+			$this->db->update('kh_posts',array('is_last_updated'=>1),array('created_dt'=>$mostRecentPost));		
+			// If there wasn't one, then the table was probably truncated for dev population
+		}
 		$info = "Looking for posts newer than ".date("d-m-y",$mostRecentPost);
 		// return nothing, just capture feeds
 		// Parse an external atom feed
@@ -55,8 +59,7 @@ class Post_Model extends App_Model {
 		// update website description
 		kohana::log("debug",$info);
         $this->updateHomeDescription();
-		// tell the next function, where to start eating...
-		return $mostRecentPost;
+		// Not returning anyting now .. nothing required
 	}
 	
 	/*
@@ -65,33 +68,45 @@ class Post_Model extends App_Model {
 	 * */
 	public function digestNewPosts(){
 		$this->posts = array();
-		
+		// Useful for dev --> $this->db->query("TRUNCATE TABLE kh_timeline");
 		// Get the last time the posts were updated
 		$mostRecentPost = $this->db->query('SELECT created_dt FROM kh_posts where is_last_updated = 1');
 		$mostRecentPost = (isset($mostRecentPost[0]))?$mostRecentPost[0]->created_dt:false;		
-		if(!$mostRecentPost){
-			Kohana::log("debug","Could not get the most recent post created_dt {$mostRecentPost}");
-			exit;
-		}
-		//$this->db->query("TRUNCATE TABLE kh_timeline");
-		// only update timeline table with new records
-		$sql = <<<SQL
-			SELECT posts.type,
-				from_unixtime(posts.created_dt,'%d-%m-%y') AS dateKey,
-				posts.content, 
-				posts.* 
-			FROM 
-				(select * from kh_posts) 
-				AS posts 
-			INNER JOIN kh_posts AS dates 
-				ON posts.created_dt = dates.created_dt 
-			WHERE posts.created_dt > {$mostRecentPost}
+		if($mostRecentPost != false){
+			// remove the last updated indicator as a reset for the next time save posts is run
+			$this->db->query('UPDATE kh_posts SET is_last_updated = 0 where is_last_updated = 1');
+			// only update timeline table with new records
+			$sql = <<<SQL
+				SELECT posts.type,
+					from_unixtime(posts.created_dt,'%d-%m-%y') AS dateKey,
+					posts.content, 
+					posts.* 
+				FROM 
+					(select * from kh_posts) 
+					AS posts 
+				INNER JOIN kh_posts AS dates 
+					ON posts.created_dt = dates.created_dt 
+				WHERE posts.created_dt > {$mostRecentPost}
+					GROUP BY posts.content ORDER BY posts.created_dt DESC
+SQL;
+
+		}else{
+			// Compile everypost into HTML
+			$sql = <<<SQL
+				SELECT posts.type,
+					from_unixtime(posts.created_dt,'%d-%m-%y') AS dateKey,
+					posts.content, 
+					posts.* 
+				FROM 
+					(select * from kh_posts) 
+					AS posts 
+				INNER JOIN kh_posts AS dates 
+					ON posts.created_dt = dates.created_dt 
 				GROUP BY posts.content ORDER BY posts.created_dt DESC
 
 SQL;
-		// remove the last updated indicator
-		// to ensure all is reset for the next time save posts is run
-		$this->db->query('UPDATE kh_posts SET is_last_updated = 0 where is_last_updated = 1');
+			Kohana::log("debug","Could not get the most recent post created_dt {$mostRecentPost} --> so will be compiling all posts into HTML");
+		}
 		 
 		$posts = $this->db->query($sql)->result_array(true);
         /* Make homepage snippet which will always be the first item
@@ -220,6 +235,7 @@ SQL;
     }
 	/*
 	 * Get part of the data, for fun
+	 * ! WTH? I don't remember this
 	 */
 	public function getDataSourceDataSchemea($key){		
 		return (Kohana::config("config.pop"))?"Pop is on":"Pop is off";
