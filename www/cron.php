@@ -162,9 +162,3 @@ Event::run('system.shutdown');
 // Close file writer
 fwrite($h, $str);
 fclose($h);
-/* clear out any out put and leave log message behind,
-* which, in my case gets sent to me via email
-*/
-ob_end_clean();
-echo $str;
-exit;
