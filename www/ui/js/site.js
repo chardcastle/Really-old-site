@@ -31,8 +31,8 @@
 							.find(".body")
 							.html(value["body"])
 							.end()
-							.find(".pubDate")
-							.html(value["title"])
+							.find(".pubDate a")
+							.text(value["title"])
 							.end()
 							.find(".close")
 							.attr("href","/day/view/"+value["id"]);	

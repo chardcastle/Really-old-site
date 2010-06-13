@@ -1,11 +1,16 @@
-<p class="paginationFullWidth">
-    <?php if($id < $paginationLimit){ ?>
-    <a href="/day/view/<?php echo $id+1;?>" class="forwards">forwards&nbsp;&raquo;</a>
-    <?php } ?>
-    <?php if($id > 2){?>
-        <a href="/day/view/<?php echo $id-1;?>">&laquo;&nbsp;backwards</a>
-    <?php } ?>
-</p>
+<div class="paginationFullWidth">	
+	<span>
+		<?php if($id > 2){?>
+		    <a href="/day/view/<?php echo $id-1;?>">&laquo;&nbsp;backwards</a>
+		<?php } ?>
+		&nbsp;
+		<?php if($id < $paginationLimit){ ?>
+		<a href="/day/view/<?php echo $id+1;?>">forwards&nbsp;&raquo;</a>
+		<?php } ?>	
+	</span>
+	<a href="#" class="back">Back</a>
+</div>
+<br style="clear:both"/>
 <h1><?php echo $date; ?></h1>
 <?php foreach($post as $key=>$value){
     echo $value;
@@ -37,6 +42,14 @@
     </form>
 </div>
 <script type="text/javascript">
+	$(function(){
+		if(history.length){
+			$('.back').click(function(e){
+				e.preventDefault();
+				history.go(-1);
+			});
+		}
+	});
     twttr.anywhere(function (T) {
         // Only offer comment feature if js is available.
         $(".comment-title").text("Comment with your Twitter account:");
@@ -77,4 +90,5 @@
             }});
           }
     });
+
 </script>

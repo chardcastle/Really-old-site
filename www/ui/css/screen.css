@@ -44,7 +44,6 @@ code {
 	border: 1px solid #D0D0D0;
 	color: #002166;
 	display: block;
-	margin: 14px 0 14px 0;
 	padding: 12px 10px 12px 10px;
 }
 
@@ -302,8 +301,14 @@ code {
     clear:both;
     display:block;
 }
-.paginationFullWidth .forwards{
-    float:right;
+.pubDate a{
+	text-decoration:none;
+	text-transform:uppercase;
+	font-weight:bold;
+	color:inherit;
+}
+.paginationFullWidth span{
+	float:right;
 }
 #footer ul{
     margin:20px 0;
@@ -344,6 +349,7 @@ code {
 }
 .fullItem div{
     min-height:46px;
+	padding:20px;
 }
 #container img{
     border:1px solid #888;

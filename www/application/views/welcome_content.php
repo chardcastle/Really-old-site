@@ -30,7 +30,7 @@
 		<div id="box<?php echo $key+1; ?>" class="outer <?php echo ($post->id == 1)?'home':''; ?>">
 			<div class="inner">
 				<a href="/day/view/<?php echo $post->id; ?>" class="close ui-icon ui-icon-search" style="float:right">Close</a>
-				<div class="pubDate"><?php echo $post->date; ?></div>			
+				<div class="pubDate"><a href="/day/view/<?php echo $post->id; ?>"><?php echo $post->date; ?></a></div>			
 				<div class="body">
 					<?php 
 				        foreach($features as $f){
