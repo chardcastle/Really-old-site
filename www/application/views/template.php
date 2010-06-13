@@ -40,11 +40,17 @@
 				
 			<?php echo $content ?>
         <div id="footer">
-            <ul>
+            <ul class="internal">
                 <li class="first"><a href="/page/about">About</a></li>
                 <li><a href="/page/contact">Contact</a></li>
-                <li><a href="/page/disclaimer">Disclaimer</a></li>
-            </ul>            
+                <li><a href="/page/disclaimer">Disclaimer</a></li>				
+            </ul> 
+			<br/>
+			<ul class="external">
+				<li><a href="http://www.twitter.com/hardcastle"><img src="http://twitter-badges.s3.amazonaws.com/follow_me-b.png" alt="Follow hardcastle on Twitter"/></a></li>
+				<li><a href="http://hardcastle.tumblr.com"><img src="http://assets.tumblr.com/images/iframe_follow_alpha.png?5" alt="Follow my Tumblr"/></a></li>
+				<li><a href="http://youtube.com/neofizz82"><img src="http://s.ytimg.com/yt/img/creators_corner/youtube_24x24.jpg" alt="Watch my channel"/></a></li>
+			</ul> 
         </div>
 		<br/>
 	</div>

@@ -113,7 +113,7 @@ SQL;
          * ... the most recent date
 		 * there's 86400 seconds in a day
 		 */
-        $today = date($this->byDayFormat,(time()+86400));
+        $today = time()+86400;
         $this->posts[$today] = $this->getHomeSnippet();
         // traverse the sql result to populate timeline
 		foreach($posts as $key => $value){			
@@ -121,13 +121,13 @@ SQL;
             $content = array(
                 "teaser" =>  $this->load($serialData,$value,"summary"),
                 "content" => $this->load($serialData,$value,"full_width"),
-				// Save timestamp of mm YYYY as month and year for use in selecting 
-				// post within a range
 				"date" => date($this->byDayFormat,$value->created_dt)
             );
-			// Load into result array, with the day string as primary key			
-			$key = date("m Y",$value->created_dt);
-		
+			/* Save timestamp of mm YYYY as month and year for use in selecting 
+			 * post within a range		
+			*/
+			$key = $value->created_dt;
+//			kohana::log("debug",print_r($key,true));
 			if(!array_key_exists($key,$this->posts)){
 				$this->posts[$key] = array($content);				
 			}else{
@@ -148,7 +148,7 @@ SQL;
             }	
             $teaser = (count($teaser)>0)?serialize($teaser):serialize(array());
             $content = (count($content)>0)?serialize($content):serialize(array());
-			//$month_stamp = (isset($value["month_stamp"]))?date("m Y",$value["month_stamp"]):999;
+			$key = strtotime(date("m Y",$key));
             $this->db->insert("kh_timeline", array(
                 "date" => "{$date}",
                 "teaser" => "{$teaser}",
@@ -167,13 +167,11 @@ SQL;
 
     private function getHomeSnippet(){
         $view = new View('home_snippet');
-		$date = 45879;
-		kohana::log("debug","Here ".$date);	
         return array(
 			array(
                 "teaser"=>$view->render(),
                 "content"=> "home",
-				"date" => $date
+				"date" => 0
 			)
         );
     }

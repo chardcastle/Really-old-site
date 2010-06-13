@@ -306,11 +306,17 @@ code {
     float:right;
 }
 #footer ul{
-    margin:10px 0;
+    margin:20px 0;
 }
-#footer ul li{   
+#footer ul.internal li{   
     border-left:1px solid #777;
     padding-left:14px;
+    margin-right:14px;
+    float:left;
+}
+#footer  ul.external li{
+    border-left:none!important;
+    padding-left:0px;
     margin-right:14px;
     float:left;
 }
@@ -406,3 +412,4 @@ h3#app-error{
 .pageTitle{
 	margin:20px 0;
 }
+
