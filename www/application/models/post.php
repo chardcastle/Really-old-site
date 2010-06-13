@@ -120,11 +120,14 @@ SQL;
             $serialData = unserialize($value->content);
             $content = array(
                 "teaser" =>  $this->load($serialData,$value,"summary"),
-                "content" => $this->load($serialData,$value,"full_width")
+                "content" => $this->load($serialData,$value,"full_width"),
+				// Save timestamp of mm YYYY as month and year for use in selecting 
+				// post within a range
+				"date" => date($this->byDayFormat,$value->created_dt)
             );
-            //$content =  $this->load($serialData,$value,"summary");
-			// load into result array			
-			$key = date($this->byDayFormat,$value->created_dt);
+			// Load into result array, with the day string as primary key			
+			$key = date("m Y",$value->created_dt);
+		
 			if(!array_key_exists($key,$this->posts)){
 				$this->posts[$key] = array($content);				
 			}else{
@@ -136,17 +139,21 @@ SQL;
 
 		foreach($this->posts as $key => $value){
             $teaser = array();
-            $content = array();
+            $content = array();  			
+			kohana::log("debug",print_r($value,true));
             foreach($value as $post){
                  $teaser[] = $post["teaser"];
-                 $content[] = $post["content"];
-            }
+                 $content[] = $post["content"];				 
+                 $date = $post["date"];		
+            }	
             $teaser = (count($teaser)>0)?serialize($teaser):serialize(array());
             $content = (count($content)>0)?serialize($content):serialize(array());
+			//$month_stamp = (isset($value["month_stamp"]))?date("m Y",$value["month_stamp"]):999;
             $this->db->insert("kh_timeline", array(
-                "date" => $key,
+                "date" => "{$date}",
                 "teaser" => "{$teaser}",
-                "content" => "{$content}"
+                "content" => "{$content}",
+				"month_stamp" => "{$key}",
             ));
             
 		}
@@ -160,9 +167,14 @@ SQL;
 
     private function getHomeSnippet(){
         $view = new View('home_snippet');
-        return array(array(
+		$date = 45879;
+		kohana::log("debug","Here ".$date);	
+        return array(
+			array(
                 "teaser"=>$view->render(),
-                "content"=> "home")
+                "content"=> "home",
+				"date" => $date
+			)
         );
     }
     /*

@@ -3,6 +3,7 @@
  * Used by cron only, to populate the database with content
  */
 class Content_Controller extends Template_Controller {
+	public $template = 'cron';
 
 	public function __construct(){
 		parent::__construct(); // This must be included
@@ -16,7 +17,9 @@ class Content_Controller extends Template_Controller {
 		if (PHP_SAPI === 'cgi-fcgi' || PHP_SAPI === 'cli' || kohana::config('config.name') !== "production"){
 			$postObj = new Post_Model;		
 			$postObj->searchForNewPosts();
-			kohana::log("debug","The function 'saveNewPosts' has run.");
+			$str = "The function 'saveNewPosts' has run.";
+			kohana::log("debug",$str);
+			$this->template->message = $str;
 		}else{
 			throw new Kohana_User_Exception('Cannot call over the web', 'This is a function that can only be called via the command line.');
 		}		
@@ -29,7 +32,9 @@ class Content_Controller extends Template_Controller {
 		if (PHP_SAPI === 'cgi-fcgi' || PHP_SAPI === 'cli' || kohana::config('config.name') !== "production"){
 			$postObj = new Post_Model;
 			$postObj->digestNewPosts();
-			kohana::log("debug","The system has digested the posts tabel. HTML is now refreshed.");
+			$str = "The system has digested the posts tabel. HTML is now refreshed.";
+			kohana::log("debug",$str);
+			$this->template->message = $str;
 		}else{
 			throw new Kohana_User_Exception('Cannot call over the web', 'This is a function that can only be called via the command line.');
 		}
