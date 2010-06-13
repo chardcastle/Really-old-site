@@ -126,7 +126,7 @@ SQL;
 			/* Save timestamp of mm YYYY as month and year for use in selecting 
 			 * post within a range		
 			*/
-			$key = $value->created_dt;
+			$key = strtotime(date("M Y",$value->created_dt));
 //			kohana::log("debug",print_r($key,true));
 			if(!array_key_exists($key,$this->posts)){
 				$this->posts[$key] = array($content);				
@@ -148,7 +148,7 @@ SQL;
             }	
             $teaser = (count($teaser)>0)?serialize($teaser):serialize(array());
             $content = (count($content)>0)?serialize($content):serialize(array());
-			$key = strtotime(date("m Y",$key));
+			//$key = strtotime(date("M Y",$key));
             $this->db->insert("kh_timeline", array(
                 "date" => "{$date}",
                 "teaser" => "{$teaser}",

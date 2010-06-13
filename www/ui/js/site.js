@@ -33,6 +33,7 @@
 							.end()
 							.find(".pubDate a")
 							.text(value["title"])
+							.attr("href","/day/view/"+value["id"])
 							.end()
 							.find(".close")
 							.attr("href","/day/view/"+value["id"]);	
