@@ -64,7 +64,7 @@ code {
 }
 #container {
 	position:relative;
-	width:762px;
+	width:960px;
 	height:500px;
 }
 #container div.outer {
@@ -73,7 +73,7 @@ code {
 	background:#fff;
 	border:1px solid #666;
 	z-index:3;	
-	width:234px;
+	width:312px;
 	height:234px;
 	overflow:hidden;	
 }
@@ -86,7 +86,7 @@ code {
 #container div.fullSize {
 	top:0!important;
 	left:0!important;
-	width:762px;
+	width:960px;
 	height:900px;
 	scroll:auto;
 	z-index:4;
@@ -94,7 +94,7 @@ code {
 }
 #globalOuter {
 	position:relative;
-	width:762px;
+	width:960px;
 	margin:20px auto 0 auto;
 	overflow-x:hidden;
 }
@@ -108,11 +108,11 @@ code {
 }
 #box2 {
 	top:0px;
-	left:254px;
+	left:324px;
 }
 #box3 {
 	top:0px;
-	left:508px;
+	left:648px;
 }
 #box4 {
 	top:250px;
@@ -120,11 +120,11 @@ code {
 }
 #box5 {
 	top:250px;
-	left:254px;
+	left:324px;
 }
 #box6 {
 	top:250px;
-	left:508px;
+	left:648px;
 }
 #box7 {
 	top:500px;
@@ -132,11 +132,11 @@ code {
 }
 #box8 {
 	top:500px;
-	left:254px;
+	left:324px;
 }
 #box9 {
 	top:500px;
-	left:508px;
+	left:648px;
 }
 /**/
 #prev1 {
@@ -145,11 +145,11 @@ code {
 }
 #prev2 {
 	top:0px;
-	left:-254px;
+	left:-324px;
 }
 #prev3 {
 	top:0px;
-	left:-508px;
+	left:-648px;
 }
 #prev4 {
 	top:250px;
@@ -157,11 +157,11 @@ code {
 }
 #prev5 {
 	top:250px;
-	left:-254px;
+	left:-324px;
 }
 #prev6 {
 	top:250px;
-	left:-508px;
+	left:-648px;
 }
 #prev7 {
 	top:500px;
@@ -169,47 +169,47 @@ code {
 }
 #prev8 {
 	top:500px;
-	left:-254px;
+	left:-324px;
 }
 #prev9 {
 	top:500px;
-	left:-508px;
+	left:-648px;
 }
 #next1 {
 	top:0px;
-	left:762px;
+	left:972px;
 }
 #next2 {
 	top:0px;
-	left:1016px;
+	left:1074px;
 }
 #next3 {
 	top:0px;
-	left:1270px;
+	left:1328px;
 }
 #next4 {
 	top:250px;
-	left:762px;
+	left:820px;
 }
 #next5 {
 	top:250px;
-	left:1016px;
+	left:1074px;
 }
 #next6 {
 	top:250px;
-	left:1270px;
+	left:1328px;
 }
 #next7 {
 	top:500px;
-	left:762px;
+	left:820px;
 }
 #next8 {
 	top:500px;
-	left:1016px;
+	left:1074px;
 }
 #next9 {
 	top:500px;
-	left:1270px;
+	left:1328px;
 }
 .item {
 	margin:5px 0;
