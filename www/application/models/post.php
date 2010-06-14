@@ -121,13 +121,14 @@ SQL;
             $content = array(
                 "teaser" =>  $this->load($serialData,$value,"summary"),
                 "content" => $this->load($serialData,$value,"full_width"),
-				"date" => date($this->byDayFormat,$value->created_dt)
+				"date" => date($this->byDayFormat,$value->created_dt),
+				"month_stamp" => strtotime(date("M Y",$value->created_dt))
             );
 			/* Save timestamp of mm YYYY as month and year for use in selecting 
 			 * post within a range		
 			*/
-			$key = strtotime(date("M Y",$value->created_dt));
-//			kohana::log("debug",print_r($key,true));
+			$key = $content['date'];
+			//
 			if(!array_key_exists($key,$this->posts)){
 				$this->posts[$key] = array($content);				
 			}else{
@@ -144,16 +145,16 @@ SQL;
             foreach($value as $post){
                  $teaser[] = $post["teaser"];
                  $content[] = $post["content"];				 
-                 $date = $post["date"];		
+                 $month = $post["month_stamp"];		
             }	
             $teaser = (count($teaser)>0)?serialize($teaser):serialize(array());
             $content = (count($content)>0)?serialize($content):serialize(array());
 			//$key = strtotime(date("M Y",$key));
             $this->db->insert("kh_timeline", array(
-                "date" => "{$date}",
+                "date" => "{$key}",
                 "teaser" => "{$teaser}",
                 "content" => "{$content}",
-				"month_stamp" => "{$key}",
+				"month_stamp" => "{$month}",
             ));
             
 		}
@@ -171,7 +172,8 @@ SQL;
 			array(
                 "teaser"=>$view->render(),
                 "content"=> "home",
-				"date" => 0
+				"date" => 0,
+				"month_stamp" => 0
 			)
         );
     }

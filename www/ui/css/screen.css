@@ -347,8 +347,10 @@ code {
     text-decoration: none;
     font-weight: bold;
 }
-.fullItem div{
-    min-height:46px;
+.tweet .fullItem div{
+   min-height:46px;	
+}
+.regular .fullItem div{ 
 	padding:20px;
 }
 #container img{
