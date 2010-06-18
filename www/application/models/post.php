@@ -91,8 +91,6 @@ class Post_Model extends App_Model {
 		$mostRecentPost = $this->db->query('SELECT created_dt FROM kh_posts where is_last_updated = 1');
 		$mostRecentPost = (isset($mostRecentPost[0]))?$mostRecentPost[0]->created_dt:false;		
 		if($mostRecentPost != false){
-			$mostRecentPost = date('d m y',$mostRecentPost);
-			Kohana::log("debug","Some new posts since {$mostRecentPost} have detected");
 			// remove the last updated indicator as a reset for the next time save posts is run
 			$this->db->query('UPDATE kh_posts SET is_last_updated = 0 where is_last_updated = 1');
 			// only update timeline table with new records
@@ -109,7 +107,8 @@ class Post_Model extends App_Model {
 				WHERE posts.created_dt > {$mostRecentPost}
 					GROUP BY posts.content ORDER BY posts.created_dt DESC
 SQL;
-
+			$mostRecentPost = date('d m y',$mostRecentPost);
+			Kohana::log("debug","Some new posts since {$mostRecentPost} have detected");
 		}else{
 			
 			Kohana::log("debug","No new posts detected");
