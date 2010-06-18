@@ -21,13 +21,15 @@ class Post_Model extends App_Model {
 	
 	/*
 	 * Look for posts newer than those we already have 
+
+	 *	Get the most recent post,
+	 *	If there wasn't one, then the table was probably truncated for dev population
+		//$this->db->query("TRUNCATE TABLE kh_posts");
 	 */	
 	public function searchForNewPosts(){
-		/* */
-		kohana::log("debug","Request for new posts detected");
-		//$this->db = new Database('local');
-		//Get the most recent post
-		//$this->db->query("TRUNCATE TABLE kh_posts");
+
+		$info = "Request for new posts detected";
+
 		$mostRecentPost = $this->db->select("*")
 		->from("kh_posts")		
 		->limit(1)
@@ -39,16 +41,23 @@ class Post_Model extends App_Model {
 		if($mostRecentPost != false){
 			// mark the one that was updated last
 			$this->db->update('kh_posts',array('is_last_updated'=>1),array('created_dt'=>$mostRecentPost));		
-			// If there wasn't one, then the table was probably truncated for dev population
+			
+			$whereStr = "created_dt between {$mostRecentPost} and now()";
+			$numberOfNewPosts = $this->db->count_records('kh_posts',$whereStr);
+			$info .= "Looking for posts newer than ".date("d-m-y",$mostRecentPost)."\n";
+			$additional = "new posts {$whereStr}";
+		}else{
+			$additional = "there was not mostRecent value, was the table truncated?\n";
+			$numberOfNewPosts = 0;
 		}
 		// Check to see if we likely to already have new posts
 		// Check for posts older than one hour
-		$whereStr = "created_dt between {$mostRecentPost} and now()";
-		$numberOfNewPosts = $this->db->count_records('kh_posts',$whereStr);
-		Kohana::log("debug","Theres ".$numberOfNewPosts." new posts {$whereStr}\n");
 
+		Kohana::log("debug","Theres ".$numberOfNewPosts." {$additional}\n");
+
+		// $mostRecentPost might be false, but that's ok, its accepted within model code
 		if($numberOfNewPosts <= 0){
-			$info = "Looking for posts newer than ".date("d-m-y",$mostRecentPost)."\n";
+
 
 			// return nothing, just capture feeds
 			// Parse an external atom feed
@@ -86,7 +95,12 @@ class Post_Model extends App_Model {
 		$this->posts = array();
 		// Useful for dev --> 
 		//$this->db->query("TRUNCATE TABLE kh_timeline");
-
+		// If table is truncated, re-generate home snippet first,
+		$truncated = false;
+		if($this->db->count_records('kh_timeline') <= 0){
+			$truncated = true;
+			$this->makeHomeSnippet();
+		}
 		// Get the last time the posts were updated
 		$mostRecentPost = $this->db->query('SELECT created_dt FROM kh_posts where is_last_updated = 1');
 		$mostRecentPost = (isset($mostRecentPost[0]))?$mostRecentPost[0]->created_dt:false;		
@@ -104,65 +118,62 @@ class Post_Model extends App_Model {
 					AS posts 
 				INNER JOIN kh_posts AS dates 
 					ON posts.created_dt = dates.created_dt 
-				WHERE posts.created_dt > {$mostRecentPost}
+				WHERE posts.created_dt between {$mostRecentPost} and now()
 					GROUP BY posts.content ORDER BY posts.created_dt DESC
 SQL;
 			$mostRecentPost = date('d m y',$mostRecentPost);
-			Kohana::log("debug","Some new posts since {$mostRecentPost} have detected");
-		}else{
-			
-			Kohana::log("debug","No new posts detected");
+			Kohana::log("debug","Some new posts since {$mostRecentPost} have been detected");
+		}else if($truncated){
+			$sql = "SELECT * FROM kh_posts";
+			Kohana::log("debug","Empty table, lets go!\n");
 		}
-		 
+
 		$posts = $this->db->query($sql)->result_array(true);
-        /* Make homepage snippet which will always be the first item
-         * ... the most recent date
-		 * there's 86400 seconds in a day
-		 */
-        $today = time()+86400;
-        $this->posts[$today] = $this->getHomeSnippet();
-        // traverse the sql result to populate timeline
-		foreach($posts as $key => $value){			
-            $serialData = unserialize($value->content);
-            $content = array(
-                "teaser" =>  $this->load($serialData,$value,"summary"),
-                "content" => $this->load($serialData,$value,"full_width"),
-				"date" => date($this->byDayFormat,$value->created_dt),
-				"month_stamp" => strtotime(date("M Y",$value->created_dt))
-            );
-			/* Save timestamp of mm YYYY as month and year for use in selecting 
-			 * post within a range		
-			*/
-			$key = $content['date'];
-			//
-			if(!array_key_exists($key,$this->posts)){
-				$this->posts[$key] = array($content);				
-			}else{
-				$this->posts[$key][] = $content;				
+
+		if(count($posts) > 0){
+			foreach($posts as $key => $value){			
+			    $serialData = unserialize($value->content);
+				/* Save month_stamp of M Y as month and year for use in selecting 
+				 * post within a range		
+				*/
+			    $content = array(
+			        "teaser" =>  $this->load($serialData,$value,"summary"),
+			        "content" => $this->load($serialData,$value,"full_width"),
+					"date" => date($this->byDayFormat,$value->created_dt),
+					"month_stamp" => strtotime(date("M Y",$value->created_dt))
+			    );
+				$key = $content['date'];
+				//
+				if(!array_key_exists($key,$this->posts)){
+					$this->posts[$key] = array($content);				
+				}else{
+					$this->posts[$key][] = $content;				
+				}	
 			}	
-		}	
 
-		// traverse and stick into table
-
-		foreach($this->posts as $key => $value){
-            $teaser = array();
-            $content = array();  			
-			kohana::log("debug",print_r($value,true));
-            foreach($value as $post){
-                 $teaser[] = $post["teaser"];
-                 $content[] = $post["content"];				 
-                 $month = $post["month_stamp"];		
-            }	
-            $teaser = (count($teaser)>0)?serialize($teaser):serialize(array());
-            $content = (count($content)>0)?serialize($content):serialize(array());
-			//$key = strtotime(date("M Y",$key));
-            $this->db->insert("kh_timeline", array(
-                "date" => "{$key}",
-                "teaser" => "{$teaser}",
-                "content" => "{$content}",
-				"month_stamp" => "{$month}",
-            ));
-            
+			// traverse and stick into table
+			if(count($this->posts)>0){
+				foreach($this->posts as $key => $value){
+					$teaser = array();
+					$content = array();  			
+					kohana::log("debug",print_r($value,true));
+					foreach($value as $post){
+					     $teaser[] = $post["teaser"];
+					     $content[] = $post["content"];				 
+					     $month = $post["month_stamp"];		
+					}	
+					$teaser = (count($teaser)>0)?serialize($teaser):serialize(array());
+					$content = (count($content)>0)?serialize($content):serialize(array());
+					//$key = strtotime(date("M Y",$key));
+					$this->db->insert("kh_timeline", array(
+					    "date" => "{$key}",
+					    "teaser" => "{$teaser}",
+					    "content" => "{$content}",
+						"month_stamp" => "{$month}",
+					));
+					
+				}
+			}
 		}
 	}
 
@@ -171,17 +182,14 @@ SQL;
 		->from("kh_posts")
 		->limit();	
 	}
-
-    private function getHomeSnippet(){
+    private function makeHomeSnippet(){
         $view = new View('home_snippet');
-        return array(
-			array(
-                "teaser"=>$view->render(),
-                "content"=> "home",
-				"date" => 0,
+        $this->db->insert("kh_timeline", array(
+                "teaser"=>serialize(array($view->render())),
+                "content"=> serialize(array("home")),
+				"date" => time(),
 				"month_stamp" => 0
-			)
-        );
+			));
     }
     /*
      * Get the website description from the 
