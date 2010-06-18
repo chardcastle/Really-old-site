@@ -65,14 +65,21 @@ class Post_Model extends App_Model {
 	/*
 	 * Remove all records from timeline
 	 * create new ones based on post source table 
+	 * The function befor it, saveNewPosts must always 
+	 * leave is_last_update set to true as this function requires it as a pointer
+	 * pointer is reset once complete
 	 * */
 	public function digestNewPosts(){
 		$this->posts = array();
-		// Useful for dev --> $this->db->query("TRUNCATE TABLE kh_timeline");
+		// Useful for dev --> 
+		//$this->db->query("TRUNCATE TABLE kh_timeline");
+
 		// Get the last time the posts were updated
 		$mostRecentPost = $this->db->query('SELECT created_dt FROM kh_posts where is_last_updated = 1');
 		$mostRecentPost = (isset($mostRecentPost[0]))?$mostRecentPost[0]->created_dt:false;		
 		if($mostRecentPost != false){
+			$mostRecentPost = date('d m y',$mostRecentPost);
+			Kohana::log("debug","Some new posts since {$mostRecentPost} have detected");
 			// remove the last updated indicator as a reset for the next time save posts is run
 			$this->db->query('UPDATE kh_posts SET is_last_updated = 0 where is_last_updated = 1');
 			// only update timeline table with new records
@@ -91,21 +98,8 @@ class Post_Model extends App_Model {
 SQL;
 
 		}else{
-			// Compile everypost into HTML
-			$sql = <<<SQL
-				SELECT posts.type,
-					from_unixtime(posts.created_dt,'%d-%m-%y') AS dateKey,
-					posts.content, 
-					posts.* 
-				FROM 
-					(select * from kh_posts) 
-					AS posts 
-				INNER JOIN kh_posts AS dates 
-					ON posts.created_dt = dates.created_dt 
-				GROUP BY posts.content ORDER BY posts.created_dt DESC
-
-SQL;
-			Kohana::log("debug","Could not get the most recent post created_dt {$mostRecentPost} --> so will be compiling all posts into HTML");
+			
+			Kohana::log("debug","No new posts detected");
 		}
 		 
 		$posts = $this->db->query($sql)->result_array(true);
