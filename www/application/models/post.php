@@ -34,32 +34,45 @@ class Post_Model extends App_Model {
 		->orderby("created_dt","desc")
 		->get()
 		->result_array(true);				
-		
+		//Kohana::log("debug",$this->db->last_query());
 		$mostRecentPost = (isset($mostRecentPost[0]))?$mostRecentPost[0]->created_dt:false;
 		if($mostRecentPost != false){
 			// mark the one that was updated last
 			$this->db->update('kh_posts',array('is_last_updated'=>1),array('created_dt'=>$mostRecentPost));		
 			// If there wasn't one, then the table was probably truncated for dev population
 		}
-		$info = "Looking for posts newer than ".date("d-m-y",$mostRecentPost);
-		// return nothing, just capture feeds
-		// Parse an external atom feed
+		// Check to see if we likely to already have new posts
+		// Check for posts older than one hour
+		$whereStr = "created_dt between {$mostRecentPost} and now()";
+		$numberOfNewPosts = $this->db->count_records('kh_posts',$whereStr);
+		Kohana::log("debug","Theres ".$numberOfNewPosts." new posts {$whereStr}\n");
+
+		if($numberOfNewPosts <= 0){
+			$info = "Looking for posts newer than ".date("d-m-y",$mostRecentPost)."\n";
+
+			// return nothing, just capture feeds
+			// Parse an external atom feed
 		
-		$obj = new Tumblr_Model;		
-		$tumNo = $obj->captureFeed($this->urls["tumblr"],$mostRecentPost);
-		$info .= (isset($tumNo)?$tumNo:"Didn't request any")." new Tumblr items";		
+			$obj = new Tumblr_Model;		
+			$tumNo = $obj->captureFeed($this->urls["tumblr"],$mostRecentPost);
+			$info .= (isset($tumNo)?$tumNo:"Didn't request any")." new Tumblr items\n";		
 		
-		$obj = new Tweet_Model;
-		$tweNo = $obj->captureFeed($this->urls["tweets"],$mostRecentPost);
-		$info .= (isset($tweNo)?$tweNo:"Didn't request any")." new Tweet items";
+			$obj = new Tweet_Model;
+			$tweNo = $obj->captureFeed($this->urls["tweets"],$mostRecentPost);
+			$info .= (isset($tweNo)?$tweNo:"Didn't request any")." new Tweet items\n";
 		
-		$obj = new Git_Model;
-		$gitNo = $obj->captureFeed($this->urls["github"]["jquery"],$mostRecentPost);
-		$info .= (isset($gitNo)?$gitNo:"Didn't request any")." new Git items";		
-		// update website description
-		kohana::log("debug",$info);
-        $this->updateHomeDescription();
-		// Not returning anyting now .. nothing required
+			$obj = new Git_Model;
+			$gitNo = $obj->captureFeed($this->urls["github"]["jquery"],$mostRecentPost);
+			$info .= (isset($gitNo)?$gitNo:"Didn't request any")." new Git items\n";		
+			// update website description
+			kohana::log("debug",$info);
+		    $this->updateHomeDescription();
+
+		}else{
+			Kohana::log("debug","We already have posts between ".date('d-m-y')." and ".date('d-m-y',$mostRecentPost)."\n");
+			// 
+		}			
+
 	}
 	
 	/*
