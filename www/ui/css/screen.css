@@ -69,13 +69,16 @@ code {
 }
 #container div.outer {
 	position:absolute;
-	/*top:0; left:0;*/
 	background:#fff;
 	border:1px solid #666;
 	z-index:3;	
 	width:300px;
 	height:234px;
 	overflow:hidden;	
+-moz-box-shadow: 5px 5px 5px #ddd;
+-webkit-box-shadow: 5px 5px 5px #ddd;
+        box-shadow: 5px 5px 5px #ddd;
+
 }
 #container div.outer .inner{
 	margin:8px 16px 0 16px;	
@@ -115,65 +118,65 @@ code {
 	left:640px;
 }
 #box4 {
-	top:250px;
+	top:254px;
 	left:0px;
 }
 #box5 {
-	top:250px;
+	top:254px;
 	left:320px;
 }
 #box6 {
-	top:250px;
+	top:254px;
 	left:640px;
 }
 #box7 {
-	top:500px;
+	top:504px;
 	left:0px;
 }
 #box8 {
-	top:500px;
+	top:504px;
 	left:320px;
 }
 #box9 {
-	top:500px;
+	top:504px;
 	left:640px;
 }
 /**/
 #prev1 {
 	top:0px;
-	left:0px;
+	left:-320px;
 }
 #prev2 {
 	top:0px;
-	left:-320px;
+	left:-640px;
 }
 #prev3 {
 	top:0px;
-	left:-640px;
+	left:-960px;
 }
 #prev4 {
-	top:250px;
-	left:0px;
+	top:254px;
+	left:-320px;
 }
 #prev5 {
-	top:250px;
-	left:-320px;
+	top:254px;
+	left:-640px;
 }
 #prev6 {
-	top:250px;
-	left:-640px;
+	top:254px;
+	left:-960px;
 }
 #prev7 {
-	top:500px;
-	left:0px;
-}
-#prev8 {
-	top:500px;
+	top:504px;
 	left:-320px;
 }
-#prev9 {
-	top:500px;
+#prev8 {
+	top:504px;
 	left:-640px;
+}
+#prev9 {
+	top:504px;
+	left:-960px;
 }
 #next1 {
 	top:0px;
@@ -188,27 +191,27 @@ code {
 	left:1620px;
 }
 #next4 {
-	top:250px;
+	top:254px;
 	left:980px;
 }
 #next5 {
-	top:250px;
+	top:254px;
 	left:1300px;
 }
 #next6 {
-	top:250px;
+	top:254px;
 	left:1620px;
 }
 #next7 {
-	top:500px;
+	top:504px;
 	left:980px;
 }
 #next8 {
-	top:500px;
+	top:504px;
 	left:1300px;
 }
 #next9 {
-	top:500px;
+	top:504px;
 	left:1620px;
 }
 .item {
