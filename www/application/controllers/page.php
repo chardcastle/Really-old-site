@@ -46,7 +46,7 @@ class Page_Controller extends Template_Controller {
 			->orderby("id","asc")
 			->get()
 			->result_array(true);
-		$x = 0;
+		$x = 1;
 		$days = array();
 		
 		foreach($data as $key => $value){			
@@ -82,39 +82,6 @@ class Page_Controller extends Template_Controller {
 	private function getPageSqlEnd($pageId){
 		return ($pageId * $this->itemsPerPage)-$this->itemsPerPage;		
 	}
-	/*
-	 * Provide data as JSON
-	 * 
-	public function pageAsJson($pageId){				
-		$end = $this->getPageSqlEnd($pageId);
-		$data = $this->db->select("*")
-		->from("kh_timeline")		
-		->limit($this->itemsPerPage,$end)
-		->orderby("id","asc")
-		->get()
-		->result_array(true);		
-		$x = 0;
-		$returned = array();
-		kohana::log("debug","load page as JSON");
-		foreach($data as $key => $value){
-			$x++;		
-			$contents = unserialize($value->content);
-			$html = "";
-			if(is_array($contents)){
-				foreach($contents as $str){
-					$html .= $str;
-				}
-			}			
-			$returned[$key] = array(
-				"index"=>"{$x}",
-				"body"=>$html,
-				"id"=>$value->id,	
-				"title"=>$value->date);			 			
-		}
-		echo json_encode($returned);		
-		exit;		
-	}	
-	*/
 	
 	/*
 	 * Static content
