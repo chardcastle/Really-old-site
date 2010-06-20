@@ -1,10 +1,10 @@
 <div class="paginationFullWidth">	
 	<span>
-		<?php if($id > 2){?>
+		<?php if($prevUrl){?>
 		    <a href="<?php echo $prevUrl?>">&laquo;&nbsp;backwards</a>
 		<?php } ?>
 		&nbsp;
-		<?php if($id < $paginationLimit){ ?>
+		<?php if($nextUrl){ ?>
 			<a href="<?php echo $nextUrl?>">forwards&nbsp;&raquo;</a>
 		<?php } ?>	
 	</span>

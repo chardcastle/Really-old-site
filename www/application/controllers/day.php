@@ -58,7 +58,7 @@ class Day_Controller extends Template_Controller {
             $next = false;
             $prev = false;
             if($postId > 0){
-				$slugs = $postObj->getNextAndPrevUrls($postId);
+				$slugs = $postObj->getNextAndPrevUrls($postId,"day");
 				//var_dump($slugs).die();
 				if($postId > 2){
 					$next = $slugs['next'];

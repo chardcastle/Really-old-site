@@ -30,8 +30,7 @@
 				<div class="pubDate"><a href="<?php echo $post['url']; ?>"><?php echo $post['date']; ?></a></div>			
 				<div class="body">
 					<?php 
-						
-						if(isset($post['body'])){ echo $post['body'];}else{echo "shit";}
+						echo $post['body'];
 					  ?>
 				</div>
 			</div>

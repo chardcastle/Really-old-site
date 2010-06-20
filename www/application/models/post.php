@@ -176,23 +176,23 @@ SQL;
 			}
 		}
 	}
-	public function getNextAndPrevUrls($postId=false){
-		$next = $postId++;
-		$prev = $postId--;
-		
+	public function getNextAndPrevUrls($postId=false,$modelName){
+	
 		if(!$postId){
 			return false;
 		}
-		
+		$next = (int)($postId)+1;
+		$prev = (int)($postId)-1;
+				
 		$slug = array();
 		$url = $this->db->query("select slug from kh_timeline where id = ".$next)->result_array();
 		$url = $url[0]->slug;
 		//var_dump($url).die();
-		$slug['next'] = ($url != NULL)?'/'.$url:'/page/view/'.$next;
+		$slug['next'] = ($url != NULL)?'/'.$url:"/{$modelName}/view/".$next;
 		unset($url);
 		//
 		$url = $this->db->from('kh_timeline')->where(array('id'=> $prev))->select('slug')->get()->result_array(true);		
-		$slug['prev'] = ($url[0]->slug != NULL)?'/'.$url[0]->slug:'/page/view/'.$prev;		
+		$slug['prev'] = ($url[0]->slug != NULL)?'/'.$url[0]->slug:"/{$modelName}/view/".$prev;		
 		return $slug;
     	
 	}
