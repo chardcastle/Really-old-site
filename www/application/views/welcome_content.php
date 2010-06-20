@@ -24,18 +24,17 @@
 		MAIN CONTENT 
 	-->
 	<?php foreach($posts as $key => $post){				 
-		$features = unserialize($post->teaser);
+		
 		
 		?>
-		<div id="box<?php echo $key+1; ?>" class="outer <?php echo ($post->id == 1)?'home':''; ?>">
+		<div id="box<?php echo $key+1; ?>" class="outer <?php echo ($post['id'] == 1)?'home':''; ?>">
 			<div class="inner">
-				<a href="/day/view/<?php echo $post->id; ?>" class="close ui-icon ui-icon-search" style="float:right">Close</a>
-				<div class="pubDate"><a href="/day/view/<?php echo $post->id; ?>"><?php echo $post->date; ?></a></div>			
+				<a href="/day/view/<?php echo $post['id']; ?>" class="close ui-icon ui-icon-search" style="float:right">Close</a>
+				<div class="pubDate"><a href="/day/view/<?php echo $post['id']; ?>"><?php echo $post['date']; ?></a></div>			
 				<div class="body">
 					<?php 
-				        foreach($features as $f){
-						 echo stripslashes($f);
-					 } ?>
+						 echo $post['body'];
+					  ?>
 				</div>
 			</div>
 			<div class="boxFooter"></div>

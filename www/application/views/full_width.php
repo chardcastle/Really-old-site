@@ -50,6 +50,10 @@
 			});
 		}
 	});
+</script>
+
+<?php if(kohana::config('config.anywhere_key')){ ?>	
+<script type="text/javascript">	
     twttr.anywhere(function (T) {
         // Only offer comment feature if js is available.
         $(".comment-title").text("Comment with your Twitter account:");
@@ -90,5 +94,5 @@
             }});
           }
     });
-
 </script>
+<?php } ?>

@@ -36,23 +36,43 @@ class Page_Controller extends Template_Controller {
 	 * Provide data to static pages
 	 * */
 	public function view($pageId,$ajax=false){
-		if($ajax){
-			echo $this->pageAsJson($pageId);
-			exit;			
-		}else{
-			$this->template->content = new View('welcome_content');
-			
-			$this->template->content->hotlinks = $this->pagination->render();
-			$end = $this->getPageSqlEnd($pageId);
-			$this->template->content->posts = $this->db->select("*")
+		$end = $this->getPageSqlEnd($pageId);
+		$data = $this->db->select("*")
 			->from("kh_timeline")		
 			->limit($this->itemsPerPage,$end)
 			->orderby("id","asc")
 			->get()
 			->result_array(true);
-			//
+		$x = 0;
+		$days = array();
+		
+		foreach($data as $key => $value){			
+			$contents = unserialize($value->content);
+			$html = "";
+			if(is_array($contents)){
+				foreach($contents as $str){
+					$html .= $str;
+				}
+			}			
+			$days[$key] = array(
+				"index"=>"{$x}",
+				"body"=>$html,
+				"id"=>$value->id,
+				"url"=>($value->slug !== NULL)?"/".$value->slug:'/day/view/'.$value->id,
+				"date"=>$value->date);	
+			$x++;				 			
+		}			
+		if($ajax){
+			echo json_encode($days);
+			exit;			
+		}else{
+			$this->template->content = new View('welcome_content');
+			
+			$this->template->content->hotlinks = $this->pagination->render();			
+
 			$from = $end - $this->itemsPerPage;
-			$this->template->title = "Pages {$from} to {$end}";//var_dump($this->pagination);
+			$this->template->content->posts = $days;
+			$this->template->title = "Timeline";
             $this->template->description = $this->siteDesc;
 		}
 	}
@@ -61,7 +81,7 @@ class Page_Controller extends Template_Controller {
 	}
 	/*
 	 * Provide data as JSON
-	 * */
+	 * 
 	public function pageAsJson($pageId){				
 		$end = $this->getPageSqlEnd($pageId);
 		$data = $this->db->select("*")
@@ -91,6 +111,8 @@ class Page_Controller extends Template_Controller {
 		echo json_encode($returned);		
 		exit;		
 	}	
+	*/
+	
 	/*
 	 * Static content
 	*/	
