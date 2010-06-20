@@ -181,8 +181,10 @@ SQL;
 		if(!$postId){
 			return false;
 		}
-		$next = (int)($postId)+1;
-		$prev = (int)($postId)-1;
+		// where 1 is the most recent item,
+		// add to the index to go back in time!
+		$next = (int)($postId)-1;
+		$prev = (int)($postId)+1;
 				
 		$slug = array();
 		$url = $this->db->query("select slug from kh_timeline where id = ".$next)->result_array();

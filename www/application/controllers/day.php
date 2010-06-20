@@ -63,7 +63,7 @@ class Day_Controller extends Template_Controller {
 				if($postId > 2){
 					$next = $slugs['next'];
 				}
-				if($postId < $postObj->totalTimeLineItems){
+				if($postId < ($postObj->totalTimeLineItems)-1){
 					$prev = $slugs['prev'];
 				}
 			}
