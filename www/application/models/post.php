@@ -176,7 +176,26 @@ SQL;
 			}
 		}
 	}
-
+	public function getNextAndPrevUrls($postId=false){
+		$next = $postId++;
+		$prev = $postId--;
+		
+		if(!$postId){
+			return false;
+		}
+		
+		$slug = array();
+		$url = $this->db->query("select slug from kh_timeline where id = ".$next)->result_array();
+		$url = $url[0]->slug;
+		//var_dump($url).die();
+		$slug['next'] = ($url != NULL)?'/'.$url:'/page/view/'.$next;
+		unset($url);
+		//
+		$url = $this->db->from('kh_timeline')->where(array('id'=> $prev))->select('slug')->get()->result_array(true);		
+		$slug['prev'] = ($url[0]->slug != NULL)?'/'.$url[0]->slug:'/page/view/'.$prev;		
+		return $slug;
+    	
+	}
 	public function getPosts($page){
 		$this->db->select("*")
 		->from("kh_posts")

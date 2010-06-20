@@ -1,11 +1,11 @@
 <div class="paginationFullWidth">	
 	<span>
 		<?php if($id > 2){?>
-		    <a href="/day/view/<?php echo $id-1;?>">&laquo;&nbsp;backwards</a>
+		    <a href="<?php echo $prevUrl?>">&laquo;&nbsp;backwards</a>
 		<?php } ?>
 		&nbsp;
 		<?php if($id < $paginationLimit){ ?>
-		<a href="/day/view/<?php echo $id+1;?>">forwards&nbsp;&raquo;</a>
+			<a href="<?php echo $nextUrl?>">forwards&nbsp;&raquo;</a>
 		<?php } ?>	
 	</span>
 	<a href="#" class="back">Back</a>

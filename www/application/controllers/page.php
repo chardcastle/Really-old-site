@@ -32,10 +32,13 @@ class Page_Controller extends Template_Controller {
 		    'style'          => 'hardcastle' // pick one from: classic (default), digg, extended, punbb, or add your own!		
 		));
 	}
+	public function index($pageId=1,$ajax=false){
+		$this->view($pageId,$ajax);
+	}
 	/*
 	 * Provide data to static pages
 	 * */
-	public function view($pageId,$ajax=false){
+	public function view($pageId=1,$ajax=false){
 		$end = $this->getPageSqlEnd($pageId);
 		$data = $this->db->select("*")
 			->from("kh_timeline")		

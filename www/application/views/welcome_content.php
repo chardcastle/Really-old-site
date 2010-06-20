@@ -23,17 +23,15 @@
 	<!-- 
 		MAIN CONTENT 
 	-->
-	<?php foreach($posts as $key => $post){				 
-		
-		
-		?>
+	<?php foreach($posts as $key => $post){	?>
 		<div id="box<?php echo $key+1; ?>" class="outer <?php echo ($post['id'] == 1)?'home':''; ?>">
 			<div class="inner">
-				<a href="/day/view/<?php echo $post['id']; ?>" class="close ui-icon ui-icon-search" style="float:right">Close</a>
-				<div class="pubDate"><a href="/day/view/<?php echo $post['id']; ?>"><?php echo $post['date']; ?></a></div>			
+				<a href="<?php echo $post['url']; ?>" class="close ui-icon ui-icon-search" style="float:right">Close</a>
+				<div class="pubDate"><a href="<?php echo $post['url']; ?>"><?php echo $post['date']; ?></a></div>			
 				<div class="body">
 					<?php 
-						 echo $post['body'];
+						
+						if(isset($post['body'])){ echo $post['body'];}else{echo "shit";}
 					  ?>
 				</div>
 			</div>
