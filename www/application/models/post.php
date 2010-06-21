@@ -190,11 +190,10 @@ SQL;
 		$url = $this->db->query("select slug from kh_timeline where id = ".$next)->result_array();
 		$url = $url[0]->slug;
 		//var_dump($url).die();
-		$slug['next'] = ($url != NULL)?'/'.$url:"/{$modelName}/view/".$next;
-		unset($url);
+		$slug['next'] = (isset($url[0]) && $url != NULL)?'/'.$url:"/{$modelName}/view/".$next;
 		//
 		$url = $this->db->from('kh_timeline')->where(array('id'=> $prev))->select('slug')->get()->result_array(true);		
-		$slug['prev'] = ($url[0]->slug != NULL)?'/'.$url[0]->slug:"/{$modelName}/view/".$prev;		
+		$slug['prev'] = (isset($url[0]) && $url[0]->slug != NULL)?'/'.$url[0]->slug:"/{$modelName}/view/".$prev;		
 		return $slug;
     	
 	}
@@ -207,7 +206,7 @@ SQL;
         $view = new View('home_snippet');
         $this->db->insert("kh_timeline", array(
                 "teaser"=>serialize(array($view->render())),
-                "content"=> serialize(array("home")),
+                "content"=> serialize(array($view->render())),
 				"date" => time(),
 				"month_stamp" => 0
 			));
