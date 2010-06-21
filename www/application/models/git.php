@@ -16,7 +16,7 @@ class Git_Model extends App_Model {
             // view
             $this->repoName = $value->title;
             $this->committer = (isset($content["committer"])?$content["committer"]:false);
-            $this->dateTime = $value->created_dt;
+            $this->dateTime = strtotime($content['committed-date']);
             $this->message = $content["message"];
             $view = new View("item_{$size}/git");
             $view->set("commit",$this);

@@ -27,7 +27,7 @@ class Post_Model extends App_Model {
 		//$this->db->query("TRUNCATE TABLE kh_posts");
 	 */	
 	public function searchForNewPosts(){
-
+$this->db->query("TRUNCATE TABLE kh_posts");
 		$info = "Request for new posts detected";
 
 		$mostRecentPost = $this->db->select("*")
@@ -94,7 +94,7 @@ class Post_Model extends App_Model {
 	public function digestNewPosts(){
 		$this->posts = array();
 		// Useful for dev --> 
-		//$this->db->query("TRUNCATE TABLE kh_timeline");
+			$this->db->query("TRUNCATE TABLE kh_timeline");
 		// If table is truncated, re-generate home snippet first,
 		$truncated = false;
 		if($this->db->count_records('kh_timeline') <= 0){
