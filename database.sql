@@ -112,7 +112,7 @@ CREATE TABLE `kh_timeline` (
   `slug` text,
   `month_stamp` text,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=42 DEFAULT CHARSET=latin1 COMMENT='A view of all the post source records stored in kh_posts';
+) ENGINE=MyISAM AUTO_INCREMENT=82 DEFAULT CHARSET=latin1 COMMENT='A view of all the post source records stored in kh_posts';
 SET character_set_client = @saved_cs_client;
 
 --
@@ -134,4 +134,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2010-07-03 12:58:29
+-- Dump completed on 2010-07-03 13:01:55
