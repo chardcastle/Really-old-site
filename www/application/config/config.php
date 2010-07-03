@@ -24,7 +24,7 @@ $prod = array(
 	"twitter-api-key"=>"yDrjhJ7gJHtyPb7JAMklA",
 	"cache-time"=>120); // 2 minute cache time
 
-$environment = $local;
+$environment = $dev;
 /**
  * This is a key required for using twitter based resources
  * see http://developer.twitter.com for details.

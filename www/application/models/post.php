@@ -98,15 +98,13 @@ class Post_Model extends App_Model {
 		// If table is truncated, re-generate home snippet first,
 		$truncated = false;
 		if($this->db->count_records('kh_timeline') <= 0){
+			$sql = "SELECT * FROM kh_posts";
+			$mostRecentPost = date('d m y');
+			Kohana::log("debug","A request to process posts from {$mostRecentPost} has been detected");
+			Kohana::log("debug","Empty table, lets go!\n");
 			$truncated = true;
 			$this->makeHomeSnippet();
-		}
-		// Get the last time the posts were updated
-		$mostRecentPost = $this->db->query('SELECT created_dt FROM kh_posts where is_last_updated = 1');
-		$mostRecentPost = (isset($mostRecentPost[0]))?$mostRecentPost[0]->created_dt:false;		
-		if($mostRecentPost != false){
-			// remove the last updated indicator as a reset for the next time save posts is run
-			$this->db->query('UPDATE kh_posts SET is_last_updated = 0 where is_last_updated = 1');
+		}else{
 			// only update timeline table with new records
 			$sql = <<<SQL
 				SELECT posts.type,
@@ -118,14 +116,14 @@ class Post_Model extends App_Model {
 					AS posts 
 				INNER JOIN kh_posts AS dates 
 					ON posts.created_dt = dates.created_dt 
-				WHERE posts.created_dt between {$mostRecentPost} and now()
+				WHERE posts.is_last_updated = 0
 					GROUP BY posts.content ORDER BY posts.created_dt DESC
 SQL;
+			// Get the last time the posts were updated
+			$mostRecentPost = $this->db->query('SELECT created_dt FROM kh_posts ORDER BY created_dt DESC limit 1');
+			$mostRecentPost = (isset($mostRecentPost[0]))?$mostRecentPost[0]->created_dt:false;		
 			$mostRecentPost = date('d m y',$mostRecentPost);
-			Kohana::log("debug","Some new posts since {$mostRecentPost} have been detected");
-		}else if($truncated){
-			$sql = "SELECT * FROM kh_posts";
-			Kohana::log("debug","Empty table, lets go!\n");
+
 		}
 
 		$posts = $this->db->query($sql)->result_array(true);
@@ -142,6 +140,9 @@ SQL;
 					"date" => date($this->byDayFormat,$value->created_dt),
 					"month_stamp" => strtotime(date("M Y",$value->created_dt))
 			    );
+				// mark as processed in table
+				$this->db->upate("kh_posts",array("is_last_updated"=>1),array("post_id"=>$value->post_id));
+				// makde key
 				$key = $content['date'];
 				//
 				if(!array_key_exists($key,$this->posts)){
