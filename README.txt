@@ -1,5 +1,5 @@
 Purpose: personal website redesign
-Status: abandoned
+Status: abandoned on age and complexity
 Stage: prototype
 Services: gitHub, Twitter, Tumblr
 Technology: PHP and jQuery
