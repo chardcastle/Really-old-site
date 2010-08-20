@@ -127,7 +127,7 @@ SQL;
 		}
 
 		$posts = $this->db->query($sql)->result_array(true);
-
+		kohana::log("debug",$this->db->last_query());
 		if(count($posts) > 0){
 			foreach($posts as $key => $value){			
 			    $serialData = unserialize($value->content);
@@ -141,7 +141,8 @@ SQL;
 					"month_stamp" => strtotime(date("M Y",$value->created_dt))
 			    );
 				// mark as processed in table
-				$this->db->upate("kh_posts",array("is_last_updated"=>1),array("post_id"=>$value->post_id));
+				$this->db->update("kh_posts",array("is_last_updated"=>1),array("post_id"=>$value->post_id));
+				kohana::log("debug",$this->db->last_query());
 				// makde key
 				$key = $content['date'];
 				//
