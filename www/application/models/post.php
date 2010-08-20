@@ -27,7 +27,7 @@ class Post_Model extends App_Model {
 		//$this->db->query("TRUNCATE TABLE kh_posts");
 	 */	
 	public function searchForNewPosts(){
-
+$this->db->query("TRUNCATE TABLE kh_posts");
 		$info = "Request for new posts detected";
 
 		$mostRecentPost = $this->db->select("*")
@@ -94,7 +94,7 @@ class Post_Model extends App_Model {
 	public function digestNewPosts(){
 		$this->posts = array();
 		// Useful for dev --> 
-		//$this->db->query("TRUNCATE TABLE kh_timeline");
+			$this->db->query("TRUNCATE TABLE kh_timeline");
 		// If table is truncated, re-generate home snippet first,
 		$truncated = false;
 		if($this->db->count_records('kh_timeline') <= 0){
@@ -178,7 +178,27 @@ SQL;
 			}
 		}
 	}
-
+	public function getNextAndPrevUrls($postId=false,$modelName){
+	
+		if(!$postId){
+			return false;
+		}
+		// where 1 is the most recent item,
+		// add to the index to go back in time!
+		$next = (int)($postId)-1;
+		$prev = (int)($postId)+1;
+				
+		$slug = array();
+		$url = $this->db->query("select slug from kh_timeline where id = ".$next)->result_array();
+		$url = $url[0]->slug;
+		//var_dump($url).die();
+		$slug['next'] = (isset($url[0]) && $url != NULL)?'/'.$url:"/{$modelName}/view/".$next;
+		//
+		$url = $this->db->from('kh_timeline')->where(array('id'=> $prev))->select('slug')->get()->result_array(true);		
+		$slug['prev'] = (isset($url[0]) && $url[0]->slug != NULL)?'/'.$url[0]->slug:"/{$modelName}/view/".$prev;		
+		return $slug;
+    	
+	}
 	public function getPosts($page){
 		$this->db->select("*")
 		->from("kh_posts")
@@ -188,7 +208,7 @@ SQL;
         $view = new View('home_snippet');
         $this->db->insert("kh_timeline", array(
                 "teaser"=>serialize(array($view->render())),
-                "content"=> serialize(array("home")),
+                "content"=> serialize(array($view->render())),
 				"date" => time(),
 				"month_stamp" => 0
 			));

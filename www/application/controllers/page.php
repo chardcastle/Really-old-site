@@ -32,49 +32,24 @@ class Page_Controller extends Template_Controller {
 		    'style'          => 'hardcastle' // pick one from: classic (default), digg, extended, punbb, or add your own!		
 		));
 	}
+	public function index($pageId=1,$ajax=false){
+		$this->view($pageId,$ajax);
+	}
 	/*
 	 * Provide data to static pages
 	 * */
-	public function view($pageId,$ajax=false){
-		if($ajax){
-			echo $this->pageAsJson($pageId);
-			exit;			
-		}else{
-			$this->template->content = new View('welcome_content');
-			
-			$this->template->content->hotlinks = $this->pagination->render();
-			$end = $this->getPageSqlEnd($pageId);
-			$this->template->content->posts = $this->db->select("*")
+	public function view($pageId=1,$ajax=false){
+		$end = $this->getPageSqlEnd($pageId);
+		$data = $this->db->select("*")
 			->from("kh_timeline")		
 			->limit($this->itemsPerPage,$end)
 			->orderby("id","asc")
 			->get()
 			->result_array(true);
-			//
-			$from = $end - $this->itemsPerPage;
-			$this->template->title = "Pages {$from} to {$end}";//var_dump($this->pagination);
-            $this->template->description = $this->siteDesc;
-		}
-	}
-	private function getPageSqlEnd($pageId){
-		return ($pageId * $this->itemsPerPage)-$this->itemsPerPage;		
-	}
-	/*
-	 * Provide data as JSON
-	 * */
-	public function pageAsJson($pageId){				
-		$end = $this->getPageSqlEnd($pageId);
-		$data = $this->db->select("*")
-		->from("kh_timeline")		
-		->limit($this->itemsPerPage,$end)
-		->orderby("id","asc")
-		->get()
-		->result_array(true);		
-		$x = 0;
-		$returned = array();
-		kohana::log("debug","load page as JSON");
-		foreach($data as $key => $value){
-			$x++;		
+		$x = 1;
+		$days = array();
+		
+		foreach($data as $key => $value){			
 			$contents = unserialize($value->content);
 			$html = "";
 			if(is_array($contents)){
@@ -82,15 +57,32 @@ class Page_Controller extends Template_Controller {
 					$html .= $str;
 				}
 			}			
-			$returned[$key] = array(
+			$days[$key] = array(
 				"index"=>"{$x}",
 				"body"=>$html,
-				"id"=>$value->id,	
-				"title"=>$value->date);			 			
+				"id"=>$value->id,
+				"url"=>($value->slug !== NULL)?"/".$value->slug:'/day/view/'.$value->id,
+				"date"=>$value->date);	
+			$x++;				 			
+		}			
+		if($ajax){
+			echo json_encode($days);
+			exit;			
+		}else{
+			$this->template->content = new View('welcome_content');
+			
+			$this->template->content->hotlinks = $this->pagination->render();			
+
+			$from = $end - $this->itemsPerPage;
+			$this->template->content->posts = $days;
+			$this->template->title = "Timeline";
+            $this->template->description = $this->siteDesc;
 		}
-		echo json_encode($returned);		
-		exit;		
-	}	
+	}
+	private function getPageSqlEnd($pageId){
+		return ($pageId * $this->itemsPerPage)-$this->itemsPerPage;		
+	}
+	
 	/*
 	 * Static content
 	*/	

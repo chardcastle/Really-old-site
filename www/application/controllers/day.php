@@ -53,7 +53,22 @@ class Day_Controller extends Template_Controller {
 			$this->template->content->comments = $commentHtml;
             $this->template->content->date = $post[0]["date"];
             $this->template->title = ($env != 'production')?"{$post[0]["date"]} ({$env})":$post[0]["date"];
-            $this->template->content->id = $post[0]["id"];
+            
+            $this->template->content->id = $post[0]["id"];            
+            $next = false;
+            $prev = false;
+            if($postId > 0){
+				$slugs = $postObj->getNextAndPrevUrls($postId,"day");
+				//var_dump($slugs).die();
+				if($postId > 2){
+					$next = $slugs['next'];
+				}
+				if($postId < $postObj->totalTimeLineItems){
+					$prev = $slugs['prev'];
+				}
+			}
+            $this->template->content->nextUrl = $next;
+            $this->template->content->prevUrl = $prev;
             $this->template->content->post = unserialize($post[0]["content"]);
         }
 

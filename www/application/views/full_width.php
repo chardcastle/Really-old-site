@@ -1,11 +1,11 @@
 <div class="paginationFullWidth">	
 	<span>
-		<?php if($id > 2){?>
-		    <a href="/day/view/<?php echo $id-1;?>">&laquo;&nbsp;backwards</a>
+		<?php if($prevUrl){?>
+		    <a href="<?php echo $prevUrl?>">&laquo;&nbsp;backwards</a>
 		<?php } ?>
 		&nbsp;
-		<?php if($id < $paginationLimit){ ?>
-		<a href="/day/view/<?php echo $id+1;?>">forwards&nbsp;&raquo;</a>
+		<?php if($nextUrl){ ?>
+			<a href="<?php echo $nextUrl?>">forwards&nbsp;&raquo;</a>
 		<?php } ?>	
 	</span>
 	<a href="#" class="back">Back</a>
@@ -50,6 +50,10 @@
 			});
 		}
 	});
+</script>
+
+<?php if(kohana::config('config.anywhere_key')){ ?>	
+<script type="text/javascript">	
     twttr.anywhere(function (T) {
         // Only offer comment feature if js is available.
         $(".comment-title").text("Comment with your Twitter account:");
@@ -90,5 +94,5 @@
             }});
           }
     });
-
 </script>
+<?php } ?>

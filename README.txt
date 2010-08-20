@@ -1,2 +1,14 @@
-This is the source code for my website.
-It's really just a playground for my work with PHP/MySQL within a true LAMP enviroment.
+Purpose: personal website redesign
+Status: abandoned
+Stage: prototype
+Services: gitHub, Twitter, Tumblr
+Technology: PHP and jQuery
+License: none
+
+###############
+
+Originally devised to be a data mash-up based website redesign. This site has become a playground of sorts for experiments and discovery. Please don't consider it as final, re-usable or even operational! As a whole, this work has become obfuscated and over complicated. Please only consider this as a demonstration of my commitment to PHP and as a user to the Kohana framework.
+
+###############
+
+Regards, CH

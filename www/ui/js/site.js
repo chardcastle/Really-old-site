@@ -32,11 +32,11 @@
 							.html(value["body"])
 							.end()
 							.find(".pubDate a")
-							.text(value["title"])
-							.attr("href","/day/view/"+value["id"])
+							.text(value["date"])
+							.attr("href",value['url'])
 							.end()
 							.find(".close")
-							.attr("href","/day/view/"+value["id"]);	
+							.attr("href",value['url']);	
 						}else{	
 							// re-draw home snippet									
 							ele.addClass("home")
